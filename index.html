@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Watch - Define Your Legacy</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette Extraction */
+            --prm-blue: #0A111F; /* Deep Navy from image */
+            --chp-gold: #D4AF37; /* Gold from palette */
+            --chp-gold-hover: #b5952f;
+            --fd-blue: #D9D9D9; /* Light grey/silver */
+            --btn-blue: #6F95E8; /* Periwinkle blue button */
+            --btn-brown: #8B887F; /* Saddle Brown for "People's Choice" buttons */
+            --cream-bg: #F9EDC9; /* Luxury collection bg approximation */
+            --dark-grey: #394150;
+            --text-light: #f8f9fa;
+            --border-color: #2d3748;
+            --input-bg: #1a2332;
+            --discount-green: #08CB00;
+            --card-bg: #394150;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            background-color: #f4f4f4;
+        }
+
+        h1, h2, h3, h4, h5, h6, .navbar-brand {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* --- Utilities --- */
+        .text-gold { color: var(--chp-gold); }
+        .bg-prm-blue { background-color: var(--prm-blue); }
+        .bg-gold { background-color: var(--chp-gold); }
+        .bg-cream { background-color: var(--cream-bg); }
+
+        .btn-gold {
+            background-color: var(--chp-gold);
+            color: #000;
+            border: none;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover {
+            background-color: var(--chp-gold-hover);
+            color: #000;
+        }
+
+        .btn-blue {
+            background-color: var(--btn-blue);
+            color: white;
+            border: none;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .btn-blue:hover {
+            background-color: #5b7dc4;
+            color: white;
+        }
+
+        .btn-brown {
+            background-color: var(--btn-brown);
+            color: white;
+            border: none;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .btn-brown:hover {
+            background-color: #787469;
+            color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* --- Top Bar --- */
+        .top-bar {
+            background-color: #C8A030; /* Slightly darker gold/mustard */
+            color: #000;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 0;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background-color: var(--prm-blue);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-logo-img {
+            height: 40px;
+            width: auto;
+        }
+        .footer-brand-logo-img{
+            height: 68px;
+            width: auto;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        .nav-link:hover {
+            color: var(--chp-gold) !important;
+        }
+        .nav-icons .btn {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            height: 600px;
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+        }
+        .hero-img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            z-index: 2;
+            max-width: 600px;
+        }
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero-btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* --- Brand Logos --- */
+        .brand-grid {
+            background-color: var(--prm-blue);
+            padding: 3rem 0;
+        }
+        
+        .brand-item {
+            background-color: var(--fd-blue);
+            border-radius: 6px;
+            /* 1. INCREASED HEIGHT */
+            height: 64px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            /* 2. ADDED PADDING so logos don't touch the edges */
+            padding: 12px;
+        }
+
+        .brand-item:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 3. NEW RULE: Force images to fit the container height */
+        .brand-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Keeps aspect ratio while filling height */
+            display: block;
+        }
+        /* --- Product Cards --- */
+        .product-card {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            padding: 25px;
+            text-align: center;
+            background: #fff;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .discount-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: linear-gradient(135deg, var(--discount-green) 0%, #2bc04e 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 3px 8px rgba(60, 231, 74, 0.4);
+            z-index: 10;
+            letter-spacing: 0.5px;
+        }
+        .product-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .card-body {
+            padding: 1.75rem;
+            background-color: var(--card-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 45px;
+        }
+        .price-section {
+            margin-bottom: 0.75rem;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .original-price {
+            font-size: 0.85rem;
+            color: #999;
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        .price {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--chp-gold);
+        }
+        .camera-icon {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 8px;
+            border-radius: 6px;
+            color: var(--chp-gold);
+            transition: all 0.3s;
+        }
+
+        .camera-icon:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .installment-text {
+            font-size: 0.75rem;
+            color: #bbb;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+        }
+
+        .koko-brand {
+            font-weight: 700;
+            color: #7191D9;
+        }
+
+        .btn-card {
+            width: 100%;
+            margin-top: auto;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        /* Specific modifications for "People's Choice" & "Fav Brands" where card body is dark grey */
+        /* But wait, in image 1 (Luxury Collection), cards have DARK bodies with WHITE text. */
+
+        /* --- Banner Sections --- */
+        .banner-section {
+            position: relative;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+        }
+        .banner-overlay {
+            background: rgba(0,0,0,0.5);
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            padding: 2rem;
+        }
+        .banner-street {
+            background-image: url('https://images.unsplash.com/photo-1568644396922-5c3bfae12521?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+        }
+        .banner-gold-watch {
+            background-image: url('https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+        }
+        .banner-wall-clock {
+            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+        }
+
+        /* --- Carousel Controls --- */
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .carousel:hover .carousel-control-prev, 
+        .carousel:hover .carousel-control-next {
+            opacity: 1;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            padding: 20px;
+            background-size: 50% 50%;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #000;
+            color: #aaa;
+            padding: 4rem 0 2rem;
+            font-size: 0.9rem;
+        }
+        footer h5 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        footer ul li {
+            margin-bottom: 10px;
+        }
+        footer a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: var(--chp-gold);
+        }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+        }
+        .social-icons a {
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 768px) {
+            .brand-logo-img { height: 32px; }
+            .footer-brand-logo-img { height: 54px; }
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 1.5rem; }
+            .brand-item { margin-bottom: 10px; }
+        }
+
+        /* Multi-item carousel hack for pure bootstrap */
+        @media (min-width: 992px) {
+            .carousel-inner.multi-item .carousel-item {
+                display: block; /* Force block to allow flex children logic if needed, but we will use groups */
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex gap-3">
+                <span><i class="fas fa-phone-alt me-2"></i> 011-22264589</span>
+                <span class="d-none d-md-inline"><i class="fas fa-truck me-2"></i> Island-wide cash on delivery</span>
+            </div>
+            <div>
+                <span><i class="fas fa-tag me-2"></i> 10% discount in this season</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <!-- Logo image long version-->
+                <img src="assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border-color: rgba(255,255,255,0.5);">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#">Wristwatch</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Wall Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+                </ul>
+                <div class="nav-icons d-flex gap-2">
+                    <button class="btn btn-link"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-link"><i class="fas fa-shopping-cart"></i></button>
+                    <button class="btn btn-link"><i class="fas fa-user"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div id="heroCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5000">
+            
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <div class="carousel-inner h-100">
+                
+                <div class="carousel-item active h-100">
+                    <img src="assets/images/home/hero-section-banners/hr-sec-img-1.png" alt="Man with watch" class="hero-img d-block w-100">
+                    <div class="hero-overlay">
+                        <div class="container">
+                            <h1 class="hero-title text-uppercase">Define<br>Your Legacy</h1>
+                            <a href="#" class="btn btn-gold hero-btn">SHOP PREMIUM COLLECTION</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item h-100">
+                    <img src="assets/images/home/hero-section-banners/hr-sec-img-2.png" alt="Luxury Watch" class="hero-img d-block w-100">
+                    <div class="hero-overlay">
+                        <div class="container">
+                            <h1 class="hero-title text-uppercase">Timeless<br>Elegance</h1>
+                            <a href="#" class="btn btn-gold hero-btn">VIEW NEW ARRIVALS</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item h-100">
+                    <img src="assets/images/home/hero-section-banners/hr-sec-img-3.png" alt="Gold Watch" class="hero-img d-block w-100">
+                    <div class="hero-overlay">
+                        <div class="container">
+                            <h1 class="hero-title text-uppercase">Golden<br>Moments</h1>
+                            <a href="#" class="btn btn-gold hero-btn">SHOP EXCLUSIVE</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Brand Logos Grid -->
+<section class="brand-grid">
+        <div class="container">
+            <div class="row g-3 d-flex justify-content-center">
+                <div class="col-4 col-md-2">
+                    <div class="brand-item">
+                        <img src="assets/images/watch-brand-logos/aviator.png" alt="Aviator">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="brand-item">
+                        <img src="assets/images/watch-brand-logos/casio.png" alt="Casio">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="brand-item">
+                        <img src="assets/images/watch-brand-logos/police.png" alt="Police">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="brand-item">
+                        <img src="assets/images/watch-brand-logos/seiko.png" alt="Seiko">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="brand-item">
+                        <img src="assets/images/watch-brand-logos/citizen.png" alt="Citizen">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Luxury Collection -->
+    <section class="py-5" style="background-color: var(--cream-bg);">
+        <div class="container">
+            <h2 class="section-title text-uppercase">The Luxury Collection</h2>
+            
+            <div id="luxuryCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    
+                    <!-- Slide 1 (Group of 4) -->
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <div class="discount-badge">-15% OFF</div>
+                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
+                                        <div class="price-section">
+                                            <div class="price-row">
+                                                <div class="price-container">
+                                                    <span class="original-price">LKR 18,125</span>
+                                                    <span class="price">LKR 14,500</span>
+                                                </div>
+                                                <i class="fas fa-camera camera-icon"></i>
+                                            </div>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-gold btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Quartz Analog Silver Dial Metal Strap Watch</h5>
+                                        <div class="price-section">
+                                            <div class="price-row">
+                                                <div class="price-container">
+                                                    <span class="original-price">LKR 18,125</span>
+                                                    <span class="price">LKR 14,500</span>
+                                                </div>
+                                                <i class="fas fa-camera camera-icon"></i>
+                                            </div>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 4,833.33 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-gold btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden on mobile to save space or stack via col-6 -->
+                            <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Quartz Analog Black Dial Metal Strap Watch</h5>
+                                        <div class="price-row">
+                                            <span class="price">LKR 18,000</span>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 6,000.00 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-gold btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Quartz Analog Gold Dial Metal Strap Watch</h5>
+                                        <div class="price-row">
+                                            <span class="price">LKR 22,000</span>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 7,333.33 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-gold btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 (Mock for scroll) -->
+                    <div class="carousel-item">
+                         <div class="row g-4">
+                             <!-- Duplicate items for demo -->
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1622434641406-a15810545064?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Sport Edition Chronograph</h5>
+                                        <div class="price-row">
+                                            <span class="price">LKR 15,000</span>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 5,000.00 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-gold btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#luxuryCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#luxuryCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner 1: More Than A Watch Shop -->
+    <section class="banner-section banner-street">
+        <div class="banner-overlay"></div>
+        <div class="container">
+            <div class="banner-content">
+                <h2 class="text-uppercase fw-bold mb-3" style="font-size: 2.5rem;">More Than A Watch Shop</h2>
+                <p class="fs-5">Panadura's trusting choice for more than 20 years</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- People's Choice -->
+    <section class="py-5" style="background-color: var(--prm-blue); color: white;">
+        <div class="container">
+            <h2 class="section-title text-uppercase text-white">People's Choice</h2>
+            
+            <div id="peoplesChoiceCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Silver Mesh Band Analog Watch</h5>
+                                        <div class="price-row">
+                                            <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                            </div>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-blue btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Gold Plated Classic Watch</h5>
+                                        <div class="price-section">
+                                            <div class="price-row">
+                                                <div class="price-container">
+                                                    <span class="original-price">LKR 18,125</span>
+                                                    <span class="price">LKR 14,500</span>
+                                                </div>
+                                                <i class="fas fa-camera camera-icon"></i>
+                                            </div>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-blue btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
+                                        <div class="price-section">
+                                            <div class="price-row">
+                                                <div class="price-container">
+                                                    <span class="original-price">LKR 18,125</span>
+                                                    <span class="price">LKR 14,500</span>
+                                                </div>
+                                                <i class="fas fa-camera camera-icon"></i>
+                                            </div>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-blue btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Classic Leather Strap Watch</h5>
+                                        <div class="price-section">
+                                            <div class="price-row">
+                                                <div class="price-container">
+                                                    <span class="original-price">LKR 18,125</span>
+                                                    <span class="price">LKR 14,500</span>
+                                                </div>
+                                                <i class="fas fa-camera camera-icon"></i>
+                                            </div>
+                                        </div>
+                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-blue btn-card">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#peoplesChoiceCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#peoplesChoiceCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner 2: Well Recognized Brands -->
+    <section class="banner-section banner-gold-watch">
+        <div class="banner-overlay"></div>
+        <div class="container text-end">
+            <div class="banner-content">
+                <div class="d-inline-block text-center p-4">
+                     <!-- Logo mock -->
+                    <div class="mb-3">
+                         <h3 style="font-family: serif; font-style: italic;">dW</h3>
+                         <small class="text-uppercase">Luxury Watch</small>
+                    </div>
+                    <h2 class="text-uppercase fw-bold" style="font-size: 3rem;">Well Recognized Brands</h2>
+                    <p class="text-end">World's most popular recognized brands</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Favorite Brands -->
+    <section class="py-5" style="background-color: var(--prm-blue); color: white;">
+        <div class="container">
+            <h2 class="section-title text-uppercase text-white">Favorite Brands</h2>
+            
+            <!-- Tabs -->
+            <div class="d-flex justify-content-center gap-2 mb-4">
+                <button class="btn btn-light rounded-pill px-4">Casio</button>
+                <button class="btn btn-outline-light rounded-pill px-4">Titan</button>
+                <button class="btn btn-outline-light rounded-pill px-4">Casio</button>
+            </div>
+
+            <!-- Grid (similar to carousel but static for variety based on image) -->
+            <div class="row g-4 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="product-card">
+                        <div class="card-img-wrapper">
+                             <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
+                            <div class="price-row">
+                                <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                <i class="fas fa-camera camera-icon"></i>
+                            </div>
+                             <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                            <button class="btn btn-blue btn-card">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="product-card">
+                        <div class="card-img-wrapper">
+                             <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
+                            <div class="price-row">
+                                <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                <i class="fas fa-camera camera-icon"></i>
+                            </div>
+                             <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                            <button class="btn btn-blue btn-card">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-6 col-lg-3 d-none d-md-block">
+                    <div class="product-card">
+                        <div class="card-img-wrapper">
+                             <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
+                            <div class="price-row">
+                                <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                <i class="fas fa-camera camera-icon"></i>
+                            </div>
+                             <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                            <button class="btn btn-blue btn-card">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-6 col-lg-3 d-none d-md-block">
+                    <div class="product-card">
+                        <div class="card-img-wrapper">
+                             <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
+                            <div class="price-row">
+                                <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                <i class="fas fa-camera camera-icon"></i>
+                            </div>
+                             <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                            <button class="btn btn-blue btn-card">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-gold rounded-pill px-5">See more</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner 3: Decorate Your Home -->
+    <section class="banner-section banner-wall-clock">
+        <div class="banner-overlay"></div>
+        <div class="container">
+            <div class="banner-content">
+                <h2 class="text-uppercase fw-bold mb-3" style="font-size: 2.5rem;">Decorate Your Home</h2>
+                <p class="fs-5">Not just a clock, it can decorate you whole time</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Elevate Your Style (Wall Clocks) -->
+    <section class="py-5" style="background-color: var(--prm-blue); color: white;">
+        <div class="container">
+            <h2 class="section-title text-uppercase text-white">Elevate Your Style</h2>
+            
+            <div id="wallClockCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1563861826300-9f71c62069e4?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Clock">
+                                    </div>
+                                    <div class="card-body"> <!-- Changing card style slightly for variety -->
+                                        <h5 class="card-title text-white">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
+                                        <div class="price-row text-white">
+                                            <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                         <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-brown btn-card" style="font-size:0.85rem;">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-6 col-lg-3">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1585123388867-3bfe6dd4bdbf?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Clock">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title text-white">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
+                                        <div class="price-row text-white">
+                                            <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                         <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-brown btn-card" style="font-size:0.85rem;">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1415604934674-561df9abf539?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Clock">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title text-white">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
+                                        <div class="price-row text-white">
+                                            <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                         <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-brown btn-card" style="font-size:0.85rem;">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-6 col-lg-3 d-none d-md-block">
+                                <div class="product-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="https://images.unsplash.com/photo-1508057198894-247b98c5af86?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Clock">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title text-white">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
+                                        <div class="price-row text-white">
+                                            <div class="price-container">
+                                                    <span class="original-price">LKR 14,120</span>
+                                                    <span class="price">LKR 12,000</span>
+                                                </div>
+                                            <i class="fas fa-camera camera-icon"></i>
+                                        </div>
+                                         <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
+                                        <button class="btn btn-brown btn-card" style="font-size:0.85rem;">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- Dots indicator -->
+             <div class="text-center mt-3">
+                 <span style="display:inline-block; width:8px; height:8px; background:white; border-radius:50%; margin:0 3px;"></span>
+                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
+                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
+                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
+             </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-md-4">
+                     <a class="navbar-brand mb-3" href="#">
+                        <!-- Logo mock -->
+                        <img src="assets/images/brand-logos/logo4.png" alt="Logo" class="footer-brand-logo-img">
+                    </a>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Men's</a></li>
+                        <li><a href="#">Women's</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h5>Customer Care</h5>
+                    <ul>
+                        <li><a href="#">Warranty Info</a></li>
+                        <li><a href="#">Returns Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Panadura Address</h5>
+                    <p>No. 123, Main Street, Panadura, Sri Lanka.</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
+                <p class="mb-0">&copy; 2026 Power Watch Panadura. All rights reserved.</p>
+                <div class="social-icons my-3 my-md-0">
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+                <div class="payment-methods">
+                     <span class="text-white me-2">We Accept:</span>
+                     <i class="fab fa-cc-mastercard fa-lg text-light me-2"></i>
+                     <i class="fab fa-cc-visa fa-lg text-light me-2"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
