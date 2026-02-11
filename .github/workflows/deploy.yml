@@ -15,10 +15,11 @@ jobs:
       - name: Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}     # Your domain/IP is fine here
+          server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }} # You need to create this Secret!
+          password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          # We can use strict now because we set the host to vortex.nodebuckethost.com
           security: strict
           exclude: |
             **/.git*
