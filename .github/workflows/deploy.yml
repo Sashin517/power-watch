@@ -1,0 +1,26 @@
+name: Deploy website on push
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: Deploy via FTPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
+
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}     # Your domain/IP is fine here
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }} # You need to create this Secret!
+          protocol: ftps
+          security: strict
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
