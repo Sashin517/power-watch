@@ -27,6 +27,11 @@
             --warning-orange: #f39c12;
         }
 
+        .brand-logo-img {
+            max-height: 40px;
+            width: 100%;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--prm-blue);
@@ -422,11 +427,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">
-                <svg width="30" height="30" viewBox="0 0 100 100" fill="none" stroke="var(--chp-gold)" stroke-width="5">
-                    <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" />
-                    <circle cx="50" cy="50" r="20" />
-                </svg>
-                <span class="brand-font h5 m-0 text-white">POWER <span class="text-gold">ADMIN</span></span>
+                <img src="../assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
             </a>
         </div>
 
@@ -577,28 +578,44 @@
                         <div class="row g-4 mb-4">
                             <div class="col-12">
                                 <label class="form-label">Product Name</label>
-                                <input type="text" class="form-control" placeholder="e.g. Titan Quartz Analog Blue Dial">
+                                <input type="text" class="form-control" id="productName" placeholder="e.g. Titan Quartz Analog Blue Dial">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Brand</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Brand</option>
-                                    <option value="1">Titan</option>
-                                    <option value="2">Casio</option>
-                                    <option value="3">Citizen</option>
+                                <select class="form-select" id="productBrand">
+                                    <option selected disabled value="0">Select Brand</option>
+                                    <option value="1">Casio</option>
+                                    <option value="2">Titan</option>
+                                    <option value="3">Seiko</option>
+                                    <option value="4">Rolex</option>
+                                    <option value="5">Omega</option>
+                                    <option value="6">Fossil</option>
+                                    <option value="7">Citizen</option>
+                                    <option value="8">Police</option>
+                                    <option value="9">Aviator</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Category</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Category</option>
-                                    <option value="1">Wristwatch</option>
-                                    <option value="2">Wall Decor</option>
+                                <label class="form-label">Sub Category</label>
+                                <select class="form-select" id="productCategory">
+                                    <option selected disabled value="0">Select Category</option>
+                                    <optgroup label="Wristwatch">
+                                        <option value="1">Men's Watches</option>
+                                        <option value="2">Women's Watches</option>
+                                        <option value="3">Smart Watches</option>
+                                        <option value="4">Luxury Collection</option>
+                                    </optgroup>
+                                    <optgroup label="Wall Decor">
+                                        <option value="5">Wall Clocks</option>
+                                        <option value="6">Photo Frames</option>
+                                        <option value="7">Wall Art</option>
+                                        <option value="8">Mirrors</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Description</label>
-                                <textarea class="form-control" rows="4" placeholder="Product details..."></textarea>
+                                <textarea class="form-control" id="productDesc" rows="4" placeholder="Product details..."></textarea>
                             </div>
                         </div>
 
@@ -630,9 +647,9 @@
                         <div class="mb-4">
                             <div class="drop-zone">
                                 <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
-                                <p class="mb-1 text-white">Drag & drop product image here</p>
+                                <p class="mb-1 text-white" id="fileNameDisplay">Drag & drop product image here</p>
                                 <p class="small text-muted">or click to browse (Max 2MB)</p>
-                                <input type="file" hidden id="fileInput">
+                                <input type="file" hidden id="fileInput" onchange="updateFileName()">
                             </div>
                         </div>
 
@@ -640,7 +657,7 @@
                         <div class="row g-4 mb-4">
                             <div class="col-md-4">
                                 <label class="form-label">Stock Status</label>
-                                <select class="form-select">
+                                <select class="form-select" id="stockStatus">
                                     <option value="In Stock">In Stock</option>
                                     <option value="Out of Stock">Out of Stock</option>
                                 </select>
@@ -662,7 +679,7 @@
                         <!-- Actions -->
                         <div class="d-flex justify-content-end gap-3 pt-3 border-top border-secondary">
                             <button type="button" class="btn btn-outline-light px-4" onclick="switchView('dashboard', document.querySelectorAll('.menu-link')[0])">Cancel</button>
-                            <button type="submit" class="btn btn-gold px-5">Save Product</button>
+                            <button type="button" class="btn btn-gold px-5" id="saveProductBtn" onclick="addProduct()">Save Product</button>
                         </div>
                     </form>
                 </div>
@@ -951,9 +968,106 @@
         
         // File Upload Trigger
         const dropZone = document.querySelector('.drop-zone');
+        const fileInput = document.getElementById('fileInput');
+        
         if(dropZone) {
             dropZone.addEventListener('click', () => {
-                document.getElementById('fileInput').click();
+                fileInput.click();
+            });
+        }
+
+        function updateFileName() {
+            if(fileInput.files.length > 0) {
+                document.getElementById('fileNameDisplay').innerText = fileInput.files[0].name;
+            }
+        }
+
+        // Add Product Function
+        function addProduct() {
+            // Get Elements
+            const title = document.getElementById('productName');
+            const brand = document.getElementById('productBrand');
+            const category = document.getElementById('productCategory');
+            const desc = document.getElementById('productDesc');
+            const oprice = document.getElementById('originalPrice');
+            const cprice = document.getElementById('currentPrice');
+            const stock = document.getElementById('stockStatus');
+            const luxury = document.getElementById('luxurySwitch');
+            const choice = document.getElementById('choiceSwitch');
+            const imageFile = document.getElementById('fileInput').files[0];
+            const saveBtn = document.getElementById('saveProductBtn');
+
+            // --- STRICT VALIDATION ---
+            if(!title.value.trim()) {
+                alert("Please enter a Product Name.");
+                title.focus();
+                return;
+            }
+            if(brand.value === "0" || brand.value === "") {
+                alert("Please select a Brand.");
+                brand.focus();
+                return;
+            }
+            if(category.value === "0" || category.value === "") {
+                alert("Please select a Category.");
+                category.focus();
+                return;
+            }
+            if(!cprice.value || cprice.value <= 0) {
+                alert("Please enter a valid Current Price.");
+                cprice.focus();
+                return;
+            }
+
+            // Visual Feedback
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+
+            const form = new FormData();
+            form.append("title", title.value);
+            form.append("brand", brand.value);
+            form.append("category", category.value);
+            form.append("desc", desc.value);
+            form.append("oprice", oprice.value);
+            form.append("cprice", cprice.value);
+            form.append("stock", stock.value);
+            form.append("luxury", luxury.checked ? 'true' : 'false');
+            form.append("choice", choice.checked ? 'true' : 'false');
+            form.append("image", imageFile);
+
+            fetch("actions/create-product.php", {
+                method: "POST",
+                body: form
+            })
+            .then(response => response.text())
+            .then(data => {
+                saveBtn.innerHTML = 'Save Product';
+                saveBtn.disabled = false;
+
+                if (data.trim() === "success") {
+                    alert("Product Saved Successfully!");
+                    
+                    // Reset Form
+                    title.value = '';
+                    desc.value = '';
+                    oprice.value = '';
+                    cprice.value = '';
+                    brand.value = '0';
+                    category.value = '0';
+                    document.getElementById('fileInput').value = '';
+                    document.getElementById('fileNameDisplay').innerText = 'Drag & drop product image here';
+                    
+                    // Go to inventory to see it
+                    switchView('inventory'); 
+                } else {
+                    alert("Database Error: " + data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                saveBtn.innerHTML = 'Save Product';
+                saveBtn.disabled = false;
+                alert("A connection error occurred. Check console.");
             });
         }
     </script>
