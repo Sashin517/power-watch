@@ -464,9 +464,9 @@
                 <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Admin" class="rounded-circle" width="40" height="40">
                 <div>
                     <p class="m-0 small fw-bold text-white">Admin User</p>
-                    <p class="m-0 small text-muted">Manager</p>
+                    <p class="m-0 small text">Manager</p>
                 </div>
-                <a href="#" class="ms-auto text-muted hover-gold"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="#" class="ms-auto text hover-gold"><i class="fas fa-sign-out-alt"></i></a>
             </div>
         </div>
     </aside>
@@ -496,7 +496,7 @@
                             <i class="fas fa-coins"></i>
                         </div>
                         <h3 class="h2 fw-bold text-white mb-1">LKR 450k</h3>
-                        <p class="text-muted m-0">Total Sales (This Month)</p>
+                        <p class="text m-0">Total Sales (This Month)</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -505,7 +505,7 @@
                             <i class="fas fa-box"></i>
                         </div>
                         <h3 class="h2 fw-bold text-white mb-1">251</h3>
-                        <p class="text-muted m-0">Total Products</p>
+                        <p class="text m-0">Total Products</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -514,7 +514,7 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <h3 class="h2 fw-bold text-white mb-1">18</h3>
-                        <p class="text-muted m-0">New Orders</p>
+                        <p class="text m-0">New Orders</p>
                     </div>
                 </div>
             </div>
@@ -636,7 +636,7 @@
                             </div>
                             <div class="col-12">
                                 <div class="p-3 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                    <span class="small text-muted">KOKO Installment (Auto-calc)</span>
+                                    <span class="small text">KOKO Installment (Auto-calc)</span>
                                     <span class="fw-bold text-white" id="kokoDisplay">LKR 0.00 x 3</span>
                                 </div>
                             </div>
@@ -646,9 +646,9 @@
                         <h5 class="text-white mb-3">Product Image</h5>
                         <div class="mb-4">
                             <div class="drop-zone">
-                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <i class="fas fa-cloud-upload-alt fa-3x text mb-3"></i>
                                 <p class="mb-1 text-white" id="fileNameDisplay">Drag & drop product image here</p>
-                                <p class="small text-muted">or click to browse (Max 2MB)</p>
+                                <p class="small text">or click to browse (Max 2MB)</p>
                                 <input type="file" hidden id="fileInput" onchange="updateFileName()">
                             </div>
                         </div>
@@ -776,7 +776,7 @@
                         <div class="stat-icon bg-icon-blue mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-clipboard-list"></i></div>
                         <div>
                             <h5 class="m-0 text-white">12</h5>
-                            <small class="text-muted">Pending</small>
+                            <small class="text">Pending</small>
                         </div>
                     </div>
                 </div>
@@ -785,7 +785,7 @@
                         <div class="stat-icon bg-icon-gold mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-box"></i></div>
                         <div>
                             <h5 class="m-0 text-white">5</h5>
-                            <small class="text-muted">Processing</small>
+                            <small class="text">Processing</small>
                         </div>
                     </div>
                 </div>
@@ -794,7 +794,7 @@
                         <div class="stat-icon bg-icon-green mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-truck"></i></div>
                         <div>
                             <h5 class="m-0 text-white">48</h5>
-                            <small class="text-muted">Shipped</small>
+                            <small class="text">Shipped</small>
                         </div>
                     </div>
                 </div>
@@ -803,7 +803,7 @@
                         <div class="stat-icon bg-icon-orange mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-undo"></i></div>
                         <div>
                             <h5 class="m-0 text-white">2</h5>
-                            <small class="text-muted">Returns</small>
+                            <small class="text">Returns</small>
                         </div>
                     </div>
                 </div>
