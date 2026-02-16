@@ -1,6 +1,6 @@
 <?php
 
-require "connection.php";
+require "../../includes/connection.php";
 
 $fname = $_POST["f"];
 $lname = $_POST["l"];

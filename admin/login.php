@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Power Watch</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Sign In - Power Watch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -35,7 +32,7 @@
             overflow-x: hidden;
             background-color: var(--prm-blue);
             color: var(--text-light);
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
 
@@ -68,20 +65,25 @@
             color: #000;
             transform: translateY(-1px);
         }
+        .btn-gold:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
         /* --- Login Section --- */
         .login-section {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             background-image: linear-gradient(rgba(10, 17, 31, 0.85), rgba(10, 17, 31, 0.95)), url('https://images.unsplash.com/photo-1612177344073-78e21244d543?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
+            padding: 2rem 0;
         }
 
         .login-card {
-            background-color: rgba(44, 52, 64, 0.95); /* Semi-transparent dark card */
+            background-color: rgba(44, 52, 64, 0.95);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
             padding: 3rem;
@@ -172,19 +174,43 @@
             color: var(--chp-gold);
         }
 
+        /* Alert Messages */
+        .alert-custom {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .alert-custom.show {
+            display: block;
+        }
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b6b;
+        }
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #51cf66;
+        }
+
+        /* Loading Spinner */
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+
         /* Responsive */
         @media (max-width: 576px) {
             .login-card { padding: 2rem; width: 90%; }
-        }
-        /* --- Responsive Tweaks --- */
-        @media (max-width: 768px) {
-            .brand-logo-img { height: 32px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Login Area -->
     <section class="login-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -192,7 +218,6 @@
                     
                     <div class="login-card">
                         
-                        <!-- Brand Header -->
                         <a href="PowerWatch_eCommerce.html" class="login-brand-logo">
                            <img src="../assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
                         </a>
@@ -202,16 +227,18 @@
                             <p class="text-muted small">Please sign in to your account</p>
                         </div>
 
-                        <form>
+                        <div id="alertMessage" class="alert-custom"></div>
+
+                        <form id="loginForm">
                             <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Email address</label>
+                                <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" required>
+                                <label for="floatingEmail">Email address</label>
                             </div>
-                            <!-- Password Field with Toggle -->
+
                             <div class="form-floating mb-3 position-relative">
-                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" style="padding-right: 45px;">
+                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" style="padding-right: 45px;" required>
                                 <label for="floatingPassword">Password</label>
-                                <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                                <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('floatingPassword', this)"></i>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -224,15 +251,23 @@
                                 <a href="#" class="small text-gold">Forgot password?</a>
                             </div>
 
-                            <button type="submit" class="btn btn-gold mb-3">Sign In</button>
+                            <button type="submit" class="btn btn-gold mb-3" id="loginBtn">
+                                <span id="btnText">Sign In</span>
+                                <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                            </button>
                         </form>
 
                         <div class="divider">OR LOGIN WITH</div>
 
-                        <div class="row">
-                            <div class="col-12">
+                        <div class="row g-2">
+                            <div class="col-6">
                                 <button class="social-login-btn">
                                     <i class="fab fa-google"></i> Google
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="social-login-btn">
+                                    <i class="fab fa-facebook-f"></i> Facebook
                                 </button>
                             </div>
                         </div>
@@ -240,7 +275,7 @@
                         <div class="text-center mt-4">
                             <p class="text small mb-0">
                                 Don't have an account? 
-                                <a href="#" class="text-gold fw-bold ms-2">Sign Up</a>
+                                <a href="signup.php" class="text-gold fw-bold ms-2">Sign Up</a>
                             </p>
                         </div>
                     </div>
@@ -250,20 +285,100 @@
         </div>
     </section>
 
-    <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Password Toggle Script -->
-    <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#floatingPassword');
 
-        togglePassword.addEventListener('click', function (e) {
-            // toggle the type attribute
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            // toggle the eye slash icon
-            this.classList.toggle('fa-eye-slash');
-            this.classList.toggle('fa-eye');
+    <script>
+        // Password Toggle Function (Reused)
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            icon.classList.toggle('fa-eye-slash');
+            icon.classList.toggle('fa-eye');
+        }
+
+        // Show Alert Message (Reused)
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertMessage');
+            alertBox.textContent = message;
+            alertBox.className = 'alert-custom show alert-' + type;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Login Form Submission Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const email = document.getElementById('floatingEmail').value.trim();
+            const password = document.getElementById('floatingPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Client-side validation
+            if (!email) {
+                showAlert('Please enter your Email', 'error');
+                return;
+            }
+
+            if (!password) {
+                showAlert('Please enter your Password', 'error');
+                return;
+            }
+
+            // Show loading state
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            loginBtn.disabled = true;
+            btnText.textContent = 'Verifying...';
+            btnSpinner.style.display = 'inline-block';
+
+            // Create FormData object
+            const formData = new FormData();
+            formData.append('e', email);
+            formData.append('p', password);
+            formData.append('rm', rememberMe ? '1' : '0'); // Sending Remember Me status
+
+            // Send AJAX request to verify-account.php
+            fetch('actions/verify-account.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            // ... inside the fetch().then() block ...
+            .then(data => {
+                // Reset button state
+                loginBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+
+                if (data.trim() === 'success') {
+                    showAlert('Login successful! Redirecting...', 'success');
+                    
+                    // UPDATE: Redirect to dashboard.php
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.php'; 
+                    }, 1000);
+                } else {
+                    // Show error message from PHP
+                    showAlert(data, 'error');
+                }
+            })
+            .catch(error => {
+                // Reset button state on network error
+                loginBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+
+                showAlert('An error occurred connecting to the server.', 'error');
+                console.error('Error:', error);
+            });
         });
     </script>
 </body>
