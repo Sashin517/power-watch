@@ -23,6 +23,8 @@
             --input-bg: #0f1623;
             --success-green: #2ecc71;
             --danger-red: #e74c3c;
+            --info-blue: #3498db;
+            --warning-orange: #f39c12;
         }
 
         body {
@@ -47,8 +49,8 @@
             top: 0;
             left: 0;
             border-right: 1px solid var(--border-color);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            z-index: 1050; /* Higher z-index for mobile overlap */
+            transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
         }
@@ -74,6 +76,7 @@
             padding: 1.5rem 1rem;
             flex-grow: 1;
             list-style: none;
+            overflow-y: auto; /* Allow scrolling within menu if tall */
         }
 
         .menu-item {
@@ -104,13 +107,15 @@
         .sidebar-footer {
             padding: 1.5rem;
             border-top: 1px solid var(--border-color);
+            background-color: var(--sec-blue); /* Ensure opaque background */
         }
 
         /* --- Main Content --- */
         .main-content {
             margin-left: 260px;
             padding: 2rem;
-            transition: margin 0.3s ease;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
         }
 
         /* --- Header --- */
@@ -129,6 +134,9 @@
             border: none;
             color: white;
             font-size: 1.5rem;
+            padding: 0;
+            margin-right: 15px;
+            cursor: pointer;
         }
 
         /* --- Cards --- */
@@ -158,8 +166,9 @@
         }
 
         .bg-icon-gold { background: rgba(212, 175, 55, 0.2); color: var(--chp-gold); }
-        .bg-icon-blue { background: rgba(111, 149, 232, 0.2); color: var(--btn-blue); }
+        .bg-icon-blue { background: rgba(111, 149, 232, 0.2); color: var(--info-blue); }
         .bg-icon-green { background: rgba(46, 204, 113, 0.2); color: var(--success-green); }
+        .bg-icon-orange { background: rgba(243, 156, 18, 0.2); color: var(--warning-orange); }
 
         /* --- Table --- */
         .custom-table-container {
@@ -174,6 +183,7 @@
             --bs-table-color: var(--text-light);
             --bs-table-border-color: var(--border-color);
             margin-bottom: 0;
+            white-space: nowrap; /* Prevent wrapping on small screens for cleaner scroll */
         }
         
         .table-dark-custom th {
@@ -198,8 +208,16 @@
             border-radius: 4px;
             padding: 2px;
         }
+        
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: var(--border-color);
+        }
 
-        /* --- Forms --- */
+        /* --- Forms & Filters --- */
         .form-label {
             color: var(--text-muted);
             font-size: 0.9rem;
@@ -219,6 +237,23 @@
             border-color: var(--chp-gold);
             color: white;
             box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
+        }
+        
+        /* Pagination */
+        .pagination .page-link {
+            background-color: var(--sec-blue);
+            border-color: var(--border-color);
+            color: var(--text-muted);
+        }
+        .pagination .page-link:hover {
+            background-color: var(--input-bg);
+            color: var(--chp-gold);
+            border-color: var(--chp-gold);
+        }
+        .pagination .page-item.active .page-link {
+            background-color: var(--chp-gold);
+            border-color: var(--chp-gold);
+            color: #000;
         }
 
         /* Drag Drop Zone */
@@ -264,6 +299,35 @@
             background-color: var(--chp-gold);
             color: #000;
         }
+        
+        .btn-icon-action {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-icon-action:hover {
+            border-color: var(--chp-gold);
+            color: var(--chp-gold);
+        }
+
+        /* Status Badges */
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        .status-paid, .status-delivered, .status-instock { background-color: rgba(46, 204, 113, 0.15); color: var(--success-green); }
+        .status-pending, .status-processing, .status-lowstock { background-color: rgba(243, 156, 18, 0.15); color: var(--warning-orange); }
+        .status-unpaid, .status-cancelled, .status-outstock { background-color: rgba(231, 76, 60, 0.15); color: var(--danger-red); }
+        .status-shipped { background-color: rgba(52, 152, 219, 0.15); color: var(--info-blue); }
 
         /* Toggles */
         .form-check-input {
@@ -277,20 +341,75 @@
 
         /* Utils */
         .d-none-view { display: none !important; }
+        
+        /* Mobile Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(2px);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
 
+        /* --- RESPONSIVE QUERIES --- */
+        
+        /* Tablet & Mobile (Below 992px) */
         @media (max-width: 992px) {
-            .sidebar { left: -260px; }
-            .sidebar.active { left: 0; }
-            .main-content { margin-left: 0; }
-            .mobile-toggle { display: block; }
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
+            .sidebar {
+                transform: translateX(-100%);
             }
-            .overlay.active { display: block; }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+        }
+
+        /* Mobile (Below 576px) */
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .top-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .top-header .d-flex:last-child { /* Action buttons container */
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .dashboard-card {
+                padding: 1.25rem;
+            }
+            
+            .btn-gold, .btn-outline-gold {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            /* Stack filter bars */
+            .filter-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .filter-bar > * {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -323,17 +442,17 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="#" class="menu-link" onclick="switchView('inventory', this)">
                     <i class="fas fa-box-open"></i> Inventory
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="#" class="menu-link" onclick="switchView('orders', this)">
                     <i class="fas fa-shopping-bag"></i> Orders
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="#" class="menu-link" onclick="switchView('customers', this)">
                     <i class="fas fa-users"></i> Customers
                 </a>
             </li>
@@ -356,13 +475,13 @@
         
         <!-- Header -->
         <header class="top-header">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center">
                 <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <h2 class="h4 m-0 brand-font text-white" id="pageTitle">Overview</h2>
             </div>
             <div class="d-flex gap-3">
-                <button class="btn btn-outline-gold rounded-circle p-2" style="width: 40px; height: 40px;"><i class="fas fa-bell"></i></button>
-                <button class="btn btn-gold">Visit Store <i class="fas fa-external-link-alt ms-2"></i></button>
+                <button class="btn btn-outline-gold rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fas fa-bell"></i></button>
+                <button class="btn btn-gold">Visit Store <i class="fas fa-external-link-alt ms-2 d-none d-sm-inline"></i></button>
             </div>
         </header>
 
@@ -401,7 +520,7 @@
 
             <!-- Recent Products Table -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="text-white m-0">Recent Inventory</h4>
+                <h4 class="text-white m-0 h5">Recent Inventory</h4>
                 <button class="btn btn-sm btn-outline-gold" onclick="switchView('add-product', document.querySelectorAll('.menu-link')[1])">Add New</button>
             </div>
             
@@ -424,10 +543,10 @@
                                 <td>Titan Quartz Analog Blue Dial</td>
                                 <td>Titan</td>
                                 <td>LKR 12,000</td>
-                                <td><span class="badge bg-success">In Stock</span></td>
+                                <td><span class="badge status-instock">In Stock</span></td>
                                 <td>
-                                    <button class="btn btn-sm text-info"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -435,10 +554,10 @@
                                 <td>Silver Mesh Band Watch</td>
                                 <td>Casio</td>
                                 <td>LKR 14,500</td>
-                                <td><span class="badge bg-warning text-dark">Low Stock</span></td>
+                                <td><span class="badge status-lowstock">Low Stock</span></td>
                                 <td>
-                                    <button class="btn btn-sm text-info"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -527,13 +646,13 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-check form-switch mt-4">
+                                <div class="form-check form-switch mt-md-4">
                                     <input class="form-check-input" type="checkbox" id="luxurySwitch">
                                     <label class="form-check-label" for="luxurySwitch">Show in "Luxury Collection"</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-check form-switch mt-4">
+                                <div class="form-check form-switch mt-md-4">
                                     <input class="form-check-input" type="checkbox" id="choiceSwitch">
                                     <label class="form-check-label" for="choiceSwitch">Show in "People's Choice"</label>
                                 </div>
@@ -546,6 +665,223 @@
                             <button type="submit" class="btn btn-gold px-5">Save Product</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Inventory -->
+        <div id="view-inventory" class="d-none-view">
+            <!-- Filter Toolbar -->
+            <div class="dashboard-card mb-4 p-3 filter-bar d-flex justify-content-between align-items-center">
+                <div class="d-flex gap-2 w-100 w-md-auto">
+                    <input type="text" class="form-control" placeholder="Search products...">
+                    <select class="form-select w-auto">
+                        <option>All Categories</option>
+                        <option>Wristwatch</option>
+                        <option>Wall Decor</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-gold"><i class="fas fa-filter"></i> Filter</button>
+                    <button class="btn btn-gold" onclick="switchView('add-product', document.querySelectorAll('.menu-link')[1])"><i class="fas fa-plus"></i> Add Product</button>
+                </div>
+            </div>
+
+            <div class="custom-table-container">
+                <div class="table-responsive">
+                    <table class="table table-dark-custom">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=50&q=80" class="product-thumb">
+                                        <span class="text-white">Titan Quartz Blue</span>
+                                    </div>
+                                </td>
+                                <td>Wristwatch</td>
+                                <td>LKR 12,000</td>
+                                <td>45</td>
+                                <td><span class="badge status-instock">In Stock</span></td>
+                                <td>
+                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <!-- More rows mock -->
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=50&q=80" class="product-thumb">
+                                        <span class="text-white">Titan Black Dial</span>
+                                    </div>
+                                </td>
+                                <td>Wristwatch</td>
+                                <td>LKR 18,000</td>
+                                <td>0</td>
+                                <td><span class="badge status-outstock">Out of Stock</span></td>
+                                <td>
+                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 d-flex justify-content-end border-top border-secondary">
+                    <nav>
+                        <ul class="pagination pagination-sm m-0">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Orders -->
+        <div id="view-orders" class="d-none-view">
+            <!-- Order Status Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="dashboard-card p-3 d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-icon-blue mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-clipboard-list"></i></div>
+                        <div>
+                            <h5 class="m-0 text-white">12</h5>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="dashboard-card p-3 d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-icon-gold mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-box"></i></div>
+                        <div>
+                            <h5 class="m-0 text-white">5</h5>
+                            <small class="text-muted">Processing</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="dashboard-card p-3 d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-icon-green mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-truck"></i></div>
+                        <div>
+                            <h5 class="m-0 text-white">48</h5>
+                            <small class="text-muted">Shipped</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="dashboard-card p-3 d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-icon-orange mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-undo"></i></div>
+                        <div>
+                            <h5 class="m-0 text-white">2</h5>
+                            <small class="text-muted">Returns</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="custom-table-container">
+                <div class="table-responsive">
+                    <table class="table table-dark-custom">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-gold fw-bold">#ORD-2451</td>
+                                <td>Oct 24, 2025</td>
+                                <td>Kamal Perera</td>
+                                <td>LKR 12,000</td>
+                                <td><span class="badge status-paid">Paid</span></td>
+                                <td><span class="badge status-pending">Pending</span></td>
+                                <td><button class="btn btn-sm btn-outline-light">View</button></td>
+                            </tr>
+                            <tr>
+                                <td class="text-gold fw-bold">#ORD-2450</td>
+                                <td>Oct 23, 2025</td>
+                                <td>Nimali Silva</td>
+                                <td>LKR 36,500</td>
+                                <td><span class="badge status-unpaid">COD</span></td>
+                                <td><span class="badge status-shipped">Shipped</span></td>
+                                <td><button class="btn btn-sm btn-outline-light">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Customers -->
+        <div id="view-customers" class="d-none-view">
+            <!-- Search Bar -->
+            <div class="dashboard-card mb-4 p-3 d-flex justify-content-between align-items-center">
+                <input type="text" class="form-control w-100 w-md-50" placeholder="Search customers by name or email...">
+                <button class="btn btn-outline-gold ms-3"><i class="fas fa-file-export"></i> Export</button>
+            </div>
+
+            <div class="custom-table-container">
+                <div class="table-responsive">
+                    <table class="table table-dark-custom">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Orders</th>
+                                <th>Total Spent</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=50&q=80" class="customer-avatar">
+                                        <span class="text-white">Kamal Perera</span>
+                                    </div>
+                                </td>
+                                <td>kamal@gmail.com</td>
+                                <td>5</td>
+                                <td>LKR 45,000</td>
+                                <td><span class="badge status-instock">Active</span></td>
+                                <td><button class="btn-icon-action"><i class="fas fa-ellipsis-v"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=50&q=80" class="customer-avatar">
+                                        <span class="text-white">Nimali Silva</span>
+                                    </div>
+                                </td>
+                                <td>nimali@yahoo.com</td>
+                                <td>2</td>
+                                <td>LKR 36,500</td>
+                                <td><span class="badge status-instock">Active</span></td>
+                                <td><button class="btn-icon-action"><i class="fas fa-ellipsis-v"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -564,8 +900,7 @@
         // View Switcher (SPA feel)
         function switchView(viewId, linkElement) {
             // Hide all views
-            document.getElementById('view-dashboard').classList.add('d-none-view');
-            document.getElementById('view-add-product').classList.add('d-none-view');
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('d-none-view'));
             
             // Show selected view
             document.getElementById('view-' + viewId).classList.remove('d-none-view');
@@ -573,13 +908,18 @@
             // Update Title
             const titles = {
                 'dashboard': 'Overview',
-                'add-product': 'Add New Product'
+                'add-product': 'Add New Product',
+                'inventory': 'Product Inventory',
+                'orders': 'Customer Orders',
+                'customers': 'Customer Management'
             };
-            document.getElementById('pageTitle').innerText = titles[viewId];
+            document.getElementById('pageTitle').innerText = titles[viewId] || 'Dashboard';
 
             // Update Sidebar Active State
-            document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
-            if(linkElement) linkElement.classList.add('active');
+            if(linkElement) {
+                document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
+                linkElement.classList.add('active');
+            }
 
             // Close sidebar on mobile after selection
             if(window.innerWidth < 992) {
@@ -610,9 +950,12 @@
         }
         
         // File Upload Trigger
-        document.querySelector('.drop-zone').addEventListener('click', () => {
-            document.getElementById('fileInput').click();
-        });
+        const dropZone = document.querySelector('.drop-zone');
+        if(dropZone) {
+            dropZone.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+        }
     </script>
 </body>
 </html>
