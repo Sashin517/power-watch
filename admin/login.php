@@ -283,11 +283,10 @@
             const responsePayload = decodeJwtResponse(response.credential);
             const email = responsePayload.email;
 
-            // Prepare Data
+            console.log("Google Email:", email); // Debugging
+
             const formData = new FormData();
             formData.append('e', email);
-            
-            // *** CRITICAL STEP: Add this flag ***
             formData.append('login_method', 'google'); 
 
             // Show UI Loading
@@ -295,24 +294,44 @@
             const btnText = document.getElementById('btnText');
             const btnSpinner = document.getElementById('btnSpinner');
             
-            loginBtn.disabled = true;
-            btnText.textContent = 'Verifying Google Account...';
-            btnSpinner.style.display = 'inline-block';
+            if(loginBtn) {
+                loginBtn.disabled = true;
+                btnText.textContent = 'Verifying Google Account...';
+                btnSpinner.style.display = 'inline-block';
+            }
 
-            // Send to backend
             fetch('actions/verify-account.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.text())
             .then(data => {
-                // ... rest of your success code ...
+                console.log("Server Response:", data); // CRITICAL: Check Console for this!
+
+                // Reset Button
+                if(loginBtn) {
+                    loginBtn.disabled = false;
+                    btnText.textContent = 'Sign In';
+                    btnSpinner.style.display = 'none';
+                }
+
                 if (data.trim() === 'success') {
-                    // ... redirect ...
+                    showAlert('Google Login Successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.php';
+                    }, 1000);
                 } else {
                     showAlert(data, 'error');
-                    // Reset buttons
                 }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+                if(loginBtn) {
+                    loginBtn.disabled = false;
+                    btnText.textContent = 'Sign In';
+                    btnSpinner.style.display = 'none';
+                }
+                showAlert('Connection error. Check console.', 'error');
             });
         }
 
