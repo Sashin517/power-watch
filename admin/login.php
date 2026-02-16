@@ -283,10 +283,12 @@
             const responsePayload = decodeJwtResponse(response.credential);
             const email = responsePayload.email;
 
-            // Prepare Data for Login Backend
+            // Prepare Data
             const formData = new FormData();
             formData.append('e', email);
-            formData.append('login_method', 'google'); // Flag to tell PHP this is a Google Login
+            
+            // *** CRITICAL STEP: Add this flag ***
+            formData.append('login_method', 'google'); 
 
             // Show UI Loading
             const loginBtn = document.getElementById('loginBtn');
@@ -297,31 +299,20 @@
             btnText.textContent = 'Verifying Google Account...';
             btnSpinner.style.display = 'inline-block';
 
-            // Send to verify-account.php
+            // Send to backend
             fetch('actions/verify-account.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.text())
             .then(data => {
-                loginBtn.disabled = false;
-                btnText.textContent = 'Sign In';
-                btnSpinner.style.display = 'none';
-
+                // ... rest of your success code ...
                 if (data.trim() === 'success') {
-                    showAlert('Google Login Successful! Redirecting...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.php';
-                    }, 1000);
+                    // ... redirect ...
                 } else {
                     showAlert(data, 'error');
+                    // Reset buttons
                 }
-            })
-            .catch(error => {
-                loginBtn.disabled = false;
-                btnText.textContent = 'Sign In';
-                btnSpinner.style.display = 'none';
-                showAlert('Error connecting to server.', 'error');
             });
         }
 
