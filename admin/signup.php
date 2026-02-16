@@ -302,18 +302,13 @@
 
                         <div class="divider">OR SIGN UP WITH</div>
 
-                        <div class="row g-2">
-                            <div class="col-6">
+                        <div class="row">
+                            <div class="col-12">
                                 <div id="googleButtonWrapper" class="google-btn-wrapper">
                                     <button class="social-login-btn" id="customGoogleBtn">
                                         <i class="fab fa-google"></i> Google
                                     </button>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <button class="social-login-btn">
-                                    <i class="fab fa-facebook-f"></i> Facebook
-                                </button>
                             </div>
                         </div>
 

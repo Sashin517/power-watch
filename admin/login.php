@@ -7,12 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         :root {
-            /* Palette Extraction (Consistent with Home/Checkout) */
-            --prm-blue: #0A111F; /* Deep Navy */
-            --chp-gold: #D4AF37; /* Gold */
+            /* Palette Extraction */
+            --prm-blue: #0A111F; 
+            --chp-gold: #D4AF37; 
             --chp-gold-hover: #b5952f;
             --btn-blue: #6F95E8; 
             --dark-card-bg: #2c3440; 
@@ -22,10 +23,7 @@
             --text-muted: #adb5bd;
         }
 
-        .brand-logo-img {
-            height: 44px;
-            width: auto;
-        }
+        .brand-logo-img { height: 44px; width: auto; }
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -65,10 +63,7 @@
             color: #000;
             transform: translateY(-1px);
         }
-        .btn-gold:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* --- Login Section --- */
         .login-section {
@@ -106,9 +101,7 @@
             box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.15);
         }
         
-        .form-floating > label {
-            color: #888;
-        }
+        .form-floating > label { color: #888; }
         
         .form-floating > .form-control:focus ~ label,
         .form-floating > .form-control:not(:placeholder-shown) ~ label {
@@ -129,6 +122,7 @@
             gap: 10px;
             width: 100%;
             margin-bottom: 10px;
+            cursor: pointer;
         }
         .social-login-btn:hover {
             background-color: rgba(255,255,255,0.05);
@@ -170,9 +164,7 @@
             color: var(--text-muted);
             z-index: 5;
         }
-        .password-toggle:hover {
-            color: var(--chp-gold);
-        }
+        .password-toggle:hover { color: var(--chp-gold); }
 
         /* Alert Messages */
         .alert-custom {
@@ -182,9 +174,7 @@
             font-size: 0.9rem;
             display: none;
         }
-        .alert-custom.show {
-            display: block;
-        }
+        .alert-custom.show { display: block; }
         .alert-error {
             background-color: rgba(220, 53, 69, 0.2);
             border: 1px solid rgba(220, 53, 69, 0.5);
@@ -197,16 +187,10 @@
         }
 
         /* Loading Spinner */
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
-            border-width: 0.15em;
-        }
+        .spinner-border-sm { width: 1rem; height: 1rem; border-width: 0.15em; }
 
         /* Responsive */
-        @media (max-width: 576px) {
-            .login-card { padding: 2rem; width: 90%; }
-        }
+        @media (max-width: 576px) { .login-card { padding: 2rem; width: 90%; } }
     </style>
 </head>
 <body>
@@ -244,9 +228,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="rememberMe" style="background-color: var(--input-bg); border-color: #555;">
-                                    <label class="form-check-label text small" for="rememberMe">
-                                        Remember me
-                                    </label>
+                                    <label class="form-check-label text small" for="rememberMe">Remember me</label>
                                 </div>
                                 <a href="#" class="small text-gold">Forgot password?</a>
                             </div>
@@ -259,15 +241,10 @@
 
                         <div class="divider">OR LOGIN WITH</div>
 
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <button class="social-login-btn">
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="social-login-btn" id="customGoogleBtn">
                                     <i class="fab fa-google"></i> Google
-                                </button>
-                            </div>
-                            <div class="col-6">
-                                <button class="social-login-btn">
-                                    <i class="fab fa-facebook-f"></i> Facebook
                                 </button>
                             </div>
                         </div>
@@ -288,7 +265,79 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Password Toggle Function (Reused)
+        // --- GOOGLE LOGIN INTEGRATION ---
+        
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "YOUR_GOOGLE_CLIENT_ID_HERE", // PASTE YOUR CLIENT ID
+                callback: handleGoogleResponse
+            });
+
+            const googleBtn = document.getElementById("customGoogleBtn");
+            googleBtn.onclick = function() {
+                google.accounts.id.prompt();
+            }
+        };
+
+        function handleGoogleResponse(response) {
+            const responsePayload = decodeJwtResponse(response.credential);
+            const email = responsePayload.email;
+
+            // Prepare Data for Login Backend
+            const formData = new FormData();
+            formData.append('e', email);
+            formData.append('login_method', 'google'); // Flag to tell PHP this is a Google Login
+
+            // Show UI Loading
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            loginBtn.disabled = true;
+            btnText.textContent = 'Verifying Google Account...';
+            btnSpinner.style.display = 'inline-block';
+
+            // Send to verify-account.php
+            fetch('actions/verify-account.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                loginBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+
+                if (data.trim() === 'success') {
+                    showAlert('Google Login Successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.php';
+                    }, 1000);
+                } else {
+                    showAlert(data, 'error');
+                }
+            })
+            .catch(error => {
+                loginBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+                showAlert('Error connecting to server.', 'error');
+            });
+        }
+
+        // Helper to decode JWT
+        function decodeJwtResponse(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+        // --- END GOOGLE INTEGRATION ---
+
+
+        // Password Toggle Function
         function togglePasswordVisibility(inputId, icon) {
             const input = document.getElementById(inputId);
             const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -298,39 +347,25 @@
             icon.classList.toggle('fa-eye');
         }
 
-        // Show Alert Message (Reused)
+        // Show Alert Message
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertMessage');
             alertBox.textContent = message;
             alertBox.className = 'alert-custom show alert-' + type;
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-                alertBox.classList.remove('show');
-            }, 5000);
+            setTimeout(() => { alertBox.classList.remove('show'); }, 5000);
         }
 
-        // Login Form Submission Handler
+        // Standard Email/Pass Login
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Get form values
             const email = document.getElementById('floatingEmail').value.trim();
             const password = document.getElementById('floatingPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
 
-            // Client-side validation
-            if (!email) {
-                showAlert('Please enter your Email', 'error');
-                return;
-            }
+            if (!email) { showAlert('Please enter your Email', 'error'); return; }
+            if (!password) { showAlert('Please enter your Password', 'error'); return; }
 
-            if (!password) {
-                showAlert('Please enter your Password', 'error');
-                return;
-            }
-
-            // Show loading state
             const loginBtn = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
             const btnSpinner = document.getElementById('btnSpinner');
@@ -339,45 +374,34 @@
             btnText.textContent = 'Verifying...';
             btnSpinner.style.display = 'inline-block';
 
-            // Create FormData object
             const formData = new FormData();
             formData.append('e', email);
             formData.append('p', password);
-            formData.append('rm', rememberMe ? '1' : '0'); // Sending Remember Me status
+            formData.append('rm', rememberMe ? '1' : '0');
+            formData.append('login_method', 'standard'); // Flag for standard login
 
-            // Send AJAX request to verify-account.php
             fetch('actions/verify-account.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.text())
-            // ... inside the fetch().then() block ...
             .then(data => {
-                // Reset button state
                 loginBtn.disabled = false;
                 btnText.textContent = 'Sign In';
                 btnSpinner.style.display = 'none';
 
                 if (data.trim() === 'success') {
                     showAlert('Login successful! Redirecting...', 'success');
-                    
-                    // UPDATE: Redirect to dashboard.php
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.php'; 
-                    }, 1000);
+                    setTimeout(() => { window.location.href = 'dashboard.php'; }, 1000);
                 } else {
-                    // Show error message from PHP
                     showAlert(data, 'error');
                 }
             })
             .catch(error => {
-                // Reset button state on network error
                 loginBtn.disabled = false;
                 btnText.textContent = 'Sign In';
                 btnSpinner.style.display = 'none';
-
                 showAlert('An error occurred connecting to the server.', 'error');
-                console.error('Error:', error);
             });
         });
     </script>
