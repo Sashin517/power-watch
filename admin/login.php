@@ -23,7 +23,10 @@
             --text-muted: #adb5bd;
         }
 
-        .brand-logo-img { height: 44px; width: auto; }
+        .brand-logo-img {
+            max-height: 44px;
+            width: 100%;
+        }
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -202,7 +205,7 @@
                     
                     <div class="login-card">
                         
-                        <a href="PowerWatch_eCommerce.html" class="login-brand-logo">
+                        <a href="../index.php" class="login-brand-logo">
                            <img src="../assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
                         </a>
 

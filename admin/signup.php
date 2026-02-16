@@ -24,8 +24,8 @@
         }
 
         .brand-logo-img {
-            height: 44px;
-            width: auto;
+            max-height: 44px;
+            width: 100%;
         }
 
         body {
@@ -241,7 +241,7 @@
                     
                     <div class="login-card">
                         
-                        <a href="PowerWatch_eCommerce.html" class="login-brand-logo">
+                        <a href="../index.php" class="login-brand-logo">
                            <img src="../assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
                         </a>
 
