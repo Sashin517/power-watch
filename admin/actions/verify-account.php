@@ -57,6 +57,7 @@ if ($login_method === "google") {
                 setcookie("email", "", -1);
                 setcookie("password", "", -1);
             }
+
             echo ("success");
         } else {
             echo ("Your account has been deactivated.");

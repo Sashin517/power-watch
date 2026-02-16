@@ -1,3 +1,14 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["u"])){
+        // Not logged in? Send them back to signin.php
+        header("Location: signin.php");
+        exit();
+    }
+
+    $user_data = $_SESSION["u"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -363,6 +374,26 @@
             opacity: 1;
         }
 
+        /* --- Custom Toast Styles --- */
+        .toast {
+            background-color: var(--sec-blue); /* Your Sidebar Color */
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            min-width: 300px;
+        }
+
+        /* Success Type */
+        .toast.toast-success {
+            border-left: 4px solid var(--success-green);
+        }
+        .toast.toast-success i { color: var(--success-green); }
+
+        /* Error Type */
+        .toast.toast-error {
+            border-left: 4px solid var(--danger-red);
+        }
+        .toast.toast-error i { color: var(--danger-red); }
         /* --- RESPONSIVE QUERIES --- */
         
         /* Tablet & Mobile (Below 992px) */
@@ -426,7 +457,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="#" class="sidebar-brand">
+            <a href="../index.php" class="sidebar-brand">
                 <img src="../assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
             </a>
         </div>
@@ -463,8 +494,8 @@
             <div class="d-flex align-items-center gap-3">
                 <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Admin" class="rounded-circle" width="40" height="40">
                 <div>
-                    <p class="m-0 small fw-bold text-white">Admin User</p>
-                    <p class="m-0 small text">Manager</p>
+                    <p class="m-0 small fw-bold text-white"><?php echo $user_data["fname"]; ?></p>
+                    <p class="m-0 small text">Admin</p>
                 </div>
                 <a href="#" class="ms-auto text hover-gold"><i class="fas fa-sign-out-alt"></i></a>
             </div>
@@ -656,22 +687,26 @@
                         <!-- Toggles -->
                         <div class="row g-4 mb-4">
                             <div class="col-md-4">
-                                <label class="form-label">Stock Status</label>
-                                <select class="form-select" id="stockStatus">
-                                    <option value="In Stock">In Stock</option>
-                                    <option value="Out of Stock">Out of Stock</option>
-                                </select>
+                                <label class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="stockQty" placeholder="0" min="0" oninput="updateStockStatus()">
                             </div>
+
                             <div class="col-md-4">
-                                <div class="form-check form-switch mt-md-4">
-                                    <input class="form-check-input" type="checkbox" id="luxurySwitch">
-                                    <label class="form-check-label" for="luxurySwitch">Show in "Luxury Collection"</label>
-                                </div>
+                                <label class="form-label">Stock Status (Auto)</label>
+                                <input type="text" class="form-control" id="stockStatus" value="Out of Stock" readonly 
+                                    style="background-color: var(--sec-blue); color: var(--danger-red); font-weight: 600; border: 1px solid var(--border-color);">
                             </div>
+
                             <div class="col-md-4">
-                                <div class="form-check form-switch mt-md-4">
-                                    <input class="form-check-input" type="checkbox" id="choiceSwitch">
-                                    <label class="form-check-label" for="choiceSwitch">Show in "People's Choice"</label>
+                                <div class="d-flex flex-column gap-3 mt-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="luxurySwitch">
+                                        <label class="form-check-label" for="luxurySwitch">Show in "Luxury Collection"</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="choiceSwitch">
+                                        <label class="form-check-label" for="choiceSwitch">Show in "People's Choice"</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -905,6 +940,18 @@
 
     </main>
 
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100;">
+        <div id="liveToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i id="toastIcon" class="fas fa-check-circle fa-lg"></i>
+                    <div id="toastMessage" class="fw-semibold">Hello, world!</div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -982,7 +1029,48 @@
             }
         }
 
-        // Add Product Function
+        // --- NEW: Auto-update Stock Status based on Quantity ---
+        function updateStockStatus() {
+            const qtyInput = document.getElementById('stockQty');
+            const statusInput = document.getElementById('stockStatus');
+            const qty = parseInt(qtyInput.value) || 0; // Default to 0 if empty
+
+            if (qty > 0) {
+                statusInput.value = "In Stock";
+                statusInput.style.color = "var(--success-green)"; // Green text
+            } else {
+                statusInput.value = "Out of Stock";
+                statusInput.style.color = "var(--danger-red)"; // Red text
+            }
+        }
+
+        // --- Notification Helper ---
+        function showNotification(message, type = 'success') {
+            const toastEl = document.getElementById('liveToast');
+            const toastBody = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            // Set Message
+            toastBody.textContent = message;
+
+            // Reset Classes
+            toastEl.className = 'toast align-items-center border-0'; // Base classes
+            
+            // Apply Type Styling
+            if (type === 'success') {
+                toastEl.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle fa-lg';
+            } else if (type === 'error') {
+                toastEl.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle fa-lg';
+            }
+
+            // Initialize and Show Bootstrap Toast
+            const toast = new bootstrap.Toast(toastEl, { delay: 4000 }); // 4 seconds
+            toast.show();
+        }
+
+        // --- UPDATED: Add Product Function ---
         function addProduct() {
             // Get Elements
             const title = document.getElementById('productName');
@@ -991,32 +1079,27 @@
             const desc = document.getElementById('productDesc');
             const oprice = document.getElementById('originalPrice');
             const cprice = document.getElementById('currentPrice');
-            const stock = document.getElementById('stockStatus');
+            
+            // NEW: Get Quantity and Status
+            const qty = document.getElementById('stockQty'); 
+            const stockStatus = document.getElementById('stockStatus');
+
             const luxury = document.getElementById('luxurySwitch');
             const choice = document.getElementById('choiceSwitch');
             const imageFile = document.getElementById('fileInput').files[0];
             const saveBtn = document.getElementById('saveProductBtn');
 
             // --- STRICT VALIDATION ---
-            if(!title.value.trim()) {
-                alert("Please enter a Product Name.");
-                title.focus();
-                return;
-            }
-            if(brand.value === "0" || brand.value === "") {
-                alert("Please select a Brand.");
-                brand.focus();
-                return;
-            }
-            if(category.value === "0" || category.value === "") {
-                alert("Please select a Category.");
-                category.focus();
-                return;
-            }
-            if(!cprice.value || cprice.value <= 0) {
-                alert("Please enter a valid Current Price.");
-                cprice.focus();
-                return;
+            if(!title.value.trim()) { showNotification("Error: Product name is required.", "error"); title.focus(); return; }
+            if(brand.value === "0" || brand.value === "") { showNotification("Error: Please select a Brand.", "error"); brand.focus(); return; }
+            if(category.value === "0" || category.value === "") { showNotification("Error: Please select a Category.", "error"); category.focus(); return; }
+            if(!cprice.value || cprice.value <= 0) { showNotification("Error: Please enter a valid Current Price.", "error"); cprice.focus(); return; }
+            
+            // Validate Quantity
+            if(qty.value === "" || parseInt(qty.value) < 0) { 
+                showNotification("Error: Please enter a valid Stock Quantity.", "error");
+                qty.focus(); 
+                return; 
             }
 
             // Visual Feedback
@@ -1030,7 +1113,11 @@
             form.append("desc", desc.value);
             form.append("oprice", oprice.value);
             form.append("cprice", cprice.value);
-            form.append("stock", stock.value);
+            
+            // SEND NEW DATA
+            form.append("qty", qty.value); // Send the number
+            form.append("stock_status", stockStatus.value); // Send the string (In Stock/Out of Stock)
+
             form.append("luxury", luxury.checked ? 'true' : 'false');
             form.append("choice", choice.checked ? 'true' : 'false');
             form.append("image", imageFile);
@@ -1045,29 +1132,39 @@
                 saveBtn.disabled = false;
 
                 if (data.trim() === "success") {
-                    alert("Product Saved Successfully!");
-                    
+                    // REPLACE THIS: alert("Product Saved Successfully!");
+                    // WITH THIS:
+                    showNotification("Product saved successfully!", "success");
+
                     // Reset Form
                     title.value = '';
                     desc.value = '';
                     oprice.value = '';
                     cprice.value = '';
+                    qty.value = '';
+                    updateStockStatus();
                     brand.value = '0';
                     category.value = '0';
                     document.getElementById('fileInput').value = '';
                     document.getElementById('fileNameDisplay').innerText = 'Drag & drop product image here';
                     
-                    // Go to inventory to see it
-                    switchView('inventory'); 
+                    // Optional: Wait 1 sec before switching view so user sees the success message
+                    setTimeout(() => { switchView('inventory'); }, 1000); 
+
                 } else {
-                    alert("Database Error: " + data);
+                    // REPLACE THIS: alert("Database Error: " + data);
+                    // WITH THIS:
+                    showNotification("Error: " + data, "error");
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 saveBtn.innerHTML = 'Save Product';
                 saveBtn.disabled = false;
-                alert("A connection error occurred. Check console.");
+                
+                // REPLACE THIS: alert("Connection error...");
+                // WITH THIS:
+                showNotification("Connection error. Check console.", "error");
             });
         }
     </script>

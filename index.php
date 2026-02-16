@@ -1315,7 +1315,7 @@
     <!-- The Luxury Collection -->
     <section class="py-5" style="background-color: var(--cream-bg);">
         <div class="container">
-            <h2 class="section-title text-uppercase">The Luxury Collection</h2>
+            <h2 class="section-title text-uppercase">The Premium Collection</h2>
             
             <div id="luxuryCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -1577,7 +1577,7 @@
     <!-- People's Choice -->
     <section class="py-5" style="background-color: var(--prm-blue); color: white;">
         <div class="container">
-            <h2 class="section-title text-uppercase text-white">People's Choice</h2>
+            <h2 class="section-title text-uppercase text-white">Popular Choice</h2>
             
             <div id="peoplesChoiceCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
