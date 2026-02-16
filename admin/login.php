@@ -269,7 +269,7 @@
         
         window.onload = function () {
             google.accounts.id.initialize({
-                client_id: "YOUR_GOOGLE_CLIENT_ID_HERE", // PASTE YOUR CLIENT ID
+                client_id: "732695935170-8s2r15mbnobiek7rd2e7j8d7i99hnjc5.apps.googleusercontent.com", // PASTE YOUR CLIENT ID
                 callback: handleGoogleResponse
             });
 
