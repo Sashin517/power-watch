@@ -1220,7 +1220,7 @@
             const statusInput = document.getElementById('stockStatus');
             const qty = parseInt(qtyInput.value) || 0; // Default to 0 if empty
 
-            if (qty < 10) {
+            if (qty > 0 && qty < 10) {
                 statusInput.value = "Low Stock";
                 statusInput.style.color = "var(--warning-orange)"; // Yellow text
             }else if (qty > 9) {
