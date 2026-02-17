@@ -224,6 +224,10 @@
             border-radius: 4px;
             padding: 2px;
         }
+
+        .text-muted{
+            color: var(--text-muted) !important;
+        }
         
         .customer-avatar {
             width: 40px;
@@ -231,6 +235,17 @@
             object-fit: cover;
             border-radius: 50%;
             background-color: var(--border-color);
+        }
+
+        /* Placeholder color */
+        .form-control::placeholder {
+            color: var(--text-muted); /* #adb5bd — matches your muted text color */
+            opacity: 1;               /* Firefox reduces opacity by default, this fixes it */
+        }
+
+        .form-select::placeholder {
+            color: var(--text-muted);
+            opacity: 1;
         }
 
         /* --- Forms & Filters --- */
@@ -716,7 +731,7 @@
                                 <input type="text" class="form-control" id="discountDisplay" placeholder="0%" readonly style="background-color: #2d3748; color: var(--chp-gold);">
                             </div>
                             <div class="col-12">
-                                <div class="p-3 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="p-3 rounded bg-dark border border-secondary d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                                     <span class="small text">KOKO Installment (Auto-calc)</span>
                                     <span class="fw-bold text-white" id="kokoDisplay">LKR 0.00 x 3</span>
                                 </div>
