@@ -3,7 +3,7 @@
 
     if(!isset($_SESSION["u"])){
         // Not logged in? Send them back to signin.php
-        header("Location: signin.php");
+        header("Location: login.php");
         exit();
     }
 
@@ -285,6 +285,56 @@
         .drop-zone:hover {
             border-color: var(--chp-gold);
             background-color: rgba(212, 175, 55, 0.05);
+        }
+
+        /* New Image Preview Grid */
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+        }
+        
+        .preview-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            transition: 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
         }
 
         /* Buttons */
@@ -674,13 +724,28 @@
                         </div>
 
                         <!-- Images -->
-                        <h5 class="text-white mb-3">Product Image</h5>
+                        <h5 class="text-white mb-3">Product Images <small class="text-muted fs-6">(Max 4)</small></h5>
                         <div class="mb-4">
-                            <div class="drop-zone">
-                                <i class="fas fa-cloud-upload-alt fa-3x text mb-3"></i>
-                                <p class="mb-1 text-white" id="fileNameDisplay">Drag & drop product image here</p>
-                                <p class="small text">or click to browse (Max 2MB)</p>
-                                <input type="file" hidden id="fileInput" onchange="updateFileName()">
+                            <!-- Drop Zone -->
+                            <div class="drop-zone" id="dropZoneContainer">
+                                <i class="fas fa-images fa-3x text-muted mb-3"></i>
+                                <p class="mb-1 text-white">Drag & drop product images here</p>
+                                <p class="small text-muted">or click to browse (JPG, PNG, WEBP)</p>
+                            </div>
+                            <!-- Allow multiple file selection -->
+                            <input type="file" hidden id="fileInput" accept="image/*" multiple onchange="handleFileSelect(this)">
+
+                            <!-- Progress Bar -->
+                            <div id="uploadProgressBarContainer" class="mt-3 d-none">
+                                <div class="progress" style="height: 5px; background-color: var(--sec-blue);">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%; background-color: var(--chp-gold);" id="uploadProgressBar"></div>
+                                </div>
+                                <small class="text-muted mt-1 d-block text-end" id="progressText">Processing...</small>
+                            </div>
+
+                            <!-- Image Preview Grid -->
+                            <div id="imagePreviewGrid" class="image-preview-grid">
+                                <!-- Dynamic Items will be added here -->
                             </div>
                         </div>
 
@@ -955,6 +1020,9 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Global array to store selected files
+        let selectedFiles = [];
+
         // Sidebar Toggle
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -1016,26 +1084,131 @@
         // File Upload Trigger
         const dropZone = document.querySelector('.drop-zone');
         const fileInput = document.getElementById('fileInput');
-        
+
         if(dropZone) {
-            dropZone.addEventListener('click', () => {
-                fileInput.click();
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--chp-gold)';
+                dropZone.style.backgroundColor = 'rgba(212, 175, 55, 0.05)';
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border-color)';
+                dropZone.style.backgroundColor = 'rgba(255,255,255,0.02)';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border-color)';
+                dropZone.style.backgroundColor = 'rgba(255,255,255,0.02)';
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                }
             });
         }
 
-        function updateFileName() {
-            if(fileInput.files.length > 0) {
-                document.getElementById('fileNameDisplay').innerText = fileInput.files[0].name;
+        // Handle Input Change
+        function handleFileSelect(input) {
+            if (input.files && input.files.length > 0) {
+                handleFiles(input.files);
             }
         }
 
-        // --- NEW: Auto-update Stock Status based on Quantity ---
+        // Process Files
+        function handleFiles(files) {
+            const progressContainer = document.getElementById('uploadProgressBarContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const progressText = document.getElementById('progressText');
+            
+            // Limit total files to 4
+            if (selectedFiles.length + files.length > 4) {
+                showNotification("Maximum 4 images allowed.", "error");
+                return;
+            }
+
+            progressContainer.classList.remove('d-none');
+            let processedCount = 0;
+
+            Array.from(files).forEach(file => {
+                // Basic type validation
+                if(!file.type.startsWith('image/')){
+                    showNotification("Only image files are allowed.", "error");
+                    return;
+                }
+
+                selectedFiles.push(file);
+                
+                // Simulate read progress
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    renderPreview(e.target.result, selectedFiles.length - 1); // Pass index
+                    
+                    processedCount++;
+                    const progress = (processedCount / files.length) * 100;
+                    progressBar.style.width = progress + '%';
+                    progressText.innerText = Math.round(progress) + '%';
+
+                    if(processedCount === files.length) {
+                        setTimeout(() => {
+                            progressContainer.classList.add('d-none');
+                            progressBar.style.width = '0%';
+                        }, 500);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Render Preview
+        function renderPreview(src, index) {
+            const grid = document.getElementById('imagePreviewGrid');
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.id = `preview-${index}`;
+            div.innerHTML = `
+                <img src="${src}" alt="Product Image">
+                <button type="button" class="remove-btn" onclick="removeImage(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            grid.appendChild(div);
+        }
+
+        // Remove Image
+        function removeImage(indexToRemove) {
+            // Remove from array
+            selectedFiles.splice(indexToRemove, 1);
+            
+            // Clear Grid and Re-render all
+            const grid = document.getElementById('imagePreviewGrid');
+            grid.innerHTML = '';
+            
+            selectedFiles.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    renderPreview(e.target.result, idx);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Clear the actual input value so change event fires if same file selected again
+            document.getElementById('fileInput').value = '';
+        }
+
+        // --- UPDATED: Auto-update Stock Status based on Quantity ---
         function updateStockStatus() {
             const qtyInput = document.getElementById('stockQty');
             const statusInput = document.getElementById('stockStatus');
             const qty = parseInt(qtyInput.value) || 0; // Default to 0 if empty
 
-            if (qty > 0) {
+            if (qty < 10) {
+                statusInput.value = "Low Stock";
+                statusInput.style.color = "var(--warning-orange)"; // Yellow text
+            }else if (qty > 9) {
                 statusInput.value = "In Stock";
                 statusInput.style.color = "var(--success-green)"; // Green text
             } else {
@@ -1086,7 +1259,6 @@
 
             const luxury = document.getElementById('luxurySwitch');
             const choice = document.getElementById('choiceSwitch');
-            const imageFile = document.getElementById('fileInput').files[0];
             const saveBtn = document.getElementById('saveProductBtn');
 
             // --- STRICT VALIDATION ---
@@ -1100,6 +1272,12 @@
                 showNotification("Error: Please enter a valid Stock Quantity.", "error");
                 qty.focus(); 
                 return; 
+            }
+            
+            // Validate Images
+            if (selectedFiles.length === 0) {
+                showNotification("Please upload at least one image.", "error");
+                return;
             }
 
             // Visual Feedback
@@ -1115,12 +1293,15 @@
             form.append("cprice", cprice.value);
             
             // SEND NEW DATA
-            form.append("qty", qty.value); // Send the number
-            form.append("stock_status", stockStatus.value); // Send the string (In Stock/Out of Stock)
+            form.append("qty", qty.value); // Send the numberic quantity to the server
 
             form.append("luxury", luxury.checked ? 'true' : 'false');
             form.append("choice", choice.checked ? 'true' : 'false');
-            form.append("image", imageFile);
+            
+            // Append Multiple Images
+            selectedFiles.forEach((file, index) => {
+                form.append("images[]", file); // Note the [] for PHP array
+            });
 
             fetch("actions/create-product.php", {
                 method: "POST",
@@ -1132,8 +1313,6 @@
                 saveBtn.disabled = false;
 
                 if (data.trim() === "success") {
-                    // REPLACE THIS: alert("Product Saved Successfully!");
-                    // WITH THIS:
                     showNotification("Product saved successfully!", "success");
 
                     // Reset Form
@@ -1145,15 +1324,15 @@
                     updateStockStatus();
                     brand.value = '0';
                     category.value = '0';
-                    document.getElementById('fileInput').value = '';
-                    document.getElementById('fileNameDisplay').innerText = 'Drag & drop product image here';
                     
-                    // Optional: Wait 1 sec before switching view so user sees the success message
+                    // Reset Images
+                    selectedFiles = [];
+                    document.getElementById('imagePreviewGrid').innerHTML = '';
+                    document.getElementById('fileInput').value = '';
+                    
                     setTimeout(() => { switchView('inventory'); }, 1000); 
 
                 } else {
-                    // REPLACE THIS: alert("Database Error: " + data);
-                    // WITH THIS:
                     showNotification("Error: " + data, "error");
                 }
             })
@@ -1161,9 +1340,6 @@
                 console.error('Error:', error);
                 saveBtn.innerHTML = 'Save Product';
                 saveBtn.disabled = false;
-                
-                // REPLACE THIS: alert("Connection error...");
-                // WITH THIS:
                 showNotification("Connection error. Check console.", "error");
             });
         }
