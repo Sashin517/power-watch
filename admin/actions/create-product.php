@@ -38,9 +38,9 @@ try {
     // stock_count matches the HTML form name 'qty', schema name 'stock_count'
     // image_path defaults here, will update later if images are uploaded
     $query = "INSERT INTO `products` 
-    (`product_name`, `description`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_status`, `is_luxury`, `is_peoples_choice`) 
+    (`product_name`, `description`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_count`, `is_luxury`, `is_peoples_choice`) 
     VALUES 
-    ('".$product_name."', '".$description."', '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."', 'In Stock', '".$is_luxury."', '".$is_peoples_choice."')";
+    ('".$product_name."', '".$description."', '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."','".$stock_count."', '".$is_luxury."', '".$is_peoples_choice."')";
 
     Database::iud($query);
     
