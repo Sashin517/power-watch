@@ -620,8 +620,8 @@
                 <h4 class="text-white m-0 h5">Recent Inventory</h4>
                 <button class="btn btn-sm btn-outline-gold" onclick="switchView('add-product', document.querySelectorAll('.menu-link')[1])">Add New</button>
             </div>
-            
-            <div class="custom-table-container">
+
+<div class="custom-table-container">
                 <div class="table-responsive">
                     <table class="table table-dark-custom">
                         <thead>
@@ -634,30 +634,14 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=50&q=80" class="product-thumb"></td>
-                                <td>Titan Quartz Analog Blue Dial</td>
-                                <td>Titan</td>
-                                <td>LKR 12,000</td>
-                                <td><span class="badge status-instock">In Stock</span></td>
-                                <td>
-                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=50&q=80" class="product-thumb"></td>
-                                <td>Silver Mesh Band Watch</td>
-                                <td>Casio</td>
-                                <td>LKR 14,500</td>
-                                <td><span class="badge status-lowstock">Low Stock</span></td>
-                                <td>
-                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
+                            <tbody id="recentProductsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
+                                        <span class="ms-2 text-muted">Loading inventory...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -667,8 +651,10 @@
         <div id="view-add-product" class="d-none-view">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <form class="dashboard-card p-4">
-                        <h4 class="text-gold mb-4 border-bottom border-secondary pb-3">Add New Product</h4>
+                    <form class="dashboard-card p-4" id="productForm">
+                        <h4 id="formTitle" class="text-gold mb-4 border-bottom border-secondary pb-3">Add New Product</h4>
+                        
+                        <input type="hidden" id="editProductId" value="">
                         
                         <!-- Basic Info -->
                         <div class="row g-4 mb-4">
@@ -1032,7 +1018,25 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Toast Notification Function -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: var(--sec-blue); border: 1px solid var(--border-color);">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-white" id="deleteConfirmModalLabel"><i class="fas fa-exclamation-triangle text-danger me-2"></i> Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-muted pt-3">
+                    Are you sure you want to delete <strong id="deleteProductName" class="text-white">this product</strong>? This action cannot be undone.
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Global array to store selected files
@@ -1073,6 +1077,185 @@
                 toggleSidebar();
             }
         }
+
+        // Product Data Retrieval Logic
+        let allProducts = [];
+
+        // Fetch data when the page loads (Make sure you delete the duplicate call at the bottom of your script!)
+        document.addEventListener('DOMContentLoaded', () => {
+            getProductsData();
+        });
+
+        async function getProductsData() {
+            const url = 'actions/products-data.php';
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Safely extract and reverse the array without mutating original data
+                let parsedData = Array.isArray(data) ? [...data] : Object.values(data);
+                allProducts = parsedData.reverse();
+
+                renderRecentProducts(allProducts);
+
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+                const tbody = document.getElementById('recentProductsTableBody');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center text-danger py-4">Failed to load products. Please try again later.</td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+
+        // Global variables to store the product being deleted
+        let productIdToDelete = null;
+        let deleteModalInstance = null;
+
+        function deleteProduct(id, name) {
+            productIdToDelete = id;
+            
+            // Set the product name in the modal text
+            document.getElementById('deleteProductName').innerText = name || "this product";
+            
+            // Initialize and show the modal
+            if (!deleteModalInstance) {
+                deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            }
+            deleteModalInstance.show();
+        }
+
+        // Attach event listener to the confirm button inside the modal
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (!productIdToDelete) return;
+
+            // Change button state
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            btn.disabled = true;
+
+            const form = new FormData();
+            form.append("id", productIdToDelete);
+
+            fetch("actions/delete-product.php", {
+                method: "POST",
+                body: form
+            })
+            .then(response => response.text())
+            .then(data => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                deleteModalInstance.hide(); // Hide modal
+
+                if (data.trim() === "success") {
+                    showNotification("Product deleted successfully!", "success");
+                    // Refresh the table data!
+                    getProductsData(); 
+                } else {
+                    showNotification("Error: " + data, "error");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                deleteModalInstance.hide();
+                showNotification("Connection error. Check console.", "error");
+            });
+        });
+
+        // Render recent products into the table
+        function renderRecentProducts(products) {
+            const tbody = document.getElementById('recentProductsTableBody');
+            if (!tbody) return;
+
+            // Clear existing rows (removes the loading spinner)
+            tbody.innerHTML = ''; 
+
+            if (!products || products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="fa-solid fa-box-open mb-3" style="font-size: 32px; color: #555;"></i>
+                            <h5>No products found</h5>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Slice the array to only show the 5 most recent products on the overview dashboard
+            const recentProducts = products.slice(0, 5);
+
+            recentProducts.forEach(product => {
+                // Safely handle missing nested pricing data to prevent JS crashes
+                const currentPrice = product.pricing?.current_price || 0;
+                
+                const formattedPrice = new Intl.NumberFormat('en-LK', {
+                    style: 'currency',
+                    currency: 'LKR',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(currentPrice);
+
+                // Safely handle inventory status
+                let badgeClass = '';
+                const status = product.inventory?.stock_status || 'Unknown';
+                
+                if (status === 'In Stock') {
+                    badgeClass = 'bg-success text-white'; 
+                } else if (status === 'Low Stock') {
+                    badgeClass = 'bg-warning text-dark';  
+                } else {
+                    badgeClass = 'bg-danger text-white';  
+                }
+
+                // Handle image path safely
+                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
+                
+                // Safely handle brand name
+                const brandName = product.brand?.name || 'N/A';
+
+                // Added "this.onerror=null;" to prevent infinite image loading loops if the default image is also missing
+                const trHtml = `
+                    <tr>
+                        <td>
+                            <img src="${imgPath}" 
+                                 class="product-thumb" 
+                                 alt="${product.name}" 
+                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
+                                 onerror="this.onerror=null; this.src='../assets/images/products/default.png'">
+                        </td>
+                        <td>${product.name}</td>
+                        <td>${brandName}</td>
+                        <td>${formattedPrice}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                        <td>
+                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
+        // Product Data Retrieval Logic End
+    
 
         // Pricing Logic
         function calculateDiscount() {
@@ -1258,102 +1441,150 @@
             toast.show();
         }
 
-        // --- UPDATED: Add Product Function ---
+// Helper function to select dropdown options by text (since your JSON returns text for category)
+        function setSelectByText(selectId, text) {
+            const select = document.getElementById(selectId);
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].text === text) {
+                    select.selectedIndex = i;
+                    return;
+                }
+            }
+        }
+
+        // --- EDIT PRODUCT LOGIC ---
+        function editProduct(id) {
+            // Find the product data from our globally fetched array
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            // 1. Set Hidden ID and Titles
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('formTitle').innerText = 'Edit Product: ' + product.name;
+            document.getElementById('saveProductBtn').innerText = 'Update Product';
+
+            // 2. Populate text inputs
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDesc').value = product.description;
+            document.getElementById('originalPrice').value = product.pricing.original_price;
+            document.getElementById('currentPrice').value = product.pricing.current_price;
+            document.getElementById('stockQty').value = product.inventory.stock_count;
+
+            // 3. Populate Selects (Dropdowns)
+            document.getElementById('productBrand').value = product.brand.id;
+            setSelectByText('productCategory', product.sub_category);
+
+            // 4. Populate Toggles
+            document.getElementById('luxurySwitch').checked = product.is_luxury;
+            document.getElementById('choiceSwitch').checked = product.is_peoples_choice;
+
+            // 5. Trigger automatic calculations
+            calculateDiscount();
+            updateStockStatus();
+
+            // 6. Switch to the form view
+            switchView('add-product');
+            
+            showNotification("Editing mode enabled. Uploading new images will replace old ones.", "success");
+        }
+
+        // --- RESET FORM LOGIC ---
+        function resetProductForm() {
+            document.getElementById('editProductId').value = '';
+            document.getElementById('formTitle').innerText = 'Add New Product';
+            document.getElementById('saveProductBtn').innerText = 'Save Product';
+            
+            document.getElementById('productName').value = '';
+            document.getElementById('productDesc').value = '';
+            document.getElementById('originalPrice').value = '';
+            document.getElementById('currentPrice').value = '';
+            document.getElementById('stockQty').value = '';
+            document.getElementById('productBrand').value = '0';
+            document.getElementById('productCategory').value = '0';
+            document.getElementById('luxurySwitch').checked = false;
+            document.getElementById('choiceSwitch').checked = false;
+            
+            selectedFiles = [];
+            document.getElementById('imagePreviewGrid').innerHTML = '';
+            document.getElementById('fileInput').value = '';
+            
+            calculateDiscount();
+            updateStockStatus();
+        }
+
+        // --- UPDATED SAVE/UPDATE LOGIC ---
+        // (Replace your existing addProduct function with this one)
         function addProduct() {
-            // Get Elements
+            const editId = document.getElementById('editProductId').value;
             const title = document.getElementById('productName');
             const brand = document.getElementById('productBrand');
             const category = document.getElementById('productCategory');
             const desc = document.getElementById('productDesc');
             const oprice = document.getElementById('originalPrice');
             const cprice = document.getElementById('currentPrice');
-            
-            // NEW: Get Quantity and Status
             const qty = document.getElementById('stockQty'); 
-            const stockStatus = document.getElementById('stockStatus');
-
             const luxury = document.getElementById('luxurySwitch');
             const choice = document.getElementById('choiceSwitch');
             const saveBtn = document.getElementById('saveProductBtn');
 
-            // --- STRICT VALIDATION ---
+            // Validation
             if(!title.value.trim()) { showNotification("Error: Product name is required.", "error"); title.focus(); return; }
             if(brand.value === "0" || brand.value === "") { showNotification("Error: Please select a Brand.", "error"); brand.focus(); return; }
             if(category.value === "0" || category.value === "") { showNotification("Error: Please select a Category.", "error"); category.focus(); return; }
             if(!cprice.value || cprice.value <= 0) { showNotification("Error: Please enter a valid Current Price.", "error"); cprice.focus(); return; }
+            if(qty.value === "" || parseInt(qty.value) < 0) { showNotification("Error: Please enter a valid Stock Quantity.", "error"); qty.focus(); return; }
             
-            // Validate Quantity
-            if(qty.value === "" || parseInt(qty.value) < 0) { 
-                showNotification("Error: Please enter a valid Stock Quantity.", "error");
-                qty.focus(); 
-                return; 
-            }
-            
-            // Validate Images
-            if (selectedFiles.length === 0) {
+            // Require images ONLY if we are adding a NEW product
+            if (!editId && selectedFiles.length === 0) {
                 showNotification("Please upload at least one image.", "error");
                 return;
             }
 
-            // Visual Feedback
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             saveBtn.disabled = true;
 
             const form = new FormData();
+            // If editId has a value, send it so the PHP knows to UPDATE instead of INSERT
+            if (editId) form.append("id", editId); 
+            
             form.append("title", title.value);
             form.append("brand", brand.value);
             form.append("category", category.value);
             form.append("desc", desc.value);
             form.append("oprice", oprice.value);
             form.append("cprice", cprice.value);
-            
-            // SEND NEW DATA
-            form.append("qty", qty.value); // Send the numberic quantity to the server
-
+            form.append("qty", qty.value);
             form.append("luxury", luxury.checked ? 'true' : 'false');
             form.append("choice", choice.checked ? 'true' : 'false');
             
-            // Append Multiple Images
-            selectedFiles.forEach((file, index) => {
-                form.append("images[]", file); // Note the [] for PHP array
+            selectedFiles.forEach((file) => {
+                form.append("images[]", file);
             });
 
-            fetch("actions/create-product.php", {
+            // Determine which PHP file to hit
+            const targetUrl = editId ? "actions/edit-product.php" : "actions/create-product.php";
+
+            fetch(targetUrl, {
                 method: "POST",
                 body: form
             })
             .then(response => response.text())
             .then(data => {
-                saveBtn.innerHTML = 'Save Product';
+                saveBtn.innerHTML = editId ? 'Update Product' : 'Save Product';
                 saveBtn.disabled = false;
 
                 if (data.trim() === "success") {
-                    showNotification("Product saved successfully!", "success");
-
-                    // Reset Form
-                    title.value = '';
-                    desc.value = '';
-                    oprice.value = '';
-                    cprice.value = '';
-                    qty.value = '';
-                    updateStockStatus();
-                    brand.value = '0';
-                    category.value = '0';
-                    
-                    // Reset Images
-                    selectedFiles = [];
-                    document.getElementById('imagePreviewGrid').innerHTML = '';
-                    document.getElementById('fileInput').value = '';
-                    
+                    showNotification(editId ? "Product updated successfully!" : "Product saved successfully!", "success");
+                    resetProductForm();
+                    getProductsData(); // Refresh the table data
                     setTimeout(() => { switchView('inventory'); }, 1000); 
-
                 } else {
                     showNotification("Error: " + data, "error");
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                saveBtn.innerHTML = 'Save Product';
+                saveBtn.innerHTML = editId ? 'Update Product' : 'Save Product';
                 saveBtn.disabled = false;
                 showNotification("Connection error. Check console.", "error");
             });
