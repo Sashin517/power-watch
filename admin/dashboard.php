@@ -1441,7 +1441,7 @@
             toast.show();
         }
 
-// Helper function to select dropdown options by text (since your JSON returns text for category)
+        // Helper function to select dropdown options by text (since your JSON returns text for category)
         function setSelectByText(selectId, text) {
             const select = document.getElementById(selectId);
             for (let i = 0; i < select.options.length; i++) {
