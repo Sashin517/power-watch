@@ -57,7 +57,7 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     // Additional headers
-    $headers .= "From: Power Watch Security <security@powerwatch.com>" . "\r\n";
+    $headers .= "From: Power Watch Security <admin@sldevs.web.lk>" . "\r\n";
 
     // Send email (Suppressed with @ to prevent UI errors if mail server isn't configured locally)
     @mail($user_email, $subject, $message, $headers);
