@@ -819,38 +819,11 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="inventoryTableBody">
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=50&q=80" class="product-thumb">
-                                        <span class="text-white">Titan Quartz Blue</span>
-                                    </div>
-                                </td>
-                                <td>Wristwatch</td>
-                                <td>LKR 12,000</td>
-                                <td>45</td>
-                                <td><span class="badge status-instock">In Stock</span></td>
-                                <td>
-                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <!-- More rows mock -->
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=50&q=80" class="product-thumb">
-                                        <span class="text-white">Titan Black Dial</span>
-                                    </div>
-                                </td>
-                                <td>Wristwatch</td>
-                                <td>LKR 18,000</td>
-                                <td>0</td>
-                                <td><span class="badge status-outstock">Out of Stock</span></td>
-                                <td>
-                                    <button class="btn-icon-action me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-icon-action text-danger border-danger"><i class="fas fa-trash"></i></button>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
+                                    <span class="ms-2 text-muted">Loading inventory...</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -1104,6 +1077,7 @@
                 allProducts = parsedData.reverse();
 
                 renderRecentProducts(allProducts);
+                renderInventoryProducts(allProducts);
 
             } catch (error) {
                 console.error('Failed to fetch products:', error);
@@ -1256,6 +1230,70 @@
             });
         }
         // Product Data Retrieval Logic End
+
+        // Render ALL products into the Inventory table
+        function renderInventoryProducts(products) {
+            const tbody = document.getElementById('inventoryTableBody');
+            if (!tbody) return;
+
+            // Clear existing rows
+            tbody.innerHTML = ''; 
+
+            if (!products || products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="fa-solid fa-box-open mb-3" style="font-size: 32px; color: #555;"></i>
+                            <h5>No products found in inventory</h5>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            products.forEach(product => {
+                const currentPrice = product.pricing?.current_price || 0;
+                const formattedPrice = new Intl.NumberFormat('en-LK', {
+                    style: 'currency', currency: 'LKR', minimumFractionDigits: 0, maximumFractionDigits: 0
+                }).format(currentPrice);
+
+                let badgeClass = '';
+                const status = product.inventory?.stock_status || 'Unknown';
+                
+                if (status === 'In Stock') { badgeClass = 'bg-success text-white'; } 
+                else if (status === 'Low Stock') { badgeClass = 'bg-warning text-dark'; } 
+                else { badgeClass = 'bg-danger text-white'; }
+
+                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
+                const brandName = product.brand?.name || 'N/A';
+
+                const trHtml = `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="${imgPath}" class="product-thumb" alt="${product.name}" 
+                                     style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"
+                                     onerror="this.onerror=null; this.src='../assets/images/products/default.png'">
+                                <span class="text-white">${product.name}</span>
+                            </div>
+                        </td>
+                        <td>${product.category || 'N/A'}</td>
+                        <td>${formattedPrice}</td>
+                        <td>${product.inventory?.stock_count || 0}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                        <td>
+                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
     
 
         // Pricing Logic
@@ -1578,7 +1616,11 @@
                     showNotification(editId ? "Product updated successfully!" : "Product saved successfully!", "success");
                     resetProductForm();
                     getProductsData(); // Refresh the table data
-                    setTimeout(() => { switchView('inventory'); }, 1000); 
+                    
+                    // Add the DOM element targeting the 3rd link [index 2] ("Inventory") to update sidebar
+                    setTimeout(() => { 
+                        switchView('inventory', document.querySelectorAll('.menu-link')[2]); 
+                    }, 1000); 
                 } else {
                     showNotification("Error: " + data, "error");
                 }
