@@ -675,6 +675,7 @@
                                     <option value="7">Citizen</option>
                                     <option value="8">Police</option>
                                     <option value="9">Aviator</option>
+                                    <option value="10">Not specified</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
