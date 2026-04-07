@@ -428,7 +428,7 @@ $product = [
                 <div class="d-flex gap-3 align-items-center">
                     <a href="#" class="text-white"><i class="fas fa-search"></i></a>
                     <a href="#" class="text-white"><i class="fas fa-user"></i></a>
-                    <a href="checkout.php" class="text-white cart-icon-wrapper">
+                    <a href="#" class="text-white cart-icon-wrapper" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-badge" id="cartBadge">0</span>
                     </a>
@@ -656,6 +656,58 @@ $product = [
             </div>
         </div>
     </footer>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--chp-gold);">
+        <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+            <h5 class="offcanvas-title text-white font-oswald text-uppercase" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px;">
+                <i class="fas fa-shopping-bag text-gold me-2"></i> Your Cart
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        
+        <div class="offcanvas-body d-flex flex-column p-0">
+            <div id="sideCartItems" class="flex-grow-1 overflow-auto p-3">
+                </div>
+
+            <div class="p-3" style="background-color: var(--dark-grey);">
+                <h6 class="text-white mb-3" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Recommended Add-ons</h6>
+                
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-box-open text-gold fs-4"></i>
+                        <div>
+                            <p class="m-0 text-white" style="font-size: 0.8rem;">Premium Gift Box</p>
+                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 1,500</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Premium Gift Box', 1500)" style="font-size: 0.7rem;">Add</button>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-shield-alt text-gold fs-4"></i>
+                        <div>
+                            <p class="m-0 text-white" style="font-size: 0.8rem;">+1 Year Ext. Warranty</p>
+                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 2,500</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Extended Warranty', 2500)" style="font-size: 0.7rem;">Add</button>
+                </div>
+            </div>
+
+            <div class="p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important; background-color: var(--prm-blue);">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Subtotal</span>
+                    <span class="text-white fw-bold fs-5" id="sideCartTotal">LKR 0.00</span>
+                </div>
+                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold" style="letter-spacing: 1px;">
+                    Proceed to Checkout <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+                <button class="btn btn-link text-muted w-100 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/cart.js"></script>

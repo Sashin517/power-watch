@@ -108,47 +108,75 @@ const cart = new ShoppingCart();
 /**
  * Show toast notification
  */
-function showCartToast(message, type = 'success') {
-    // Remove existing toast
-    const existing = document.getElementById('cartToast');
-    if (existing) existing.remove();
+// Function to re-render the side cart UI
+function renderSideCart() {
+    const cartContainer = document.getElementById('sideCartItems');
+    const totalEl = document.getElementById('sideCartTotal');
+    if(!cartContainer) return;
 
-    const toastHtml = `
-        <div id="cartToast" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999; margin-top: 80px;">
-            <div class="toast show align-items-center border-0 ${type === 'success' ? 'bg-success' : 'bg-danger'}" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body text-white d-flex align-items-center gap-3">
-                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} fa-lg"></i>
-                        <div class="flex-grow-1">
-                            <div class="fw-semibold mb-1">${message}</div>
-                            <div class="d-flex gap-2 mt-2">
-                                <button onclick="window.location.href='checkout.php'" class="btn btn-sm btn-light">
-                                    <i class="fas fa-shopping-cart me-1"></i> Checkout
-                                </button>
-                                <button onclick="document.getElementById('cartToast').remove()" class="btn btn-sm btn-outline-light">
-                                    Continue Shopping
-                                </button>
-                            </div>
+    const items = cart.getItems();
+    cartContainer.innerHTML = '';
+
+    if (items.length === 0) {
+        cartContainer.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart text-muted mb-3" style="font-size: 3rem;"></i>
+                <p class="text-muted">Your cart is empty.</p>
+            </div>`;
+        totalEl.innerText = 'LKR 0.00';
+        return;
+    }
+
+    items.forEach((item, index) => {
+        cartContainer.innerHTML += `
+            <div class="d-flex align-items-center mb-3 pb-3 border-bottom" style="border-color: rgba(255,255,255,0.05) !important;">
+                <img src="${item.image}" style="width: 60px; height: 60px; object-fit: contain; background: white; border-radius: 6px; padding: 2px;">
+                <div class="ms-3 flex-grow-1">
+                    <p class="text-white mb-1" style="font-size: 0.85rem; line-height: 1.2;">${item.name}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="text-gold fw-bold" style="font-size: 0.9rem;">${cart.formatCurrency(item.price)}</span>
+                        <div class="d-flex align-items-center" style="background: var(--dark-grey); border-radius: 4px;">
+                            <button class="btn btn-sm text-white px-2 py-0" onclick="cart.updateQuantity(${index}, ${item.quantity - 1}); renderSideCart();">-</button>
+                            <span class="text-white px-2" style="font-size: 0.8rem;">${item.quantity}</span>
+                            <button class="btn btn-sm text-white px-2 py-0" onclick="cart.updateQuantity(${index}, ${item.quantity + 1}); renderSideCart();">+</button>
                         </div>
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="document.getElementById('cartToast').remove()"></button>
                 </div>
-            </div>
-        </div>
-    `;
+            </div>`;
+    });
 
-    document.body.insertAdjacentHTML('beforeend', toastHtml);
-
-    // Auto-remove after 8 seconds
-    setTimeout(() => {
-        const toast = document.getElementById('cartToast');
-        if (toast) {
-            toast.style.transition = 'opacity 0.3s';
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }
-    }, 8000);
+    totalEl.innerText = cart.formatCurrency(cart.getSubtotal());
 }
+
+// Override addToCart to update Side Panel instead of Toast
+function addToCart(productData) {
+    cart.addItem(productData);
+    renderSideCart();
+    
+    // Show Offcanvas if it's not already open
+    const cartCanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
+    cartCanvas.show();
+}
+
+// Function for Addons
+function addAddonToCart(addonName, price) {
+    const addonData = {
+        id: 'ADDON_' + addonName.replace(/\s+/g, ''),
+        name: addonName,
+        price: price,
+        image: 'assets/images/brand-logos/logo5.png', // Use brand logo as placeholder for addons
+        quantity: 1,
+        options: { Type: 'Service/Extra' }
+    };
+    cart.addItem(addonData);
+    renderSideCart();
+}
+
+// Update cart on page load
+document.addEventListener('DOMContentLoaded', () => {
+    cart.updateCartBadge();
+    renderSideCart();
+});
 
 /**
  * Add to cart button handler

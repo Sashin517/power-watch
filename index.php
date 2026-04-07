@@ -1194,7 +1194,8 @@
                     <button class="btn btn-link" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
-                    <button class="btn btn-link position-relative" aria-label="Shopping Cart">
+                    
+                    <button class="btn btn-link position-relative" aria-label="Shopping Cart" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             3
@@ -1318,239 +1319,8 @@
             <h2 class="section-title text-uppercase">The Premium Collection</h2>
             
             <div id="luxuryCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    
-                    <!-- Slide 1 (Group of 4) -->
-                    <div class="carousel-item active">
-                        <div class="row g-3">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Silver Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 4,833.33 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Black Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 6,000.00 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Gold Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 7,333.33 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Gold Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 7,333.33 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Gold Dial Metal Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 7,333.33 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 2 -->
-                    <div class="carousel-item">
-                        <div class="row g-3">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-20% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1622434641406-a15810545064?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Sport Edition Chronograph</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 20,000</span>
-                                                    <span class="price">LKR 16,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 5,333.33 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-10% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1587836374615-91d3b6c88a9c?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Casio Edifice Premium Steel Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 22,500</span>
-                                                    <span class="price">LKR 20,250</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 6,750.00 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-25% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Seiko Automatic Diver's Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 30,000</span>
-                                                    <span class="price">LKR 22,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 7,500.00 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Fossil Minimalist Rose Gold Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 17,000</span>
-                                                    <span class="price">LKR 14,450</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 4,816.67 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-gold btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="carousel-inner" id="luxuryCarouselInner">
+                    <div class="text-center py-5"><div class="spinner-border text-gold" role="status"></div></div>
                 </div>
                 <!-- Controls -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#luxuryCarousel" data-bs-slide="prev">
@@ -1580,275 +1350,8 @@
             <h2 class="section-title text-uppercase text-white">Popular Choice</h2>
             
             <div id="peoplesChoiceCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row g-4">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Silver Mesh Band Analog Watch</h5>
-                                        <div class="price-row">
-                                            <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                            </div>
-                                            <i class="fa-solid fa-eye eye-icon"></i>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Gold Plated Classic Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Classic Leather Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row g-4">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Silver Mesh Band Analog Watch</h5>
-                                        <div class="price-row">
-                                            <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                            </div>
-                                            <i class="fa-solid fa-eye eye-icon"></i>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Gold Plated Classic Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Classic Leather Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="carousel-inner" id="peoplesChoiceCarouselInner">
+                    <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#peoplesChoiceCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -1878,275 +1381,16 @@
             <h2 class="section-title text-uppercase text-white">Favorite Brands</h2>
             
             <!-- Tabs -->
-            <div class="d-flex justify-content-center gap-2 mb-4">
-                <button class="btn btn-light rounded-pill px-4">Casio</button>
-                <button class="btn btn-outline-light rounded-pill px-4">Titan</button>
-                <button class="btn btn-outline-light rounded-pill px-4">Casio</button>
+            <div class="d-flex justify-content-center gap-2 mb-4" id="brandTabs">
+                <button class="btn btn-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Casio'); updateActiveTab(this);">Casio</button>
+                <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Titan'); updateActiveTab(this);">Titan</button>
+                <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Seiko'); updateActiveTab(this);">Seiko</button>
             </div>
 
             <!-- Carousel Grid (similar to Luxury Collection) -->
             <div id="favoriteBrandsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row g-3">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row g-3">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-blue btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="carousel-inner" id="favoriteBrandsCarouselInner">
+                    <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
                 <!-- Controls -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#favoriteBrandsCarousel" data-bs-slide="prev">
@@ -2169,7 +1413,7 @@
         <div class="container">
             <div class="banner-content">
                 <h2 class="text-uppercase fw-bold mb-3" style="font-size: 2.5rem;">Decorate Your Home</h2>
-                <p class="fs-5">Not just a clock, it can decorate you whole time</p>
+                <p class="fs-5">Statement pieces that transform your living space</p>
             </div>
         </div>
     </section>
@@ -2180,283 +1424,15 @@
             <h2 class="section-title text-uppercase text-white">Elevate Your Style</h2>
             
             <div id="wallClockCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row g-4">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Silver Mesh Band Analog Watch</h5>
-                                        <div class="price-row">
-                                            <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                            </div>
-                                            <i class="fa-solid fa-eye eye-icon"></i>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Gold Plated Classic Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Classic Leather Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row g-4">
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Silver Mesh Band Analog Watch</h5>
-                                        <div class="price-row">
-                                            <div class="price-container">
-                                                    <span class="original-price">LKR 14,120</span>
-                                                    <span class="price">LKR 12,000</span>
-                                            </div>
-                                            <i class="fa-solid fa-eye eye-icon"></i>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Gold Plated Classic Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Classic Leather Strap Watch</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2">
-                                <div class="product-card">
-                                    <div class="card-img-wrapper">
-                                        <div class="discount-badge">-15% OFF</div>
-                                        <img src="https://images.unsplash.com/photo-1614164185128-e4899ea2b789?auto=format&fit=crop&w=400&q=80" class="product-img" alt="Watch">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Titan Quartz Analog Blue Dial</h5>
-                                        <div class="price-section">
-                                            <div class="price-row">
-                                                <div class="price-container">
-                                                    <span class="original-price">LKR 18,125</span>
-                                                    <span class="price">LKR 14,500</span>
-                                                </div>
-                                                <i class="fa-solid fa-eye eye-icon"></i>
-                                            </div>
-                                        </div>
-                                        <p class="installment-text">or pay in 3 x Rs 3,316.66 with <span class="koko-brand">KOKO</span></p>
-                                        <button class="btn btn-brown btn-card">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Controls -->
-                    <button class="carousel-control-prev" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    </button>
+                <div class="carousel-inner" id="wallClockCarouselInner">
+                    <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
             </div>
              <!-- Dots indicator -->
              <div class="text-center mt-3">
@@ -2515,7 +1491,200 @@
             </div>
         </div>
     </footer>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--chp-gold);">
+    <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+        <h5 class="offcanvas-title text-white font-oswald text-uppercase" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px;">
+            <i class="fas fa-shopping-bag text-gold me-2"></i> Your Cart
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    
+        <div class="offcanvas-body d-flex flex-column p-0">
+            <div id="sideCartItems" class="flex-grow-1 overflow-auto p-3">
+                </div>
 
+            <div class="p-3" style="background-color: var(--dark-grey);">
+                <h6 class="text-white mb-3" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Recommended Add-ons</h6>
+                
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-box-open text-gold fs-4"></i>
+                        <div>
+                            <p class="m-0 text-white" style="font-size: 0.8rem;">Premium Gift Box</p>
+                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 1,500</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Premium Gift Box', 1500)" style="font-size: 0.7rem;">Add</button>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-shield-alt text-gold fs-4"></i>
+                        <div>
+                            <p class="m-0 text-white" style="font-size: 0.8rem;">+1 Year Ext. Warranty</p>
+                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 2,500</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Extended Warranty', 2500)" style="font-size: 0.7rem;">Add</button>
+                </div>
+            </div>
+
+            <div class="p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important; background-color: var(--prm-blue);">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Subtotal</span>
+                    <span class="text-white fw-bold fs-5" id="sideCartTotal">LKR 0.00</span>
+                </div>
+                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold" style="letter-spacing: 1px;">
+                    Proceed to Checkout <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+                <button class="btn btn-link text-muted w-100 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="js/cart.js"></script>
+    <script>
+        function updateActiveTab(clickedBtn) {
+            // Remove active styling from all tabs
+            document.querySelectorAll('.brand-tab').forEach(btn => {
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-outline-light');
+            });
+            // Add active styling to clicked tab
+            clickedBtn.classList.remove('btn-outline-light');
+            clickedBtn.classList.add('btn-light');
+        }
+    </script>
+    <script>
+        // Global variable to store all products for brand filtering
+        let globalProducts = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Fetch data from your PHP endpoint
+                const response = await fetch('admin/actions/products-data.php');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                globalProducts = await response.json();
+                
+                // 1. Filter for Luxury Collection (is_luxury == true)
+                const luxuryProducts = globalProducts.filter(p => p.is_luxury === true);
+                renderCarouselGrid(luxuryProducts, 'luxuryCarouselInner', 'btn-gold');
+                
+                // 2. Filter for People's Choice (is_peoples_choice == true)
+                const popularProducts = globalProducts.filter(p => p.is_peoples_choice === true);
+                renderCarouselGrid(popularProducts, 'peoplesChoiceCarouselInner', 'btn-blue');
+
+                // 3. Filter for Wall Decor (Category Name === 'Wall Decor')
+                const wallDecorProducts = globalProducts.filter(p => p.category === 'Wall Decor');
+                renderCarouselGrid(wallDecorProducts, 'wallClockCarouselInner', 'btn-brown');
+
+                // 4. Initial load for Favorite Brands (Default to 'Casio')
+                filterByBrand('Casio');
+
+            } catch (error) {
+                console.error("Failed to load products:", error);
+                document.getElementById('luxuryCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
+                document.getElementById('peoplesChoiceCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
+                document.getElementById('favoriteBrandsCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
+                document.getElementById('wallClockCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
+            }
+        });
+
+        // Function to filter the bottom section by Brand Name
+        function filterByBrand(brandName) {
+            const brandProducts = globalProducts.filter(p => p.brand && p.brand.name.toLowerCase() === brandName.toLowerCase());
+            renderCarouselGrid(brandProducts, 'favoriteBrandsCarouselInner', 'btn-brown');
+        }
+
+        // The Master Function that builds the HTML
+        function renderCarouselGrid(products, containerId, btnClass) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+
+            if (products.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-5">No products found in this category.</div>';
+                return;
+            }
+
+            let html = '';
+            const itemsPerSlide = 6; // Desktop shows 6 items per row (col-lg-2)
+
+            // Loop through products in chunks of 6
+            for (let i = 0; i < products.length; i += itemsPerSlide) {
+                const chunk = products.slice(i, i + itemsPerSlide);
+                const isActive = i === 0 ? 'active' : '';
+                
+                html += `<div class="carousel-item ${isActive}"><div class="row g-3">`;
+                
+                chunk.forEach(p => {
+                    // Format Prices
+                    const currentPrice = new Intl.NumberFormat('en-LK').format(p.pricing.current_price);
+                    const kokoInstallment = new Intl.NumberFormat('en-LK').format(p.pricing.koko_installment);
+                    
+                    // Handle Discount Badge & Old Price
+                    let oldPriceHtml = '';
+                    let badgeHtml = '';
+                    if (p.pricing.discount_percent > 0) {
+                        const originalPrice = new Intl.NumberFormat('en-LK').format(p.pricing.original_price);
+                        oldPriceHtml = `<span class="original-price">LKR ${originalPrice}</span>`;
+                        badgeHtml = `<div class="discount-badge">-${p.pricing.discount_percent}% OFF</div>`;
+                    }
+
+                    // Handle Image
+                    const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
+
+                    // Ensure safe string passing to JS functions
+                    const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                    // Build Card HTML
+                    html += `
+                    <div class="col-6 col-lg-2">
+                        <div class="product-card">
+                            <div class="card-img-wrapper" style="cursor:pointer;" onclick="window.location.href='product-page.php?id=${p.id}'">
+                                ${badgeHtml}
+                                <img src="${img}" class="product-img" alt="${safeName}" onerror="this.onerror=null; this.src='assets/images/products/default.png'">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title" style="cursor:pointer;" onclick="window.location.href='product-page.php?id=${p.id}'">${p.name}</h5>
+                                <div class="price-section">
+                                    <div class="price-row">
+                                        <div class="price-container">
+                                            ${oldPriceHtml}
+                                            <span class="price">LKR ${currentPrice}</span>
+                                        </div>
+                                        <i class="fa-solid fa-eye eye-icon" onclick="window.location.href='product-page.php?id=${p.id}'"></i>
+                                    </div>
+                                </div>
+                                <p class="installment-text">or pay in 3 x Rs ${kokoInstallment} with <span class="koko-brand">KOKO</span></p>
+                                <button class="btn ${btnClass} btn-card" onclick="quickAddToCart(${p.id}, '${safeName}', ${p.pricing.current_price}, '${img}')">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                
+                html += `</div></div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Quick Add to Cart from Home Page
+        function quickAddToCart(id, name, price, img) {
+            const productData = { 
+                id: id, 
+                name: name, 
+                price: parseFloat(price), 
+                image: img, 
+                quantity: 1,
+                options: { Type: 'Standard' } 
+            };
+            
+            // This calls the function inside your cart.js
+            addToCart(productData); 
+        }
+    </script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
