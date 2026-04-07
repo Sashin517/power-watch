@@ -2,7 +2,6 @@
     session_start();
 
     if(!isset($_SESSION["u"])){
-        // Not logged in? Send them back to signin.php
         header("Location: login.php");
         exit();
     }
@@ -15,18 +14,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Power Watch</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --prm-blue: #0A111F; /* Deep Navy Main BG */
-            --sec-blue: #151f32; /* Sidebar/Card BG */
-            --chp-gold: #D4AF37; /* Gold Accent */
+            --prm-blue: #0A111F;
+            --sec-blue: #151f32;
+            --chp-gold: #D4AF37;
             --chp-gold-hover: #b5952f;
             --text-light: #f8f9fa;
             --text-muted: #adb5bd;
@@ -65,7 +61,7 @@
             top: 0;
             left: 0;
             border-right: 1px solid var(--border-color);
-            z-index: 1050; /* Higher z-index for mobile overlap */
+            z-index: 1050;
             transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -92,7 +88,7 @@
             padding: 1.5rem 1rem;
             flex-grow: 1;
             list-style: none;
-            overflow-y: auto; /* Allow scrolling within menu if tall */
+            overflow-y: auto;
         }
 
         .menu-item {
@@ -123,7 +119,7 @@
         .sidebar-footer {
             padding: 1.5rem;
             border-top: 1px solid var(--border-color);
-            background-color: var(--sec-blue); /* Ensure opaque background */
+            background-color: var(--sec-blue);
         }
 
         /* --- Main Content --- */
@@ -199,7 +195,7 @@
             --bs-table-color: var(--text-light);
             --bs-table-border-color: var(--border-color);
             margin-bottom: 0;
-            white-space: nowrap; /* Prevent wrapping on small screens for cleaner scroll */
+            white-space: nowrap;
         }
         
         .table-dark-custom th {
@@ -239,8 +235,8 @@
 
         /* Placeholder color */
         .form-control::placeholder {
-            color: var(--text-muted); /* #adb5bd — matches your muted text color */
-            opacity: 1;               /* Firefox reduces opacity by default, this fixes it */
+            color: var(--text-muted);
+            opacity: 1;
         }
 
         .form-select::placeholder {
@@ -287,6 +283,46 @@
             color: #000;
         }
 
+        /* Search Dropdown */
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .search-result-item img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            background: white;
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        .search-no-results {
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .search-no-results i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
         /* Drag Drop Zone */
         .drop-zone {
             border: 2px dashed var(--border-color);
@@ -302,7 +338,7 @@
             background-color: rgba(212, 175, 55, 0.05);
         }
 
-        /* New Image Preview Grid */
+        /* Image Preview Grid */
         .image-preview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -313,7 +349,7 @@
         .preview-item {
             position: relative;
             width: 100%;
-            padding-top: 100%; /* 1:1 Aspect Ratio */
+            padding-top: 100%;
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -420,7 +456,6 @@
             border-color: var(--chp-gold);
         }
 
-        /* Utils */
         .d-none-view { display: none !important; }
         
         /* Mobile Overlay */
@@ -439,84 +474,47 @@
             opacity: 1;
         }
 
-        /* --- Custom Toast Styles --- */
+        /* Toast */
         .toast {
-            background-color: var(--sec-blue); /* Your Sidebar Color */
+            background-color: var(--sec-blue);
             color: var(--text-light);
             border: 1px solid var(--border-color);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             min-width: 300px;
         }
-
-        /* Success Type */
-        .toast.toast-success {
-            border-left: 4px solid var(--success-green);
-        }
+        .toast.toast-success { border-left: 4px solid var(--success-green); }
         .toast.toast-success i { color: var(--success-green); }
-
-        /* Error Type */
-        .toast.toast-error {
-            border-left: 4px solid var(--danger-red);
-        }
+        .toast.toast-error { border-left: 4px solid var(--danger-red); }
         .toast.toast-error i { color: var(--danger-red); }
-        /* --- RESPONSIVE QUERIES --- */
-        
-        /* Tablet & Mobile (Below 992px) */
+
+        /* --- RESPONSIVE --- */
         @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .mobile-toggle {
-                display: block;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .mobile-toggle { display: block; }
         }
 
-        /* Mobile (Below 576px) */
         @media (max-width: 576px) {
-            .main-content {
-                padding: 1rem;
-            }
-            
+            .main-content { padding: 1rem; }
             .top-header {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 1rem;
             }
-            
-            .top-header .d-flex:last-child { /* Action buttons container */
+            .top-header .d-flex:last-child {
                 justify-content: space-between;
                 width: 100%;
             }
-            
-            .dashboard-card {
-                padding: 1.25rem;
-            }
-            
-            .btn-gold, .btn-outline-gold {
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-            
-            /* Stack filter bars */
-            .filter-bar {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .filter-bar > * {
-                width: 100%;
-            }
+            .dashboard-card { padding: 1.25rem; }
+            .btn-gold, .btn-outline-gold { padding: 8px 16px; font-size: 0.9rem; }
+            .filter-bar { flex-direction: column; gap: 10px; }
+            .filter-bar > * { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Mobile Overlay -->
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <!-- Sidebar -->
@@ -560,9 +558,9 @@
                 <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Admin" class="rounded-circle" width="40" height="40">
                 <div>
                     <p class="m-0 small fw-bold text-white"><?php echo $user_data["fname"]; ?></p>
-                    <p class="m-0 small text">Admin</p>
+                    <p class="m-0 small text-muted">Admin</p>
                 </div>
-                <a href="#" class="ms-auto text hover-gold"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="#" class="ms-auto text-muted hover-gold"><i class="fas fa-sign-out-alt"></i></a>
             </div>
         </div>
     </aside>
@@ -584,44 +582,36 @@
 
         <!-- View: Dashboard Overview -->
         <div id="view-dashboard">
-            <!-- Stats Row -->
             <div class="row g-4 mb-5">
                 <div class="col-md-4">
                     <div class="dashboard-card">
-                        <div class="stat-icon bg-icon-gold">
-                            <i class="fas fa-coins"></i>
-                        </div>
+                        <div class="stat-icon bg-icon-gold"><i class="fas fa-coins"></i></div>
                         <h3 class="h2 fw-bold text-white mb-1">LKR 450k</h3>
-                        <p class="text m-0">Total Sales (This Month)</p>
+                        <p class="text-muted m-0">Total Sales (This Month)</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="dashboard-card">
-                        <div class="stat-icon bg-icon-blue">
-                            <i class="fas fa-box"></i>
-                        </div>
-                        <h3 class="h2 fw-bold text-white mb-1">251</h3>
-                        <p class="text m-0">Total Products</p>
+                        <div class="stat-icon bg-icon-blue"><i class="fas fa-box"></i></div>
+                        <h3 id="prod-num" class="h2 fw-bold text-white mb-1">null</h3>
+                        <p class="text-muted m-0">Total Products</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="dashboard-card">
-                        <div class="stat-icon bg-icon-green">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
+                        <div class="stat-icon bg-icon-green"><i class="fas fa-check-circle"></i></div>
                         <h3 class="h2 fw-bold text-white mb-1">18</h3>
-                        <p class="text m-0">New Orders</p>
+                        <p class="text-muted m-0">New Orders</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Products Table -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="text-white m-0 h5">Recent Inventory</h4>
                 <button class="btn btn-sm btn-outline-gold" onclick="switchView('add-product', document.querySelectorAll('.menu-link')[1])">Add New</button>
             </div>
-
-<div class="custom-table-container">
+            
+            <div class="custom-table-container">
                 <div class="table-responsive">
                     <table class="table table-dark-custom">
                         <thead>
@@ -629,19 +619,20 @@
                                 <th>Image</th>
                                 <th>Product Name</th>
                                 <th>Brand</th>
+                                <th>Category</th>
                                 <th>Price</th>
                                 <th>Stock</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                            <tbody id="recentProductsTableBody">
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">
-                                        <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
-                                        <span class="ms-2 text-muted">Loading inventory...</span>
-                                    </td>
-                                </tr>
-                            </tbody>
+                        <tbody id="recentProductsTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
+                                    <span class="ms-2 text-muted">Loading inventory...</span>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -652,7 +643,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <form class="dashboard-card p-4" id="productForm">
-                        <h4 id="formTitle" class="text-gold mb-4 border-bottom border-secondary pb-3">Add New Product</h4>
+                        <h4 id="formTitle" class="text-white mb-4 border-bottom border-secondary pb-3" style="color: var(--chp-gold) !important;">Add New Product</h4>
                         
                         <input type="hidden" id="editProductId" value="">
                         
@@ -719,7 +710,7 @@
                             </div>
                             <div class="col-12">
                                 <div class="p-3 rounded bg-dark border border-secondary d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                                    <span class="small text">KOKO Installment (Auto-calc)</span>
+                                    <span class="small text-muted">KOKO Installment (Auto-calc)</span>
                                     <span class="fw-bold text-white" id="kokoDisplay">LKR 0.00 x 3</span>
                                 </div>
                             </div>
@@ -728,16 +719,13 @@
                         <!-- Images -->
                         <h5 class="text-white mb-3">Product Images <small class="text-muted fs-6">(Max 4)</small></h5>
                         <div class="mb-4">
-                            <!-- Drop Zone -->
                             <div class="drop-zone" id="dropZoneContainer">
                                 <i class="fas fa-images fa-3x text-muted mb-3"></i>
                                 <p class="mb-1 text-white">Drag & drop product images here</p>
                                 <p class="small text-muted">or click to browse (JPG, PNG, WEBP)</p>
                             </div>
-                            <!-- Allow multiple file selection -->
                             <input type="file" hidden id="fileInput" accept="image/*" multiple onchange="handleFileSelect(this)">
 
-                            <!-- Progress Bar -->
                             <div id="uploadProgressBarContainer" class="mt-3 d-none">
                                 <div class="progress" style="height: 5px; background-color: var(--sec-blue);">
                                     <div class="progress-bar" role="progressbar" style="width: 0%; background-color: var(--chp-gold);" id="uploadProgressBar"></div>
@@ -745,10 +733,7 @@
                                 <small class="text-muted mt-1 d-block text-end" id="progressText">Processing...</small>
                             </div>
 
-                            <!-- Image Preview Grid -->
-                            <div id="imagePreviewGrid" class="image-preview-grid">
-                                <!-- Dynamic Items will be added here -->
-                            </div>
+                            <div id="imagePreviewGrid" class="image-preview-grid"></div>
                         </div>
 
                         <!-- Toggles -->
@@ -757,13 +742,11 @@
                                 <label class="form-label">Stock Quantity</label>
                                 <input type="number" class="form-control" id="stockQty" placeholder="0" min="0" oninput="updateStockStatus()">
                             </div>
-
                             <div class="col-md-4">
                                 <label class="form-label">Stock Status (Auto)</label>
                                 <input type="text" class="form-control" id="stockStatus" value="Out of Stock" readonly 
                                     style="background-color: var(--sec-blue); color: var(--danger-red); font-weight: 600; border: 1px solid var(--border-color);">
                             </div>
-
                             <div class="col-md-4">
                                 <div class="d-flex flex-column gap-3 mt-2">
                                     <div class="form-check form-switch">
@@ -780,7 +763,7 @@
 
                         <!-- Actions -->
                         <div class="d-flex justify-content-end gap-3 pt-3 border-top border-secondary">
-                            <button type="button" class="btn btn-outline-light px-4" onclick="switchView('dashboard', document.querySelectorAll('.menu-link')[0])">Cancel</button>
+                            <button type="button" class="btn btn-outline-light px-4" onclick="resetFormAndGoToDashboard()">Cancel</button>
                             <button type="button" class="btn btn-gold px-5" id="saveProductBtn" onclick="addProduct()">Save Product</button>
                         </div>
                     </form>
@@ -790,19 +773,29 @@
 
         <!-- View: Inventory -->
         <div id="view-inventory" class="d-none-view">
-            <!-- Filter Toolbar -->
-            <div class="dashboard-card mb-4 p-3 filter-bar d-flex justify-content-between align-items-center">
-                <div class="d-flex gap-2 w-100 w-md-auto">
-                    <input type="text" class="form-control" placeholder="Search products...">
-                    <select class="form-select w-auto">
-                        <option>All Categories</option>
-                        <option>Wristwatch</option>
-                        <option>Wall Decor</option>
+            <div class="dashboard-card mb-4 p-3 filter-bar d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 w-100 w-md-auto position-relative">
+                    <div class="position-relative w-100 w-md-auto" style="min-width: 250px;">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)" autocomplete="off">
+                        
+                        <div id="searchDropdown" class="position-absolute w-100 mt-1 d-none" style="z-index: 1000; max-height: 300px; overflow-y: auto; background-color: var(--sec-blue); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></div>
+                    </div>
+                    
+                    <select class="form-select w-auto" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="Men's Watches">Men's Watches</option>
+                        <option value="Women's Watches">Women's Watches</option>
+                        <option value="Smart Watches">Smart Watches</option>
+                        <option value="Luxury Collection">Luxury Collection</option>
+                        <option value="Wall Clocks">Wall Clocks</option>
+                        <option value="Photo Frames">Photo Frames</option>
+                        <option value="Wall Art">Wall Art</option>
+                        <option value="Mirrors">Mirrors</option>
                     </select>
                 </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-gold"><i class="fas fa-filter"></i> Filter</button>
-                    <button class="btn btn-gold" onclick="switchView('add-product', document.querySelectorAll('.menu-link')[1])"><i class="fas fa-plus"></i> Add Product</button>
+                <div class="d-flex gap-2 w-100 w-md-auto">
+                    <button class="btn btn-outline-gold flex-fill flex-md-grow-0" onclick="applyFilters()"><i class="fas fa-filter me-2"></i>Filter</button>
+                    <button class="btn btn-gold flex-fill flex-md-grow-0" onclick="resetFormAndSwitchToAdd()"><i class="fas fa-plus me-2"></i>Add Product</button>
                 </div>
             </div>
 
@@ -811,7 +804,9 @@
                     <table class="table table-dark-custom">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Product</th>
+                                <th>Brand</th>
                                 <th>Category</th>
                                 <th>Price</th>
                                 <th>Stock</th>
@@ -821,7 +816,7 @@
                         </thead>
                         <tbody id="inventoryTableBody">
                             <tr>
-                                <td colspan="6" class="text-center py-4">
+                                <td colspan="8" class="text-center py-4">
                                     <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
                                     <span class="ms-2 text-muted">Loading inventory...</span>
                                 </td>
@@ -829,14 +824,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="p-3 d-flex justify-content-end border-top border-secondary">
+                
+                <div id="paginationContainer" class="p-3 d-none justify-content-between align-items-center border-top border-secondary flex-column flex-md-row gap-3">
+                    <div class="text-muted small" id="paginationInfo">Showing 1-7 of 0 products</div>
                     <nav>
-                        <ul class="pagination pagination-sm m-0">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
+                        <ul class="pagination pagination-sm m-0" id="paginationControls"></ul>
                     </nav>
                 </div>
             </div>
@@ -844,47 +836,33 @@
 
         <!-- View: Orders -->
         <div id="view-orders" class="d-none-view">
-            <!-- Order Status Cards -->
             <div class="row g-3 mb-4">
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-blue mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-clipboard-list"></i></div>
-                        <div>
-                            <h5 class="m-0 text-white">12</h5>
-                            <small class="text">Pending</small>
-                        </div>
+                        <div><h5 class="m-0 text-white">12</h5><small class="text-muted">Pending</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-gold mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-box"></i></div>
-                        <div>
-                            <h5 class="m-0 text-white">5</h5>
-                            <small class="text">Processing</small>
-                        </div>
+                        <div><h5 class="m-0 text-white">5</h5><small class="text-muted">Processing</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-green mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-truck"></i></div>
-                        <div>
-                            <h5 class="m-0 text-white">48</h5>
-                            <small class="text">Shipped</small>
-                        </div>
+                        <div><h5 class="m-0 text-white">48</h5><small class="text-muted">Shipped</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-orange mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-undo"></i></div>
-                        <div>
-                            <h5 class="m-0 text-white">2</h5>
-                            <small class="text">Returns</small>
-                        </div>
+                        <div><h5 class="m-0 text-white">2</h5><small class="text-muted">Returns</small></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Orders Table -->
             <div class="custom-table-container">
                 <div class="table-responsive">
                     <table class="table table-dark-custom">
@@ -901,7 +879,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="text-gold fw-bold">#ORD-2451</td>
+                                <td class="fw-bold" style="color: var(--chp-gold);">#ORD-2451</td>
                                 <td>Oct 24, 2025</td>
                                 <td>Kamal Perera</td>
                                 <td>LKR 12,000</td>
@@ -910,7 +888,7 @@
                                 <td><button class="btn btn-sm btn-outline-light">View</button></td>
                             </tr>
                             <tr>
-                                <td class="text-gold fw-bold">#ORD-2450</td>
+                                <td class="fw-bold" style="color: var(--chp-gold);">#ORD-2450</td>
                                 <td>Oct 23, 2025</td>
                                 <td>Nimali Silva</td>
                                 <td>LKR 36,500</td>
@@ -926,7 +904,6 @@
 
         <!-- View: Customers -->
         <div id="view-customers" class="d-none-view">
-            <!-- Search Bar -->
             <div class="dashboard-card mb-4 p-3 d-flex justify-content-between align-items-center">
                 <input type="text" class="form-control w-100 w-md-50" placeholder="Search customers by name or email...">
                 <button class="btn btn-outline-gold ms-3"><i class="fas fa-file-export"></i> Export</button>
@@ -992,7 +969,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification Function -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="background-color: var(--sec-blue); border: 1px solid var(--border-color);">
@@ -1013,24 +989,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Global array to store selected files
         let selectedFiles = [];
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        const itemsPerPage = 7;
 
-        // Sidebar Toggle
+        // ========== SIDEBAR & VIEW SWITCHING ==========
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.querySelector('.overlay').classList.toggle('active');
         }
 
-        // View Switcher (SPA feel)
         function switchView(viewId, linkElement) {
-            // Hide all views
             document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('d-none-view'));
-            
-            // Show selected view
             document.getElementById('view-' + viewId).classList.remove('d-none-view');
             
-            // Update Title
             const titles = {
                 'dashboard': 'Overview',
                 'add-product': 'Add New Product',
@@ -1040,80 +1014,313 @@
             };
             document.getElementById('pageTitle').innerText = titles[viewId] || 'Dashboard';
 
-            // Update Sidebar Active State
             if(linkElement) {
                 document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
                 linkElement.classList.add('active');
             }
 
-            // Close sidebar on mobile after selection
-            if(window.innerWidth < 992) {
-                toggleSidebar();
-            }
+            if(window.innerWidth < 992) toggleSidebar();
         }
 
-        // Product Data Retrieval Logic
-        let allProducts = [];
-
-        // Fetch data when the page loads (Make sure you delete the duplicate call at the bottom of your script!)
+        // ========== DATA FETCHING ==========
         document.addEventListener('DOMContentLoaded', () => {
             getProductsData();
         });
 
         async function getProductsData() {
-            const url = 'actions/products-data.php';
-
             try {
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
+                const response = await fetch('actions/products-data.php');
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 
-                // Safely extract and reverse the array without mutating original data
+                const data = await response.json();
                 let parsedData = Array.isArray(data) ? [...data] : Object.values(data);
                 allProducts = parsedData.reverse();
+                filteredProducts = [...allProducts];
 
+                document.getElementById('prod-num').innerText = allProducts.length;
                 renderRecentProducts(allProducts);
-                renderInventoryProducts(allProducts);
-
+                renderInventoryProducts(filteredProducts, 1);
             } catch (error) {
                 console.error('Failed to fetch products:', error);
-                const tbody = document.getElementById('recentProductsTableBody');
-                if (tbody) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="text-center text-danger py-4">Failed to load products. Please try again later.</td>
-                        </tr>
-                    `;
-                }
+                document.getElementById('recentProductsTableBody').innerHTML = `
+                    <tr><td colspan="7" class="text-center text-danger py-4">Failed to load products.</td></tr>
+                `;
             }
         }
 
-        // Global variables to store the product being deleted
+        // ========== RENDER FUNCTIONS ==========
+        function renderRecentProducts(products) {
+            const tbody = document.getElementById('recentProductsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="7" class="text-center text-muted py-5">
+                        <i class="fa-solid fa-box-open mb-3" style="font-size: 32px;"></i>
+                        <h5>No products found</h5>
+                    </td></tr>
+                `;
+                return;
+            }
+
+            const recentProducts = products.slice(0, 5);
+
+            recentProducts.forEach(product => {
+                const currentPrice = product.pricing?.current_price || 0;
+                const formattedPrice = new Intl.NumberFormat('en-LK', {
+                    style: 'currency', currency: 'LKR', minimumFractionDigits: 0, maximumFractionDigits: 0
+                }).format(currentPrice);
+
+                let badgeClass = '';
+                const status = product.inventory?.stock_status || 'Unknown';
+                if (status === 'In Stock') badgeClass = 'bg-success text-white';
+                else if (status === 'Low Stock') badgeClass = 'bg-warning text-dark';
+                else badgeClass = 'bg-danger text-white';
+
+                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
+                const brandName = product.brand?.name || 'N/A';
+
+                const trHtml = `
+                    <tr>
+                        <td><img src="${imgPath}" class="product-thumb" onerror="this.onerror=null; this.src='../assets/images/products/default.png'"></td>
+                        <td>${product.name.slice(0, 20)}</td>
+                        <td>${brandName}</td>
+                        <td>${product.category || 'N/A'}</td>
+                        <td>${formattedPrice}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                        <td>
+                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
+
+        function renderInventoryProducts(products, page = 1) {
+            const tbody = document.getElementById('inventoryTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="8" class="text-center text-muted py-5">
+                        <i class="fa-solid fa-box-open mb-3" style="font-size: 32px;"></i>
+                        <h5>No products found</h5>
+                    </td></tr>
+                `;
+                document.getElementById('paginationContainer').classList.add('d-none');
+                return;
+            }
+
+            // Pagination Logic
+            const totalProducts = products.length;
+            const totalPages = Math.ceil(totalProducts / itemsPerPage);
+            currentPage = page;
+
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageProducts = products.slice(startIdx, endIdx);
+
+            pageProducts.forEach(product => {
+                const currentPrice = product.pricing?.current_price || 0;
+                const formattedPrice = new Intl.NumberFormat('en-LK', {
+                    style: 'currency', currency: 'LKR', minimumFractionDigits: 0, maximumFractionDigits: 0
+                }).format(currentPrice);
+
+                let badgeClass = '';
+                const status = product.inventory?.stock_status || 'Unknown';
+                if (status === 'In Stock') badgeClass = 'bg-success text-white';
+                else if (status === 'Low Stock') badgeClass = 'bg-warning text-dark';
+                else badgeClass = 'bg-danger text-white';
+
+                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
+                const brandName = product.brand?.name || 'N/A';
+
+                const trHtml = `
+                    <tr>
+                        <td><img src="${imgPath}" class="product-thumb" onerror="this.onerror=null; this.src='../assets/images/products/default.png'"></td>
+                        <td>${product.name.slice(0, 20)}</td>
+                        <td>${brandName}</td>
+                        <td>${product.sub_category || 'N/A'}</td>
+                        <td>${formattedPrice}</td>
+                        <td>${product.inventory?.stock_count || 0}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                        <td>
+                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+
+            // Show/Hide Pagination
+            if (totalProducts <= itemsPerPage) {
+                document.getElementById('paginationContainer').classList.add('d-none');
+            } else {
+                document.getElementById('paginationContainer').classList.remove('d-none');
+                document.getElementById('paginationContainer').classList.add('d-flex');
+                renderPagination(totalPages, currentPage);
+                
+                const showing = `Showing ${startIdx + 1}-${Math.min(endIdx, totalProducts)} of ${totalProducts} products`;
+                document.getElementById('paginationInfo').textContent = showing;
+            }
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            const controls = document.getElementById('paginationControls');
+            controls.innerHTML = '';
+
+            // Previous Button
+            const prevClass = currentPage === 1 ? 'disabled' : '';
+            controls.innerHTML += `
+                <li class="page-item ${prevClass}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">Previous</a>
+                </li>
+            `;
+
+            // Page Numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const activeClass = i === currentPage ? 'active' : '';
+                controls.innerHTML += `
+                    <li class="page-item ${activeClass}">
+                        <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Next Button
+            const nextClass = currentPage === totalPages ? 'disabled' : '';
+            controls.innerHTML += `
+                <li class="page-item ${nextClass}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">Next</a>
+                </li>
+            `;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            renderInventoryProducts(filteredProducts, page);
+        }
+
+        // ========== SEARCH FUNCTIONALITY ==========
+        let searchTimeout;
+        function handleSearch(query) {
+            clearTimeout(searchTimeout);
+            const dropdown = document.getElementById('searchDropdown');
+
+            if (!query.trim()) {
+                dropdown.classList.add('d-none');
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                const results = allProducts.filter(p => 
+                    p.name.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (results.length === 0) {
+                    dropdown.innerHTML = `
+                        <div class="search-no-results">
+                            <i class="fas fa-search d-block"></i>
+                            <p class="mb-0">No matching products</p>
+                        </div>
+                    `;
+                } else {
+                    dropdown.innerHTML = results.slice(0, 5).map(product => {
+                        const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
+                        return `
+                            <div class="search-result-item" onclick="selectSearchResult(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                                <img src="${imgPath}" onerror="this.onerror=null; this.src='../assets/images/products/default.png'">
+                                <span class="text-white">${product.name}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                dropdown.classList.remove('d-none');
+            }, 300);
+        }
+
+        function selectSearchResult(id, name) {
+            document.getElementById('searchInput').value = name;
+            document.getElementById('searchDropdown').classList.add('d-none');
+            
+            filteredProducts = allProducts.filter(p => p.id === id);
+            renderInventoryProducts(filteredProducts, 1);
+        }
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#searchInput') && !e.target.closest('#searchDropdown')) {
+                document.getElementById('searchDropdown').classList.add('d-none');
+            }
+        });
+
+        // Enter key to search
+        document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+
+        // ========== FILTER FUNCTIONALITY ==========
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+
+            filteredProducts = allProducts.filter(product => {
+                const matchesSearch = !searchQuery || product.name.toLowerCase().includes(searchQuery);
+                const matchesCategory = !categoryFilter || product.sub_category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            document.getElementById('searchDropdown').classList.add('d-none');
+            renderInventoryProducts(filteredProducts, 1);
+        }
+
+        // ========== ADD PRODUCT BUTTON ==========
+        function resetFormAndSwitchToAdd() {
+            resetProductForm();
+            switchView('add-product', document.querySelectorAll('.menu-link')[1]);
+        }
+
+        function resetFormAndGoToDashboard() {
+            resetProductForm();
+            switchView('dashboard', document.querySelectorAll('.menu-link')[0]);
+        }
+
+        // ========== DELETE PRODUCT ==========
         let productIdToDelete = null;
         let deleteModalInstance = null;
 
         function deleteProduct(id, name) {
             productIdToDelete = id;
-            
-            // Set the product name in the modal text
             document.getElementById('deleteProductName').innerText = name || "this product";
             
-            // Initialize and show the modal
             if (!deleteModalInstance) {
                 deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
             }
             deleteModalInstance.show();
         }
 
-        // Attach event listener to the confirm button inside the modal
         document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
             if (!productIdToDelete) return;
 
-            // Change button state
             const btn = this;
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
@@ -1130,12 +1337,11 @@
             .then(data => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-                deleteModalInstance.hide(); // Hide modal
+                deleteModalInstance.hide();
 
                 if (data.trim() === "success") {
                     showNotification("Product deleted successfully!", "success");
-                    // Refresh the table data!
-                    getProductsData(); 
+                    getProductsData();
                 } else {
                     showNotification("Error: " + data, "error");
                 }
@@ -1145,163 +1351,15 @@
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 deleteModalInstance.hide();
-                showNotification("Connection error. Check console.", "error");
+                showNotification("Connection error.", "error");
             });
         });
 
-        // Render recent products into the table
-        function renderRecentProducts(products) {
-            const tbody = document.getElementById('recentProductsTableBody');
-            if (!tbody) return;
-
-            // Clear existing rows (removes the loading spinner)
-            tbody.innerHTML = ''; 
-
-            if (!products || products.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
-                            <i class="fa-solid fa-box-open mb-3" style="font-size: 32px; color: #555;"></i>
-                            <h5>No products found</h5>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            // Slice the array to only show the 5 most recent products on the overview dashboard
-            const recentProducts = products.slice(0, 5);
-
-            recentProducts.forEach(product => {
-                // Safely handle missing nested pricing data to prevent JS crashes
-                const currentPrice = product.pricing?.current_price || 0;
-                
-                const formattedPrice = new Intl.NumberFormat('en-LK', {
-                    style: 'currency',
-                    currency: 'LKR',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(currentPrice);
-
-                // Safely handle inventory status
-                let badgeClass = '';
-                const status = product.inventory?.stock_status || 'Unknown';
-                
-                if (status === 'In Stock') {
-                    badgeClass = 'bg-success text-white'; 
-                } else if (status === 'Low Stock') {
-                    badgeClass = 'bg-warning text-dark';  
-                } else {
-                    badgeClass = 'bg-danger text-white';  
-                }
-
-                // Handle image path safely
-                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
-                
-                // Safely handle brand name
-                const brandName = product.brand?.name || 'N/A';
-
-                // Added "this.onerror=null;" to prevent infinite image loading loops if the default image is also missing
-                const trHtml = `
-                    <tr>
-                        <td>
-                            <img src="${imgPath}" 
-                                 class="product-thumb" 
-                                 alt="${product.name}" 
-                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
-                                 onerror="this.onerror=null; this.src='../assets/images/products/default.png'">
-                        </td>
-                        <td>${product.name}</td>
-                        <td>${brandName}</td>
-                        <td>${formattedPrice}</td>
-                        <td><span class="badge ${badgeClass}">${status}</span></td>
-                        <td>
-                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                
-                tbody.insertAdjacentHTML('beforeend', trHtml);
-            });
-        }
-        // Product Data Retrieval Logic End
-
-        // Render ALL products into the Inventory table
-        function renderInventoryProducts(products) {
-            const tbody = document.getElementById('inventoryTableBody');
-            if (!tbody) return;
-
-            // Clear existing rows
-            tbody.innerHTML = ''; 
-
-            if (!products || products.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
-                            <i class="fa-solid fa-box-open mb-3" style="font-size: 32px; color: #555;"></i>
-                            <h5>No products found in inventory</h5>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            products.forEach(product => {
-                const currentPrice = product.pricing?.current_price || 0;
-                const formattedPrice = new Intl.NumberFormat('en-LK', {
-                    style: 'currency', currency: 'LKR', minimumFractionDigits: 0, maximumFractionDigits: 0
-                }).format(currentPrice);
-
-                let badgeClass = '';
-                const status = product.inventory?.stock_status || 'Unknown';
-                
-                if (status === 'In Stock') { badgeClass = 'bg-success text-white'; } 
-                else if (status === 'Low Stock') { badgeClass = 'bg-warning text-dark'; } 
-                else { badgeClass = 'bg-danger text-white'; }
-
-                const imgPath = product.primary_thumbnail ? `../${product.primary_thumbnail}` : '../assets/images/products/default.png';
-                const brandName = product.brand?.name || 'N/A';
-
-                const trHtml = `
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <img src="${imgPath}" class="product-thumb" alt="${product.name}" 
-                                     style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"
-                                     onerror="this.onerror=null; this.src='../assets/images/products/default.png'">
-                                <span class="text-white">${product.name}</span>
-                            </div>
-                        </td>
-                        <td>${product.category || 'N/A'}</td>
-                        <td>${formattedPrice}</td>
-                        <td>${product.inventory?.stock_count || 0}</td>
-                        <td><span class="badge ${badgeClass}">${status}</span></td>
-                        <td>
-                            <button class="btn-icon-action me-1 bg-transparent border-0 text-white" onclick="editProduct(${product.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon-action bg-transparent border-0 text-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.insertAdjacentHTML('beforeend', trHtml);
-            });
-        }
-    
-
-        // Pricing Logic
+        // ========== PRICING & STOCK ==========
         function calculateDiscount() {
             const original = parseFloat(document.getElementById('originalPrice').value) || 0;
             const current = parseFloat(document.getElementById('currentPrice').value) || 0;
             
-            // Calc Discount
             if(original > 0 && current > 0 && original > current) {
                 const discount = ((original - current) / original) * 100;
                 document.getElementById('discountDisplay').value = Math.round(discount) + '%';
@@ -1309,7 +1367,6 @@
                 document.getElementById('discountDisplay').value = '0%';
             }
 
-            // Calc KOKO (Current / 3)
             if(current > 0) {
                 const installment = (current / 3).toFixed(2);
                 document.getElementById('kokoDisplay').innerText = `LKR ${installment} x 3`;
@@ -1317,8 +1374,24 @@
                 document.getElementById('kokoDisplay').innerText = 'LKR 0.00 x 3';
             }
         }
-        
-        // File Upload Trigger
+
+        function updateStockStatus() {
+            const qty = parseInt(document.getElementById('stockQty').value) || 0;
+            const statusInput = document.getElementById('stockStatus');
+            
+            if (qty > 0 && qty < 10) {
+                statusInput.value = "Low Stock";
+                statusInput.style.color = "var(--warning-orange)";
+            } else if (qty > 9) {
+                statusInput.value = "In Stock";
+                statusInput.style.color = "var(--success-green)";
+            } else {
+                statusInput.value = "Out of Stock";
+                statusInput.style.color = "var(--danger-red)";
+            }
+        }
+
+        // ========== FILE UPLOAD ==========
         const dropZone = document.querySelector('.drop-zone');
         const fileInput = document.getElementById('fileInput');
 
@@ -1348,20 +1421,17 @@
             });
         }
 
-        // Handle Input Change
         function handleFileSelect(input) {
             if (input.files && input.files.length > 0) {
                 handleFiles(input.files);
             }
         }
 
-        // Process Files
         function handleFiles(files) {
             const progressContainer = document.getElementById('uploadProgressBarContainer');
             const progressBar = document.getElementById('uploadProgressBar');
             const progressText = document.getElementById('progressText');
             
-            // Limit total files to 4
             if (selectedFiles.length + files.length > 4) {
                 showNotification("Maximum 4 images allowed.", "error");
                 return;
@@ -1371,7 +1441,6 @@
             let processedCount = 0;
 
             Array.from(files).forEach(file => {
-                // Basic type validation
                 if(!file.type.startsWith('image/')){
                     showNotification("Only image files are allowed.", "error");
                     return;
@@ -1379,10 +1448,9 @@
 
                 selectedFiles.push(file);
                 
-                // Simulate read progress
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    renderPreview(e.target.result, selectedFiles.length - 1); // Pass index
+                    renderPreview(e.target.result, selectedFiles.length - 1);
                     
                     processedCount++;
                     const progress = (processedCount / files.length) * 100;
@@ -1400,7 +1468,6 @@
             });
         }
 
-        // Render Preview
         function renderPreview(src, index) {
             const grid = document.getElementById('imagePreviewGrid');
             const div = document.createElement('div');
@@ -1415,12 +1482,9 @@
             grid.appendChild(div);
         }
 
-        // Remove Image
         function removeImage(indexToRemove) {
-            // Remove from array
             selectedFiles.splice(indexToRemove, 1);
             
-            // Clear Grid and Re-render all
             const grid = document.getElementById('imagePreviewGrid');
             grid.innerHTML = '';
             
@@ -1432,55 +1496,10 @@
                 reader.readAsDataURL(file);
             });
             
-            // Clear the actual input value so change event fires if same file selected again
             document.getElementById('fileInput').value = '';
         }
 
-        // --- UPDATED: Auto-update Stock Status based on Quantity ---
-        function updateStockStatus() {
-            const qtyInput = document.getElementById('stockQty');
-            const statusInput = document.getElementById('stockStatus');
-            const qty = parseInt(qtyInput.value) || 0; // Default to 0 if empty
-
-            if (qty > 0 && qty < 10) {
-                statusInput.value = "Low Stock";
-                statusInput.style.color = "var(--warning-orange)"; // Yellow text
-            }else if (qty > 9) {
-                statusInput.value = "In Stock";
-                statusInput.style.color = "var(--success-green)"; // Green text
-            } else {
-                statusInput.value = "Out of Stock";
-                statusInput.style.color = "var(--danger-red)"; // Red text
-            }
-        }
-
-        // --- Notification Helper ---
-        function showNotification(message, type = 'success') {
-            const toastEl = document.getElementById('liveToast');
-            const toastBody = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-            
-            // Set Message
-            toastBody.textContent = message;
-
-            // Reset Classes
-            toastEl.className = 'toast align-items-center border-0'; // Base classes
-            
-            // Apply Type Styling
-            if (type === 'success') {
-                toastEl.classList.add('toast-success');
-                toastIcon.className = 'fas fa-check-circle fa-lg';
-            } else if (type === 'error') {
-                toastEl.classList.add('toast-error');
-                toastIcon.className = 'fas fa-exclamation-circle fa-lg';
-            }
-
-            // Initialize and Show Bootstrap Toast
-            const toast = new bootstrap.Toast(toastEl, { delay: 4000 }); // 4 seconds
-            toast.show();
-        }
-
-        // Helper function to select dropdown options by text (since your JSON returns text for category)
+        // ========== EDIT PRODUCT ==========
         function setSelectByText(selectId, text) {
             const select = document.getElementById(selectId);
             for (let i = 0; i < select.options.length; i++) {
@@ -1491,43 +1510,35 @@
             }
         }
 
-        // --- EDIT PRODUCT LOGIC ---
         function editProduct(id) {
-            // Find the product data from our globally fetched array
             const product = allProducts.find(p => p.id === id);
             if (!product) return;
 
-            // 1. Set Hidden ID and Titles
             document.getElementById('editProductId').value = product.id;
-            document.getElementById('formTitle').innerText = 'Edit Product: ' + product.name;
+            document.getElementById('formTitle').innerText = 'Edit Product: ' + product.name.slice(0,15);
             document.getElementById('saveProductBtn').innerText = 'Update Product';
 
-            // 2. Populate text inputs
             document.getElementById('productName').value = product.name;
             document.getElementById('productDesc').value = product.description;
             document.getElementById('originalPrice').value = product.pricing.original_price;
             document.getElementById('currentPrice').value = product.pricing.current_price;
             document.getElementById('stockQty').value = product.inventory.stock_count;
 
-            // 3. Populate Selects (Dropdowns)
             document.getElementById('productBrand').value = product.brand.id;
             setSelectByText('productCategory', product.sub_category);
 
-            // 4. Populate Toggles
             document.getElementById('luxurySwitch').checked = product.is_luxury;
             document.getElementById('choiceSwitch').checked = product.is_peoples_choice;
 
-            // 5. Trigger automatic calculations
             calculateDiscount();
             updateStockStatus();
 
-            // 6. Switch to the form view
             switchView('add-product');
             
-            showNotification("Editing mode enabled. Uploading new images will replace old ones.", "success");
+            showNotification("Editing mode enabled.", "success");
         }
 
-        // --- RESET FORM LOGIC ---
+        // ========== RESET FORM ==========
         function resetProductForm() {
             document.getElementById('editProductId').value = '';
             document.getElementById('formTitle').innerText = 'Add New Product';
@@ -1551,8 +1562,7 @@
             updateStockStatus();
         }
 
-        // --- UPDATED SAVE/UPDATE LOGIC ---
-        // (Replace your existing addProduct function with this one)
+        // ========== SAVE/UPDATE PRODUCT ==========
         function addProduct() {
             const editId = document.getElementById('editProductId').value;
             const title = document.getElementById('productName');
@@ -1561,19 +1571,17 @@
             const desc = document.getElementById('productDesc');
             const oprice = document.getElementById('originalPrice');
             const cprice = document.getElementById('currentPrice');
-            const qty = document.getElementById('stockQty'); 
+            const qty = document.getElementById('stockQty');
             const luxury = document.getElementById('luxurySwitch');
             const choice = document.getElementById('choiceSwitch');
             const saveBtn = document.getElementById('saveProductBtn');
 
-            // Validation
             if(!title.value.trim()) { showNotification("Error: Product name is required.", "error"); title.focus(); return; }
-            if(brand.value === "0" || brand.value === "") { showNotification("Error: Please select a Brand.", "error"); brand.focus(); return; }
-            if(category.value === "0" || category.value === "") { showNotification("Error: Please select a Category.", "error"); category.focus(); return; }
+            if(brand.value === "0") { showNotification("Error: Please select a Brand.", "error"); brand.focus(); return; }
+            if(category.value === "0") { showNotification("Error: Please select a Category.", "error"); category.focus(); return; }
             if(!cprice.value || cprice.value <= 0) { showNotification("Error: Please enter a valid Current Price.", "error"); cprice.focus(); return; }
             if(qty.value === "" || parseInt(qty.value) < 0) { showNotification("Error: Please enter a valid Stock Quantity.", "error"); qty.focus(); return; }
             
-            // Require images ONLY if we are adding a NEW product
             if (!editId && selectedFiles.length === 0) {
                 showNotification("Please upload at least one image.", "error");
                 return;
@@ -1583,8 +1591,7 @@
             saveBtn.disabled = true;
 
             const form = new FormData();
-            // If editId has a value, send it so the PHP knows to UPDATE instead of INSERT
-            if (editId) form.append("id", editId); 
+            if (editId) form.append("id", editId);
             
             form.append("title", title.value);
             form.append("brand", brand.value);
@@ -1600,7 +1607,6 @@
                 form.append("images[]", file);
             });
 
-            // Determine which PHP file to hit
             const targetUrl = editId ? "actions/edit-product.php" : "actions/create-product.php";
 
             fetch(targetUrl, {
@@ -1615,12 +1621,11 @@
                 if (data.trim() === "success") {
                     showNotification(editId ? "Product updated successfully!" : "Product saved successfully!", "success");
                     resetProductForm();
-                    getProductsData(); // Refresh the table data
+                    getProductsData();
                     
-                    // Add the DOM element targeting the 3rd link [index 2] ("Inventory") to update sidebar
-                    setTimeout(() => { 
-                        switchView('inventory', document.querySelectorAll('.menu-link')[2]); 
-                    }, 1000); 
+                    setTimeout(() => {
+                        switchView('inventory', document.querySelectorAll('.menu-link')[2]);
+                    }, 1000);
                 } else {
                     showNotification("Error: " + data, "error");
                 }
@@ -1629,8 +1634,28 @@
                 console.error('Error:', error);
                 saveBtn.innerHTML = editId ? 'Update Product' : 'Save Product';
                 saveBtn.disabled = false;
-                showNotification("Connection error. Check console.", "error");
+                showNotification("Connection error.", "error");
             });
+        }
+
+        // ========== NOTIFICATIONS ==========
+        function showNotification(message, type = 'success') {
+            const toastEl = document.getElementById('liveToast');
+            const toastBody = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastBody.textContent = message;
+            toastEl.className = 'toast align-items-center border-0';
+            
+            if (type === 'success') {
+                toastEl.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle fa-lg';
+            } else {
+                toastEl.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle fa-lg';
+            }
+
+            new bootstrap.Toast(toastEl, { delay: 4000 }).show();
         }
     </script>
 </body>
