@@ -1,77 +1,123 @@
 <?php
 session_start();
+require_once "includes/connection.php";
 
-// Get product ID from URL
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// In production, fetch this from database
-// For now, using sample data
-$product = [
-    'id' => $product_id,
-    'name' => 'Titan Quartz Analog Blue Dial',
-    'brand' => 'Titan',
-    'price' => 12000,
-    'original_price' => 15000,
-    'discount' => 20,
-    'koko_installment' => 4000,
-    'description' => 'Premium analog watch with blue dial and stainless steel strap',
-    'images' => [
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=800&q=80'
-    ]
-];
+// Fetch Real Product Data from DB
+$query = "SELECT p.*, b.brand_name, c.category_name 
+          FROM products p 
+          LEFT JOIN brands b ON p.brand_id = b.brand_id 
+          LEFT JOIN sub_categories sc ON p.sub_category_id = sc.sub_category_id
+          LEFT JOIN categories c ON sc.category_id = c.category_id
+          WHERE p.product_id = '" . $product_id . "'";
+
+$result = Database::search($query);
+if ($result && $result->num_rows > 0) {
+    $product = $result->fetch_assoc();
+} else {
+    // Redirect or show error if product not found
+    header("Location: index.php");
+    exit();
+}
+
+// Fetch Multiple Images
+$images = [];
+$img_query = Database::search("SELECT image_path FROM product_images WHERE product_id = '".$product_id."' ORDER BY is_primary DESC");
+if ($img_query && $img_query->num_rows > 0) {
+    while($img = $img_query->fetch_assoc()) {
+        $images[] = $img['image_path'];
+    }
+}
+if(empty($images)) {
+    $images[] = $product['image_path']; // Fallback to main image
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $product['name']; ?> - Power Watch</title>
+    <title><?php echo htmlspecialchars($product['product_name']); ?> - Power Watch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --prm-blue: #0A111F;
+            --sec-blue: #151f32;
             --chp-gold: #D4AF37;
             --chp-gold-hover: #b5952f;
             --text-light: #f8f9fa;
-            --text-muted: #adb5bd;
+            --text-faded: #adb5bd;
             --dark-grey: #394150;
+            --border-color: #2d3748;
+            --input-bg: #1a2332;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', sans-serif; 
             background-color: var(--prm-blue);
             color: var(--text-light);
             overflow-x: hidden;
         }
+        h1, h2, h3, h4, h5, h6, .font-oswald, .navbar-brand { 
+            font-family: 'Oswald', sans-serif; text-transform: uppercase;
+        }
+        .text-gold { color: var(--chp-gold) !important; }
+        .bg-gold { background-color: var(--chp-gold) !important; }
+        .hover-gold:hover { color: var(--chp-gold) !important; transition: 0.3s; }
 
-        h1, h2, h3, h4, h5, h6, .navbar-brand {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
+        .brand-logo-img {
+            height: 40px;
+            width: auto;
         }
 
-        .text-gold { color: var(--chp-gold); }
-        .text-muted { color: var(--text-muted) !important; }
-        
-        /* Top Bar & Navbar */
+        /* --- Top Bar --- */
         .top-bar {
             background-color: #C8A030;
             color: #000;
-            font-size: 0.85rem;
-            font-weight: 600;
             padding: 8px 0;
+            overflow: hidden;
+        }
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            display: flex;
         }
 
+        .marquee-content {
+            display: flex;
+            animation: marquee 20s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .marquee-content span {
+            padding: 0 50px;
+            flex-shrink: 0;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .marquee-container:hover .marquee-content {
+            animation-play-state: paused;
+        }
+
+        /* --- Navbar --- */
         .navbar {
             background-color: var(--prm-blue);
             padding: 1rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
         .navbar-brand {
             color: white !important;
             font-size: 1.5rem;
@@ -80,631 +126,550 @@ $product = [
             align-items: center;
             gap: 10px;
         }
-
-        .brand-logo-img {
-            max-height: 50px;
-        }
-
         .nav-link {
             color: rgba(255,255,255,0.8) !important;
             font-weight: 500;
             margin: 0 10px;
             text-transform: uppercase;
             font-size: 0.9rem;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
         }
-
         .nav-link:hover {
             color: var(--chp-gold) !important;
         }
-
-        .cart-icon-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: var(--chp-gold);
-            color: #000;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.7rem;
+        
+        /* Dropdown specific styles */
+        .nav-link.dropdown-toggle::after {
             display: none;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
         }
+        
+        .nav-link i.fa-chevron-down {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link[aria-expanded="true"] i.fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-menu {
+            background-color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            padding: 0.5rem 0;
+            min-width: 200px;
+        }
+        
+        .dropdown-item {
+            padding: 0.6rem 1.5rem;
+            color: #333;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--prm-blue);
+            color: white;
+            padding-left: 2rem;
+        }
+        
+        .dropdown-divider {
+            margin: 0.5rem 0;
+            border-color: rgba(0,0,0,0.1);
+        }
+        
+        /* Mobile dropdown styles */
+        @media (max-width: 991px) {
+            .dropdown-menu {
+                background-color: rgba(255,255,255,0.1);
+                border-left: 3px solid var(--chp-gold);
+                margin-left: 1rem;
+                box-shadow: none;
+            }
+            
+            .dropdown-item {
+                color: rgba(255,255,255,0.8);
+                font-size: 0.85rem;
+            }
+            
+            .dropdown-item:hover {
+                background-color: rgba(255,255,255,0.1);
+                color: var(--chp-gold);
+                padding-left: 1.5rem;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 0;
+            }
+        }
+        
+        .nav-icons .btn {
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icons .btn:hover {
+            color: var(--chp-gold);
+            transform: scale(1.1);
+        }
+        
+        /* Cart badge */
+        .cart-badge {
+            font-size: 0.65rem;
+            padding: 0.25em 0.5em;
+        }
+        
+        /* Navbar toggler animation */
+        .navbar-toggler {
+            border-color: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler:hover {
+            border-color: var(--chp-gold);
+        }
+        
+        .navbar-toggler:hover i {
+            color: var(--chp-gold) !important;
+        }
+
+        /* Global Cart Styles */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 0px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 10px; }
+        .qty-pill { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 50px; display: inline-flex; align-items: center; }
+        .qty-pill button { background: transparent; border: none; color: var(--text-light); padding: 2px 10px; transition: 0.2s; }
+        .qty-pill button:hover { color: var(--chp-gold); }
+        .cart-item-title { font-size: 0.85rem; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* Breadcrumb */
-        .breadcrumb-section {
-            background-color: rgba(255,255,255,0.05);
-            padding: 15px 0;
+        .breadcrumb a { color: var(--text-faded); text-decoration: none; font-size: 0.85rem; }
+        .breadcrumb-item.active { color: var(--chp-gold); font-size: 0.85rem; }
+        .breadcrumb-item + .breadcrumb-item::before { color: #666; }
+
+        /* --- UI/UX Upgrades for Product Page --- */
+
+        /* --- Premium Cart Scroll & Text Fixes --- */
+        #cartOffcanvas {
+            width: 400px;
+            max-width: 100vw;
+            background-color: var(--prm-blue);        /* ADDED */
+            border-left: 1px solid var(--border-color); /* ADDED */
         }
 
-        .breadcrumb a {
-            color: var(--text-muted);
-            text-decoration: none;
+        #sideCartItems {
+            overflow-x: hidden !important; 
+            overflow-y: auto; 
         }
 
-        .breadcrumb-item.active {
-            color: var(--chp-gold);
+        .offcanvas-header {                                          /* ADDED */
+            border-color: rgba(255,255,255,0.05) !important;
+            padding: 1.5rem;
         }
 
-        .breadcrumb-item + .breadcrumb-item::before {
-            color: #666;
-        }
-
-        /* Product Gallery */
-        .product-gallery-img {
-            width: 100%;
-            height: 450px;
-            object-fit: contain;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .thumbnail-container {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-        }
-
-        .thumbnail {
-            width: 90px;
-            height: 90px;
-            object-fit: contain;
-            border: 2px solid #333;
-            border-radius: 8px;
-            cursor: pointer;
-            padding: 8px;
-            background: white;
-            opacity: 0.6;
-            transition: all 0.3s;
-        }
-
-        .thumbnail:hover, .thumbnail.active {
-            border-color: var(--chp-gold);
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
-        /* Product Info */
-        .product-price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--chp-gold);
-        }
-
-        .original-price {
-            font-size: 1.2rem;
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .discount-badge {
-            background: linear-gradient(135deg, #990000, #cc0000);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-block;
-        }
-
-        .koko-box {
-            background: var(--dark-grey);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .koko-amount {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--chp-gold);
-        }
-
-        /* Quantity Selector */
-        .qty-selector {
-            display: inline-flex;
-            border: 1px solid #555;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #1a2332;
-        }
-
-        .qty-btn {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px 18px;
-            cursor: pointer;
-            transition: 0.2s;
+        .offcanvas-title {                                           /* ADDED */
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
             font-size: 1.2rem;
         }
 
-        .qty-btn:hover {
-            background: var(--chp-gold);
-            color: #000;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px; 
+            height: 0px !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {          /* ADDED */
+            background: rgba(212, 175, 55, 0.8);
         }
 
-        .qty-input {
-            background: transparent;
-            border: none;
-            color: white;
+        /* --- Free Shipping Bar --- */                             /* ADDED */
+        #freeShippingContainer {
+            background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);
+            padding: 1rem;
             text-align: center;
-            width: 60px;
-            font-weight: 600;
-            font-size: 1.1rem;
+        }
+        #freeShippingText {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        #freeShippingBar {
+            border-radius: 10px;
+            transition: width 0.4s ease;
         }
 
-        /* Buttons */
+        .cart-item-title {
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            line-height: 1.3;
+            color: white;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .qty-pill {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .qty-pill button {
+            background: transparent; border: none; color: var(--text-light); padding: 2px 10px; transition: 0.2s;
+        }
+        .qty-pill button:hover { color: var(--chp-gold); }
+        .qty-pill span { font-size: 0.85rem; font-weight: 600; min-width: 20px; text-align: center; }
+
+        /* --- Cart Addon Section --- */                            /* ADDED */
+        .cart-addon-section {
+            padding: 1rem;
+            border-color: rgba(255,255,255,0.05) !important;
+            background-color: rgba(0,0,0,0.2);
+        }
+        .cart-addon-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .cart-addon-item {
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            transition: border-color 0.3s;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .cart-addon-item:hover { border-color: var(--chp-gold); }
+        .cart-addon-icon-wrap {
+            background-color: var(--prm-blue);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+        }
+        .cart-addon-name { font-size: 0.85rem; font-weight: 500; margin: 0; }
+        .cart-addon-price { font-size: 0.75rem; }
+
+        /* --- Cart Totals Section --- */                           /* ADDED */
+        .cart-totals-section {
+            padding: 1.5rem;
+            border-color: rgba(255,255,255,0.05) !important;
+            background-color: var(--sec-blue);
+        }
+        .cart-subtotal-label { font-size: 0.9rem; }
+        #sideCartTotal {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1;
+            font-weight: 700;
+            display: block;
+        }
+        .cart-tax-note { font-size: 0.7rem; }
+        .cart-checkout-btn { letter-spacing: 1px; border-radius: 6px; padding: 0.75rem; }
+        .cart-secure-note { font-size: 0.7rem; margin: 0; }
+
         .btn-gold {
             background-color: var(--chp-gold);
             color: #000;
             border: none;
-            font-weight: 700;
-            border-radius: 8px;
-            padding: 14px 32px;
+            font-weight: 600;
+            border-radius: 4px;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 1rem;
         }
-
         .btn-gold:hover {
             background-color: var(--chp-gold-hover);
             color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
         }
 
+        /* --- btn-outline-gold --- */
         .btn-outline-gold {
             background: transparent;
             color: var(--chp-gold);
             border: 2px solid var(--chp-gold);
             font-weight: 600;
             border-radius: 8px;
-            padding: 12px 30px;
             transition: all 0.3s;
         }
-
         .btn-outline-gold:hover {
             background-color: var(--chp-gold);
             color: #000;
         }
 
-        /* Features Grid */
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(212, 175, 55, 0.1);
-            border: 2px solid var(--chp-gold);
-            border-radius: 50%;
+        /* 1. Image Gallery (Hidden Scrollbars) */
+        .product-gallery-img { width: 100%; height: 500px; object-fit: contain; background: white; border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .thumbnail-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--chp-gold);
-            margin: 0 auto 15px;
+            gap: 12px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-bottom: 5px;
         }
-
-        .feature-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 30px;
-            transition: 0.3s;
-            text-align: center;
-        }
-
-        .feature-card:hover {
-            background: rgba(212, 175, 55, 0.05);
-            border-color: var(--chp-gold);
-            transform: translateY(-5px);
-        }
-
-        /* Related Products */
-        .related-product-card {
-            background: #151f32;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .related-product-card:hover {
-            border-color: var(--chp-gold);
-            transform: translateY(-5px);
-        }
-
-        .related-img-wrapper {
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: white;
-        }
-
-        .related-img-wrapper img {
-            max-width: 100%;
-            max-height: 100%;
+        .thumbnail-container::-webkit-scrollbar { display: none; }
+        
+        .thumbnail {
+            flex: 0 0 85px;
+            width: 85px;
+            height: 85px;
             object-fit: contain;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 5px;
+            background: white;
+            opacity: 0.5;
+            transition: all 0.3s ease;
         }
+        .thumbnail:hover, .thumbnail.active { border-color: var(--chp-gold); opacity: 1; }
 
-        .related-body {
-            padding: 15px;
-        }
+        /* 2. Text Hierarchy */
+        .product-brand-label { color: var(--chp-gold); font-weight: 600; letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+        .product-main-title { font-size: 2.8rem; line-height: 1.1; font-weight: 700; margin-bottom: 1rem; }
+        .product-price { font-size: 2.2rem; font-weight: 700; color: var(--text-light); font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+        .original-price { font-size: 1.2rem; text-decoration: line-through; color: var(--text-faded); margin-left: 10px; font-weight: 400; }
 
-        /* Footer */
+        /* 3. Koko Box */
+        .koko-box { background: var(--sec-blue); border-left: 3px solid #7191D9; border-radius: 6px; padding: 15px 20px; margin: 25px 0; }
+        
+        /* 4. Actions */
+        .btn-add-cart { background-color: var(--chp-gold); color: #000; font-family: 'Oswald', sans-serif; font-size: 1.2rem; letter-spacing: 1px; padding: 15px; border-radius: 6px; border: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        .btn-add-cart:hover { background-color: var(--chp-gold-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+
+        /* 5. Trust Badges */
+        .trust-item { display: flex; align-items: center; gap: 10px; color: var(--text-faded); font-size: 0.85rem; }
+        .trust-item i { color: var(--chp-gold); font-size: 1.2rem; }
+
+        /* Related Products (Match Index.php) */
+        .product-card { background: var(--sec-blue); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; }
+        .product-card:hover { border-color: var(--chp-gold); transform: translateY(-5px); }
+        .card-img-wrapper { height: 180px; padding: 15px; background: white; display: flex; align-items: center; justify-content: center; position: relative; }
+        .card-img-wrapper img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+
+        /* --- Footer --- */
         footer {
-            background-color: #0d1626;
-            color: var(--text-muted);
-            padding: 3rem 0 1.5rem;
-            margin-top: 5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            background-color: #000;
+            color: #aaa;
+            padding: 4rem 0 2rem;
+            font-size: 0.9rem;
         }
-
+        .footer-brand-logo-img {
+            height: 68px;
+            width: auto;
+        }
         footer h5 {
             color: white;
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
         }
-
         footer ul {
             list-style: none;
             padding: 0;
         }
-
         footer ul li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
         }
-
         footer a {
-            color: var(--text-muted);
+            color: #aaa;
             text-decoration: none;
-            transition: 0.3s;
+            transition: color 0.3s;
         }
-
         footer a:hover {
             color: var(--chp-gold);
         }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+        }
+        .social-icons a {
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
 
+        /* --- Responsive Tweaks --- */
         @media (max-width: 768px) {
-            .product-price {
-                font-size: 2rem;
-            }
-
-            .koko-amount {
-                font-size: 1.4rem;
-            }
-
-            .product-gallery-img {
-                height: 300px;
-                padding: 20px;
-            }
+            .footer-brand-logo-img { height: 54px; }
+            .product-main-title { font-size: 2rem; }
+            .product-gallery-img { height: 350px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Bar -->
-    <div class="top-bar text-center">
-        <div class="container">
-            <i class="fas fa-shipping-fast me-2"></i> FREE SHIPPING on orders over LKR 10,000
-        </div>
+    <?php include 'includes/nav.php'; ?>
+
+    <div class="container mt-4 mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                <li class="breadcrumb-item"><a href="#"><?php echo htmlspecialchars($product['category_name'] ?? 'Shop'); ?></a></li>
+                <li class="breadcrumb-item active"><?php echo htmlspecialchars($product['product_name']); ?></li>
+            </ol>
+        </nav>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <section class="py-4 mb-5">
         <div class="container">
-            <a class="navbar-brand" href="index.php">
-                <img src="assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Men's</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Women's</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Luxury</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Wall Decor</a></li>
-                </ul>
+            <div class="row gx-lg-5">
                 
-                <div class="d-flex gap-3 align-items-center">
-                    <a href="#" class="text-white"><i class="fas fa-search"></i></a>
-                    <a href="#" class="text-white"><i class="fas fa-user"></i></a>
-                    <a href="#" class="text-white cart-icon-wrapper" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadge">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Breadcrumb -->
-    <section class="breadcrumb-section">
-        <div class="container">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Men's Watches</a></li>
-                    <li class="breadcrumb-item active"><?php echo $product['name']; ?></li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-
-    <!-- Product Detail Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <!-- Left: Gallery -->
-                <div class="col-lg-6 mb-4">
-                    <img src="<?php echo $product['images'][0]; ?>" alt="<?php echo $product['name']; ?>" class="product-gallery-img" id="mainImage">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="<?php echo htmlspecialchars($images[0]); ?>" id="mainImage" class="product-gallery-img" alt="<?php echo htmlspecialchars($product['product_name']); ?>">
                     
-                    <div class="thumbnail-container">
-                        <?php foreach ($product['images'] as $index => $img): ?>
-                            <img src="<?php echo $img; ?>" alt="Thumbnail" class="thumbnail <?php echo $index === 0 ? 'active' : ''; ?>" onclick="changeImage(this)">
+                    <div class="thumbnail-container mt-3">
+                        <?php foreach($images as $index => $img): ?>
+                            <img src="<?php echo htmlspecialchars($img); ?>" class="thumbnail <?php echo $index === 0 ? 'active' : ''; ?>" onclick="changeImage(this)">
                         <?php endforeach; ?>
                     </div>
                 </div>
 
-                <!-- Right: Product Info -->
                 <div class="col-lg-6">
-                    <h1 class="h2 text-white mb-2"><?php echo $product['name']; ?></h1>
-                    <p class="text-muted mb-4">By <?php echo $product['brand']; ?></p>
-
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <span class="product-price">LKR <?php echo number_format($product['price']); ?></span>
-                        <span class="original-price">LKR <?php echo number_format($product['original_price']); ?></span>
-                        <span class="discount-badge">-<?php echo $product['discount']; ?>% OFF</span>
+                    <span class="product-brand-label"><?php echo htmlspecialchars($product['brand_name']); ?></span>
+                    <h1 class="product-main-title font-oswald text-white"><?php echo htmlspecialchars($product['product_name']); ?></h1>
+                    
+                    <div class="d-flex align-items-baseline mb-3 mt-4">
+                        <span class="product-price">LKR <?php echo number_format($product['current_price'], 2); ?></span>
+                        <?php if($product['discount_percentage'] > 0): ?>
+                            <span class="original-price">LKR <?php echo number_format($product['original_price'], 2); ?></span>
+                            <span class="badge bg-danger ms-3" style="font-size: 0.9rem; padding: 6px 10px;">Save <?php echo $product['discount_percentage']; ?>%</span>
+                        <?php endif; ?>
                     </div>
 
-                    <!-- KOKO Installment -->
-                    <div class="koko-box">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="text-muted mb-2">Pay with <span style="color:#6F95E8; font-weight:bold;">KOKO</span></div>
-                                <div class="koko-amount">LKR <?php echo number_format($product['koko_installment']); ?> <small class="text-muted" style="font-size: 1rem;">x 3</small></div>
-                            </div>
-                            <i class="fas fa-credit-card fa-2x text-gold"></i>
+                    <div class="koko-box d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-white d-block mb-1" style="font-size: 0.9rem;">Pay in 3 installments of <strong>LKR <?php echo number_format($product['koko_installment'], 2); ?></strong></span>
+                            <span class="text-faded" style="font-size: 0.75rem;">0% interest. No hidden fees.</span>
                         </div>
-                        <small class="text-muted d-block mt-2">No interest. No hidden fees.</small>
+                        <span class="fw-bold" style="color: #7191D9; font-size: 1.2rem;">KOKO</span>
                     </div>
 
-                    <p class="text-muted mb-4"><?php echo $product['description']; ?></p>
+                    <p class="text-faded mb-4" style="line-height: 1.6; font-size: 0.95rem;">
+                        <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                    </p>
 
-                    <!-- Quantity Selector -->
-                    <div class="mb-4">
-                        <label class="text-muted d-block mb-2">Quantity</label>
-                        <div class="qty-selector">
-                            <button class="qty-btn" onclick="changeQty(-1)">−</button>
-                            <input type="number" class="qty-input" id="qtyInput" value="1" min="1" readonly>
-                            <button class="qty-btn" onclick="changeQty(1)">+</button>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+
+                    <div class="row g-3 align-items-center mb-4">
+                        <div class="col-auto">
+                            <div class="qty-pill" style="height: 54px; padding: 0 10px;">
+                                <button onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
+                                <input type="number" id="qtyInput" value="1" min="1" max="<?php echo $product['stock_count']; ?>" style="background: transparent; border: none; color: white; width: 40px; text-align: center; font-weight: bold; pointer-events: none;">
+                                <button onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <button class="btn-add-cart w-100" onclick="handleAddToCart()">
+                                <i class="fas fa-shopping-bag me-2"></i> Add to Cart
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Add to Cart Buttons -->
-                    <div class="d-grid gap-3 mb-4">
-                        <button class="btn btn-gold" onclick="handleAddToCart()">
-                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                        </button>
-                        <button class="btn btn-outline-gold">
-                            <i class="fas fa-heart me-2"></i> Add to Wishlist
-                        </button>
-                    </div>
-
-                    <!-- Product Features -->
-                    <div class="row g-3 mt-4">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-shield-alt text-gold"></i>
-                                <small class="text-muted">2 Year Warranty</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-truck text-gold"></i>
-                                <small class="text-muted">Free Shipping</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-undo text-gold"></i>
-                                <small class="text-muted">7 Day Returns</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-certificate text-gold"></i>
-                                <small class="text-muted">100% Authentic</small>
-                            </div>
-                        </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-6"><div class="trust-item"><i class="fas fa-shield-alt"></i> 2 Year Warranty</div></div>
+                        <div class="col-6"><div class="trust-item"><i class="fas fa-truck"></i> Island-wide Delivery</div></div>
+                        <div class="col-6"><div class="trust-item"><i class="fas fa-undo"></i> 7 Day Returns</div></div>
+                        <div class="col-6"><div class="trust-item"><i class="fas fa-certificate"></i> 100% Authentic</div></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-5" style="background: rgba(255,255,255,0.02);">
+    <section class="py-5" style="background-color: #0f1724;">
         <div class="container">
-            <h3 class="text-center text-white mb-5">Why Choose This Watch?</h3>
-            
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-gem"></i>
-                        </div>
-                        <h5 class="text-white mb-3">Premium Quality</h5>
-                        <p class="text-muted small mb-0">Crafted with precision using the finest materials for lasting durability.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <h5 class="text-white mb-3">Swiss Movement</h5>
-                        <p class="text-muted small mb-0">Powered by reliable Japanese quartz movement for accurate timekeeping.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-water"></i>
-                        </div>
-                        <h5 class="text-white mb-3">Water Resistant</h5>
-                        <p class="text-muted small mb-0">50m water resistance suitable for daily wear and light swimming.</p>
-                    </div>
-                </div>
+            <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">You May Also Like</h3>
+            <div class="row g-4" id="relatedProductsContainer">
+                <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div>
             </div>
         </div>
     </section>
 
-    <!-- Related Products -->
-    <section class="py-5">
-        <div class="container">
-            <h3 class="text-center text-white mb-5">You May Also Like</h3>
-            
-            <div class="row g-4">
-                <?php
-                $related = [
-                    ['name' => 'Titan Silver Analog', 'price' => 14500, 'img' => 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=80'],
-                    ['name' => 'Titan Black Dial', 'price' => 18000, 'img' => 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=400&q=80'],
-                    ['name' => 'Titan Gold Edition', 'price' => 22000, 'img' => 'https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=400&q=80'],
-                    ['name' => 'Classic Leather', 'price' => 12000, 'img' => 'https://images.unsplash.com/photo-1434056838489-293029c62689?auto=format&fit=crop&w=400&q=80']
-                ];
-                
-                foreach ($related as $item):
-                ?>
-                <div class="col-6 col-md-3">
-                    <div class="related-product-card">
-                        <div class="related-img-wrapper">
-                            <img src="<?php echo $item['img']; ?>" alt="<?php echo $item['name']; ?>">
-                        </div>
-                        <div class="related-body">
-                            <h6 class="text-white mb-2"><?php echo $item['name']; ?></h6>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold text-gold">LKR <?php echo number_format($item['price']); ?></span>
-                                <button class="btn btn-sm btn-gold"><i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+    <?php include 'includes/footer.php'; ?>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-md-4">
-                    <a class="navbar-brand mb-3" href="index.php">
-                        <span>POWER <span class="text-gold">WATCH</span></span>
-                    </a>
-                    <p>Your trusted source for premium timepieces since 2020.</p>
-                </div>
-                <div class="col-md-2 col-6">
-                    <h5>Quick Links</h5>
-                    <ul>
-                        <li><a href="#">Men's</a></li>
-                        <li><a href="#">Women's</a></li>
-                        <li><a href="#">About Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 col-6">
-                    <h5>Customer Care</h5>
-                    <ul>
-                        <li><a href="#">Warranty Info</a></li>
-                        <li><a href="#">Returns Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>No. 123, Main Street<br>Panadura, Sri Lanka</p>
-                    <p>Phone: +94 77 123 4567</p>
-                </div>
-            </div>
-            
-            <div class="mt-4 pt-3 border-top border-secondary d-flex justify-content-between flex-wrap">
-                <p class="mb-0">&copy; 2026 Power Watch. All rights reserved.</p>
-                <div>
-                    <span class="me-2">We Accept:</span>
-                    <i class="fab fa-cc-mastercard fa-lg me-2"></i>
-                    <i class="fab fa-cc-visa fa-lg"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--chp-gold);">
-        <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
-            <h5 class="offcanvas-title text-white font-oswald text-uppercase" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px;">
-                <i class="fas fa-shopping-bag text-gold me-2"></i> Your Cart
+    <!-- Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--border-color); width: 400px;">
+        
+        <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.05) !important; padding: 1.5rem;">
+            <h5 class="offcanvas-title text-white mb-0" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 1.2rem;">
+                Your Cart <span id="cartHeaderCount" class="text-gold ms-1">(0)</span>
             </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white opacity-50 hover-opacity-100" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         
-        <div class="offcanvas-body d-flex flex-column p-0">
+        <div class="offcanvas-body d-flex flex-column p-0 custom-scrollbar">
+            
+            <div id="freeShippingContainer" class="p-3 text-center" style="background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);">
+                <p id="freeShippingText" class="text-white mb-2" style="font-size: 0.8rem; font-weight: 500;">
+                    You're <span class="text-gold fw-bold">LKR 5,000</span> away from Free Shipping!
+                </p>
+                <div class="progress" style="height: 6px; background-color: var(--input-bg); border-radius: 10px;">
+                    <div id="freeShippingBar" class="progress-bar bg-gold" role="progressbar" style="width: 60%; border-radius: 10px; transition: width 0.4s ease;"></div>
+                </div>
+            </div>
+
             <div id="sideCartItems" class="flex-grow-1 overflow-auto p-3">
                 </div>
 
-            <div class="p-3" style="background-color: var(--dark-grey);">
-                <h6 class="text-white mb-3" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Recommended Add-ons</h6>
+            <div class="p-3 mt-auto border-top" style="border-color: rgba(255,255,255,0.05) !important; background-color: rgba(0,0,0,0.2);">
+                <h6 class="text-white mb-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Complete Your Purchase</h6>
                 
-                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-box-open text-gold fs-4"></i>
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: var(--input-bg); border: 1px solid transparent; transition: 0.3s;" onmouseover="this.style.borderColor='var(--chp-gold)'" onmouseout="this.style.borderColor='transparent'">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-prm-blue d-flex align-items-center justify-content-center rounded" style="width: 40px; height: 40px;">
+                            <i class="fas fa-gift text-gold"></i>
+                        </div>
                         <div>
-                            <p class="m-0 text-white" style="font-size: 0.8rem;">Premium Gift Box</p>
-                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 1,500</span>
+                            <p class="m-0 text-white fw-medium" style="font-size: 0.85rem;">Luxury Gift Box</p>
+                            <span class="text-white" style="font-size: 0.75rem;">LKR 1,500</span>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Premium Gift Box', 1500)" style="font-size: 0.7rem;">Add</button>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-shield-alt text-gold fs-4"></i>
-                        <div>
-                            <p class="m-0 text-white" style="font-size: 0.8rem;">+1 Year Ext. Warranty</p>
-                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 2,500</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Extended Warranty', 2500)" style="font-size: 0.7rem;">Add</button>
+                    <button class="btn btn-sm btn-outline-gold rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" onclick="addAddonToCart('Luxury Gift Box', 1500)">Add</button>
                 </div>
             </div>
 
-            <div class="p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important; background-color: var(--prm-blue);">
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="text-muted">Subtotal</span>
-                    <span class="text-white fw-bold fs-5" id="sideCartTotal">LKR 0.00</span>
+            <div class="p-4 border-top" style="border-color: rgba(255,255,255,0.05) !important; background-color: var(--sec-blue);">
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <span class="text-white" style="font-size: 0.9rem;">Subtotal</span>
+                    <div class="text-end">
+                        <span class="text-white fw-bold d-block" id="sideCartTotal" style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; line-height: 1;">LKR 0.00</span>
+                        <span class="text-white" style="font-size: 0.7rem;">Taxes and shipping calculated at checkout</span>
+                    </div>
                 </div>
-                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold" style="letter-spacing: 1px;">
-                    Proceed to Checkout <i class="fas fa-arrow-right ms-2"></i>
+                
+                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold shadow-sm" style="letter-spacing: 1px; border-radius: 6px;">
+                    Checkout
                 </button>
-                <button class="btn btn-link text-muted w-100 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
-                    Continue Shopping
-                </button>
+                
+                <div class="text-center mt-3">
+                    <p class="text-white m-0" style="font-size: 0.7rem;">
+                        <i class="fas fa-lock me-1 text-gold"></i> Secure Encrypted Checkout
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -713,38 +678,84 @@ $product = [
     <script src="js/cart.js"></script>
 
     <script>
-        // Product data from PHP
-        const productData = {
-            id: <?php echo $product['id']; ?>,
-            name: '<?php echo addslashes($product['name']); ?>',
-            price: <?php echo $product['price']; ?>,
-            image: '<?php echo $product['images'][0]; ?>',
+        // 1. Current Product Data (Passed from PHP to JS for the Cart)
+        const currentProductData = {
+            id: <?php echo $product['product_id']; ?>,
+            name: "<?php echo addslashes($product['product_name']); ?>",
+            price: <?php echo $product['current_price']; ?>,
+            image: "<?php echo addslashes($images[0]); ?>",
             quantity: 1,
-            options: {}
+            options: { Brand: "<?php echo addslashes($product['brand_name']); ?>" }
         };
 
-        // Change main image
+        // 2. Image Gallery Logic
         function changeImage(element) {
             document.getElementById('mainImage').src = element.src;
             document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
             element.classList.add('active');
         }
 
-        // Quantity controls
+        // 3. Quantity Logic
         function changeQty(delta) {
             const input = document.getElementById('qtyInput');
             let value = parseInt(input.value) + delta;
+            const maxStock = <?php echo $product['stock_count']; ?>;
             if (value < 1) value = 1;
-            if (value > 10) value = 10;
+            if (value > maxStock) {
+                value = maxStock;
+                alert("Maximum stock reached.");
+            }
             input.value = value;
-            productData.quantity = value;
+            currentProductData.quantity = value;
         }
 
-        // Add to cart handler
+        // 4. Add to Cart Trigger
         function handleAddToCart() {
-            productData.quantity = parseInt(document.getElementById('qtyInput').value);
-            addToCart(productData);
+            currentProductData.quantity = parseInt(document.getElementById('qtyInput').value);
+            addToCart(currentProductData); // Calls cart.js which opens the offcanvas
         }
+
+        // 5. Fetch Dynamic Related Products
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('admin/actions/products-data.php');
+                const allProducts = await response.json();
+                
+                // Filter logic: Same category, but NOT this exact product. Limit to 4.
+                const categoryId = <?php echo $product['category_id'] ?? 1; ?>;
+                const related = allProducts.filter(p => p.id !== currentProductData.id).slice(0, 4);
+
+                const container = document.getElementById('relatedProductsContainer');
+                container.innerHTML = '';
+
+                related.forEach(p => {
+                    const currentPrice = new Intl.NumberFormat('en-LK').format(p.pricing.current_price);
+                    const oldPrice = p.pricing.discount_percent > 0 ? `<span class="original-price" style="font-size:0.8rem;">LKR ${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}</span>` : '';
+                    const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
+
+                    container.innerHTML += `
+                        <div class="col-6 col-md-3">
+                            <div class="product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
+                                <div class="card-img-wrapper">
+                                    <img src="${img}" alt="${p.name.replace(/"/g, '&quot;')}">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title text-white">${p.name}</h6>
+                                    <div class="mt-auto">
+                                        ${oldPrice}
+                                        <div class="text-gold fw-bold font-oswald" style="font-size: 1.1rem;">LKR ${currentPrice}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                console.error("Error loading related products:", error);
+                document.getElementById('relatedProductsContainer').innerHTML = '';
+            }
+        });
     </script>
 </body>
 </html>

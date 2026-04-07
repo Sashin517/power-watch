@@ -58,6 +58,20 @@
             background-color: var(--chp-gold-hover);
             color: #000;
         }
+        .btn-outline-gold {
+            background: transparent;
+            color: var(--chp-gold);
+            border: 2px solid var(--chp-gold);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px 30px;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-gold:hover {
+            background-color: var(--chp-gold);
+            color: #000;
+        }
 
         .btn-blue {
             background-color: var(--btn-blue);
@@ -1049,6 +1063,79 @@
             padding: 20px;
             background-size: 50% 50%;
         }
+        /* --- Premium Cart Specific Styles --- */
+
+        /* 1. Hide horizontal scrollbar completely and style the vertical one */
+        #sideCartItems {
+            overflow-x: hidden !important; 
+            overflow-y: auto; 
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px; 
+            height: 0px; /* Removes horizontal scrollbar */
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.8);
+        }
+
+        /* 2. Line Clamping for Long Product Names */
+        .cart-item-title {
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            line-height: 1.4;
+            color: white;
+            margin-bottom: 0.25rem;
+            
+            /* The Magic: Limits text to 2 lines and adds '...' */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+        /* 3. Existing Pill & Image Styles */
+        .qty-pill {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .qty-pill button {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            padding: 2px 10px;
+            transition: 0.2s;
+        }
+        .qty-pill button:hover {
+            color: var(--chp-gold);
+        }
+        .qty-pill span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        .cart-item-image {
+            width: 70px; 
+            height: 70px; 
+            object-fit: contain; 
+            background: white; 
+            border-radius: 8px; 
+            padding: 4px;
+            border: 1px solid var(--border-color);
+        }
 
         /* --- Footer --- */
         footer {
@@ -1114,7 +1201,7 @@
         
     </style>
 </head>
-<body>
+    <body>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="marquee-container">
@@ -1491,58 +1578,69 @@
             </div>
         </div>
     </footer>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--chp-gold);">
-    <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
-        <h5 class="offcanvas-title text-white font-oswald text-uppercase" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px;">
-            <i class="fas fa-shopping-bag text-gold me-2"></i> Your Cart
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    
-        <div class="offcanvas-body d-flex flex-column p-0">
+    <!-- Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--border-color); width: 400px;">
+        
+        <div class="offcanvas-header border-bottom" style="border-color: rgba(255,255,255,0.05) !important; padding: 1.5rem;">
+            <h5 class="offcanvas-title text-white mb-0" id="cartOffcanvasLabel" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 1.2rem;">
+                Your Cart <span id="cartHeaderCount" class="text-gold ms-1">(0)</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white opacity-50 hover-opacity-100" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        
+        <div class="offcanvas-body d-flex flex-column p-0 custom-scrollbar">
+            
+            <div id="freeShippingContainer" class="p-3 text-center" style="background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);">
+                <p id="freeShippingText" class="text-white mb-2" style="font-size: 0.8rem; font-weight: 500;">
+                    You're <span class="text-gold fw-bold">LKR 5,000</span> away from Free Shipping!
+                </p>
+                <div class="progress" style="height: 6px; background-color: var(--input-bg); border-radius: 10px;">
+                    <div id="freeShippingBar" class="progress-bar bg-gold" role="progressbar" style="width: 60%; border-radius: 10px; transition: width 0.4s ease;"></div>
+                </div>
+            </div>
+
             <div id="sideCartItems" class="flex-grow-1 overflow-auto p-3">
                 </div>
 
-            <div class="p-3" style="background-color: var(--dark-grey);">
-                <h6 class="text-white mb-3" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Recommended Add-ons</h6>
+            <div class="p-3 mt-auto border-top" style="border-color: rgba(255,255,255,0.05) !important; background-color: rgba(0,0,0,0.2);">
+                <h6 class="text-white mb-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Complete Your Purchase</h6>
                 
-                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-box-open text-gold fs-4"></i>
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background: var(--input-bg); border: 1px solid transparent; transition: 0.3s;" onmouseover="this.style.borderColor='var(--chp-gold)'" onmouseout="this.style.borderColor='transparent'">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-prm-blue d-flex align-items-center justify-content-center rounded" style="width: 40px; height: 40px;">
+                            <i class="fas fa-gift text-gold"></i>
+                        </div>
                         <div>
-                            <p class="m-0 text-white" style="font-size: 0.8rem;">Premium Gift Box</p>
-                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 1,500</span>
+                            <p class="m-0 text-white fw-medium" style="font-size: 0.85rem;">Luxury Gift Box</p>
+                            <span class="text-white" style="font-size: 0.75rem;">LKR 1,500</span>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Premium Gift Box', 1500)" style="font-size: 0.7rem;">Add</button>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-shield-alt text-gold fs-4"></i>
-                        <div>
-                            <p class="m-0 text-white" style="font-size: 0.8rem;">+1 Year Ext. Warranty</p>
-                            <span class="text-gold fw-bold" style="font-size: 0.75rem;">+ LKR 2,500</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-gold px-2 py-1" onclick="addAddonToCart('Extended Warranty', 2500)" style="font-size: 0.7rem;">Add</button>
+                    <button class="btn btn-sm btn-outline-gold rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" onclick="addAddonToCart('Luxury Gift Box', 1500)">Add</button>
                 </div>
             </div>
 
-            <div class="p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important; background-color: var(--prm-blue);">
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="text-muted">Subtotal</span>
-                    <span class="text-white fw-bold fs-5" id="sideCartTotal">LKR 0.00</span>
+            <div class="p-4 border-top" style="border-color: rgba(255,255,255,0.05) !important; background-color: var(--sec-blue);">
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <span class="text-white" style="font-size: 0.9rem;">Subtotal</span>
+                    <div class="text-end">
+                        <span class="text-white fw-bold d-block" id="sideCartTotal" style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; line-height: 1;">LKR 0.00</span>
+                        <span class="text-white" style="font-size: 0.7rem;">Taxes and shipping calculated at checkout</span>
+                    </div>
                 </div>
-                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold" style="letter-spacing: 1px;">
-                    Proceed to Checkout <i class="fas fa-arrow-right ms-2"></i>
+                
+                <button onclick="window.location.href='checkout.php'" class="btn btn-gold w-100 py-3 text-uppercase fw-bold shadow-sm" style="letter-spacing: 1px; border-radius: 6px;">
+                    Checkout
                 </button>
-                <button class="btn btn-link text-muted w-100 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
-                    Continue Shopping
-                </button>
+                
+                <div class="text-center mt-3">
+                    <p class="text-white m-0" style="font-size: 0.7rem;">
+                        <i class="fas fa-lock me-1 text-gold"></i> Secure Encrypted Checkout
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+
     <script src="js/cart.js"></script>
     <script>
         function updateActiveTab(clickedBtn) {
@@ -1584,11 +1682,11 @@
                 filterByBrand('Casio');
 
             } catch (error) {
-                console.error("Failed to load products:", error);
-                document.getElementById('luxuryCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
-                document.getElementById('peoplesChoiceCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
-                document.getElementById('favoriteBrandsCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
-                document.getElementById('wallClockCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Failed to load products.</div>';
+                console.error("Give us a second. We’re winding the collection.:", error);
+                document.getElementById('luxuryCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
+                document.getElementById('peoplesChoiceCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
+                document.getElementById('favoriteBrandsCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
+                document.getElementById('wallClockCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
             }
         });
 
