@@ -417,9 +417,17 @@ if(empty($images)) {
             color: #000;
         }
 
-        /* 1. Image Gallery (Hidden Scrollbars) */
-        .product-gallery-img { width: 100%; height: 500px; object-fit: contain; background: white; border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        
+        /* --- 1. Fixed Image Gallery Responsiveness --- */
+        .product-gallery-img { 
+            width: 100%; 
+            aspect-ratio: 1 / 1; /* Forces a perfect square */
+            max-height: 500px;
+            object-fit: contain; 
+            background: white; 
+            border-radius: 12px; 
+            padding: 2rem; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
         .thumbnail-container {
             display: flex;
             gap: 12px;
@@ -463,12 +471,30 @@ if(empty($images)) {
         .trust-item i { color: var(--chp-gold); font-size: 1.2rem; }
 
         /* Related Products (Match Index.php) */
-        .product-card { background: var(--sec-blue); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; }
+        /* --- 2. Upgraded Product Cards (For Related Section) --- */
+        .product-card { 
+            background: var(--sec-blue); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            transition: 0.3s; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+        }
         .product-card:hover { border-color: var(--chp-gold); transform: translateY(-5px); }
-        .card-img-wrapper { height: 180px; padding: 15px; background: white; display: flex; align-items: center; justify-content: center; position: relative; }
+        .card-img-wrapper { 
+            aspect-ratio: 1 / 1; /* Keeps images uniform */
+            padding: 15px; 
+            background: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+        }
         .card-img-wrapper img { max-height: 100%; max-width: 100%; object-fit: contain; }
         .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
         
 
         /* --- Footer --- */
@@ -511,12 +537,39 @@ if(empty($images)) {
             font-size: 1.2rem;
             margin-right: 15px;
         }
-
+        /* --- 3. Sticky Mobile Cart Bar --- */
+        .mobile-sticky-cart {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 17, 31, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--chp-gold);
+            padding: 10px 15px;
+            z-index: 1030;
+            transform: translateY(100%); /* Hidden by default */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .mobile-sticky-cart.show {
+            transform: translateY(0); /* Slides up */
+        }
+        @media (max-width: 576px) {
+            .card-body { padding: 0.75rem; }
+            .card-title { font-size: 0.75rem; }
+        }
         /* --- Responsive Tweaks --- */
         @media (max-width: 768px) {
+            body { padding-bottom: 70px; } 
+            .brand-logo-img { height: 32px; }
             .footer-brand-logo-img { height: 54px; }
-            .product-main-title { font-size: 2rem; }
-            .product-gallery-img { height: 350px; }
+            .product-main-title { font-size: 1.8rem; line-height: 1.2; }
+            .product-price { font-size: 1.8rem; }
+            .product-gallery-img { padding: 1rem; }
         }
     </style>
 </head>
@@ -599,6 +652,18 @@ if(empty($images)) {
             </div>
         </div>
     </section>
+
+    <div class="mobile-sticky-cart d-md-none" id="stickyCartBar">
+        <div>
+            <p class="m-0 text-white font-oswald" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
+                <?php echo htmlspecialchars($product['product_name']); ?>
+            </p>
+            <p class="m-0 text-gold fw-bold">LKR <?php echo number_format($product['current_price'], 2); ?></p>
+        </div>
+        <button class="btn btn-gold btn-sm px-4 py-2 text-uppercase fw-bold" onclick="handleAddToCart()">
+            Add to Cart
+        </button>
+    </div>
 
     <section class="py-5" style="background-color: #0f1724;">
         <div class="container">
@@ -715,13 +780,24 @@ if(empty($images)) {
             addToCart(currentProductData); // Calls cart.js which opens the offcanvas
         }
 
-        // 5. Fetch Dynamic Related Products
+        // 5. Fetch Dynamic Related Products & Add to Cart Logic
+        function quickAddToCart(id, name, price, img) {
+            const pData = { 
+                id: id, 
+                name: name, 
+                price: parseFloat(price), 
+                image: img, 
+                quantity: 1,
+                options: { Type: 'Standard' } 
+            };
+            addToCart(pData); // Calls cart.js which opens offcanvas
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch('admin/actions/products-data.php');
                 const allProducts = await response.json();
                 
-                // Filter logic: Same category, but NOT this exact product. Limit to 4.
                 const categoryId = <?php echo $product['category_id'] ?? 1; ?>;
                 const related = allProducts.filter(p => p.id !== currentProductData.id).slice(0, 4);
 
@@ -730,20 +806,26 @@ if(empty($images)) {
 
                 related.forEach(p => {
                     const currentPrice = new Intl.NumberFormat('en-LK').format(p.pricing.current_price);
-                    const oldPrice = p.pricing.discount_percent > 0 ? `<span class="original-price" style="font-size:0.8rem;">LKR ${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}</span>` : '';
+                    const oldPrice = p.pricing.discount_percent > 0 ? `<span class="original-price" style="font-size:0.75rem;">LKR ${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}</span>` : '';
                     const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
+                    const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     container.innerHTML += `
                         <div class="col-6 col-md-3">
                             <div class="product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
                                 <div class="card-img-wrapper">
-                                    <img src="${img}" alt="${p.name.replace(/"/g, '&quot;')}">
+                                    <img src="${img}" alt="${safeName}">
                                 </div>
                                 <div class="card-body">
                                     <h6 class="card-title text-white">${p.name}</h6>
                                     <div class="mt-auto">
-                                        ${oldPrice}
-                                        <div class="text-gold fw-bold font-oswald" style="font-size: 1.1rem;">LKR ${currentPrice}</div>
+                                        <div class="d-flex align-items-baseline gap-2 mb-2">
+                                            <div class="text-gold fw-bold font-oswald" style="font-size: 1.1rem;">LKR ${currentPrice}</div>
+                                            ${oldPrice}
+                                        </div>
+                                        <button class="btn btn-outline-gold btn-sm w-100 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${p.pricing.current_price}, '${img}')">
+                                            <i class="fas fa-plus me-1"></i> Add
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -753,9 +835,28 @@ if(empty($images)) {
 
             } catch (error) {
                 console.error("Error loading related products:", error);
-                document.getElementById('relatedProductsContainer').innerHTML = '';
+                document.getElementById('relatedProductsContainer').innerHTML = '<p class="text-center text-muted">No related products found.</p>';
             }
         });
+
+        // 6. Sticky Mobile Bar Observer
+        // This makes the sticky bar appear ONLY when the main Add to Cart button scrolls out of view
+        const mainAddToCartBtn = document.querySelector('.btn-add-cart');
+        const stickyBar = document.getElementById('stickyCartBar');
+        
+        if (mainAddToCartBtn && stickyBar) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        stickyBar.classList.add('show'); // Button is out of view, show sticky bar
+                    } else {
+                        stickyBar.classList.remove('show'); // Button is in view, hide sticky bar
+                    }
+                });
+            }, { threshold: 0 });
+            
+            observer.observe(mainAddToCartBtn);
+        }
     </script>
 </body>
 </html>
