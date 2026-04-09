@@ -575,7 +575,7 @@ if(empty($images)) {
 </head>
 <body>
 
-    <?php include 'includes/nav.php'; ?>
+    <?php include 'includes/header.php'; ?>
 
     <div class="container mt-4 mb-3">
         <nav aria-label="breadcrumb">

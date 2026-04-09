@@ -220,6 +220,28 @@
             margin: 0.5rem 0;
             border-color: rgba(0,0,0,0.1);
         }
+        /* --- Minimalist Toast Responsiveness --- */
+        .minimal-toast-container {
+            position: fixed;
+            z-index: 1080;
+            bottom: 24px;
+            right: 24px;
+            width: auto;
+            max-width: 400px;
+        }
+    
+        @media (max-width: 768px) {
+            .minimal-toast-container {
+                bottom: 85px; /* Pushes it up so it sits right above the sticky mobile Add to Cart bar */
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                width: auto;
+            }
+            .minimal-toast-container .toast {
+                width: 100% !important; /* Forces it to stretch beautifully on mobile */
+            }
+        }
         
         /* Mobile dropdown styles */
         @media (max-width: 991px) {

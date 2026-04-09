@@ -18,25 +18,33 @@ session_start();
             --chp-gold: #D4AF37;
             --chp-gold-hover: #b5952f;
             --text-light: #f8f9fa;
-            --text-muted: #adb5bd;
+            --text-faded: #adb5bd;
             --border-color: #2d3748;
             --input-bg: #1a2332;
             --success-green: #2ecc71;
             --danger-red: #e74c3c;
         }
 
+        /* --- Refined Typography --- */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--prm-blue);
             color: var(--text-light);
             min-height: 100vh;
+            font-size: 0.9rem; /* Standardized e-commerce base font size */
         }
 
         h1, h2, h3, h4, h5, h6, .brand-font {
             font-family: 'Oswald', sans-serif;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
+        h5 { font-size: 1.1rem; margin-bottom: 1rem; }
+
+        .brand-logo-img { height: 32px; width: auto; }
+
+        /* --- Layout & Grid --- */
         .checkout-container {
             display: flex;
             flex-wrap: wrap;
@@ -45,150 +53,159 @@ session_start();
         
         .main-content {
             flex: 1;
-            padding: 2rem 5%;
+            padding: 3rem 5%;
             border-right: 1px solid var(--border-color);
         }
 
         .sidebar-summary {
-            flex: 0 0 40%;
+            flex: 0 0 42%;
             background-color: #0f1724;
-            padding: 2rem 5%;
+            padding: 3rem 5%;
             border-left: 1px solid var(--border-color);
         }
 
+        /* --- Links & Breadcrumbs --- */
         a { color: var(--chp-gold); text-decoration: none; transition: 0.3s; }
         a:hover { color: var(--chp-gold-hover); }
         
-        .breadcrumb-item + .breadcrumb-item::before { color: var(--text-muted); }
-        .breadcrumb a { color: var(--text-muted); font-size: 0.9rem; }
-        .breadcrumb-item.active { color: var(--text-light); font-weight: 600; }
+        .breadcrumb { margin-bottom: 2rem; }
+        .breadcrumb-item + .breadcrumb-item::before { color: var(--text-faded); font-size: 0.8rem; }
+        .breadcrumb a { color: var(--chp-gold); font-size: 0.8rem; font-weight: 500; }
+        .breadcrumb-item.active { color: var(--text-light); font-weight: 500; font-size: 0.8rem; }
 
-        .form-control, .form-select {
+        /* --- Sleeker Forms --- */
+        .form-floating > .form-control, .form-floating > .form-select {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             color: white;
-            padding: 0.8rem;
+            font-size: 0.9rem;
             border-radius: 6px;
+            height: calc(3.2rem + 2px); /* Slimmer inputs */
+            min-height: calc(3.2rem + 2px);
         }
-
-        .form-control:focus, .form-select:focus {
+        .form-floating > label {
+            padding: 0.8rem 0.75rem;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .form-floating > .form-control:focus, .form-floating > .form-select:focus {
             background-color: var(--input-bg);
             border-color: var(--chp-gold);
             color: white;
-            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
         }
-
-        .form-control::placeholder { color: #6c757d; }
-        
-        .form-floating label { color: #888; }
+        .form-control::placeholder { color: transparent; }
         .form-floating > .form-control:focus ~ label,
         .form-floating > .form-control:not(:placeholder-shown) ~ label {
             color: var(--chp-gold);
+            transform: scale(.85) translateY(-0.75rem) translateX(0.15rem);
         }
 
+        /* --- Compact Radio Cards --- */
         .radio-card-group {
             border: 1px solid var(--border-color);
             border-radius: 6px;
             overflow: hidden;
-        }
-
-        .radio-card {
             background-color: var(--input-bg);
+        }
+        .radio-card {
             padding: 1rem;
             display: flex;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.2s;
+            margin: 0;
         }
-
         .radio-card:last-child { border-bottom: none; }
         .radio-card:hover { background-color: #242e42; }
-        
         .radio-card input[type="radio"] {
             accent-color: var(--chp-gold);
-            width: 1.2em;
-            height: 1.2em;
-            margin-right: 1rem;
+            width: 1.1em;
+            height: 1.1em;
+            margin-right: 0.8rem;
+            cursor: pointer;
         }
 
+        /* --- Buttons --- */
         .btn-gold {
             background-color: var(--chp-gold);
             color: #000;
-            font-weight: 700;
-            padding: 1rem 2rem;
-            border-radius: 8px;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
             width: 100%;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             border: none;
+            font-size: 0.95rem;
             transition: all 0.3s;
         }
-
         .btn-gold:hover {
             background-color: var(--chp-gold-hover);
-            color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
         }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .btn-gold:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
+        /* --- Product Thumbnail & List --- */
         .product-thumbnail-wrapper {
             position: relative;
-            width: 70px;
-            height: 70px;
-            border: 1px solid var(--border-color);
+            width: 64px;
+            height: 64px;
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
-            background: #fff;
-            padding: 5px;
+            background: rgba(255,255,255,0.02);
+            padding: 4px;
         }
-
         .product-thumbnail-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
-
         .product-badge {
             position: absolute;
             top: -8px;
             right: -8px;
-            background-color: var(--chp-gold);
+            background-color: rgba(212, 175, 55, 0.9);
             color: #000;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 0.75rem;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
         }
-
         .products-list {
-            max-height: 350px;
+            max-height: 40vh;
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: 10px;
+            padding-top: 7px;
         }
+        .products-list::-webkit-scrollbar { width: 4px; }
+        .products-list::-webkit-scrollbar-track { background: transparent; }
+        .products-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
-        .products-list::-webkit-scrollbar { width: 5px; }
-        .products-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        .products-list::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
-
-        .empty-cart {
+        /* --- Mobile Header & Toggle --- */
+        .mobile-header {
+            display: none;
+            padding: 1.25rem 5%;
+            border-bottom: 1px solid var(--border-color);
             text-align: center;
-            padding: 3rem 1rem;
+            background-color: var(--prm-blue);
         }
-
-        .empty-cart i {
-            font-size: 4rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+        .order-summary-toggle {
+            background-color: #0f1724;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 5%;
+            display: none;
+            color: var(--chp-gold);
+            cursor: pointer;
+            font-size: 0.95rem;
         }
+        .order-summary-toggle .fa-chevron-down { transition: transform 0.3s; }
+        .order-summary-toggle[aria-expanded="true"] .fa-chevron-down { transform: rotate(180deg); }
 
         .error-message {
             background: rgba(231, 76, 60, 0.1);
@@ -196,64 +213,91 @@ session_start();
             color: var(--danger-red);
             padding: 0.75rem;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: none;
         }
 
+        /* --- Responsive Magic --- */
         @media (max-width: 991px) {
+            .checkout-container { flex-direction: column-reverse; }
+            .mobile-header { display: block; }
+            .order-summary-toggle { display: flex; justify-content: space-between; align-items: center; }
+            
             .sidebar-summary {
                 flex: 0 0 100%;
                 border-left: none;
-                border-top: 1px solid var(--border-color);
+                border-bottom: 1px solid var(--border-color);
+                padding: 1.5rem 5%;
+                background-color: #0f1724;
             }
+            .sidebar-summary:not(.show) { display: none; }
             
             .main-content {
                 border-right: none;
+                padding: 1.5rem 5%;
             }
+            
+            /* Hide desktop logo */
+            .desktop-logo { display: none !important; }
         }
 
         @media (max-width: 576px) {
-            .main-content, .sidebar-summary {
-                padding: 1.5rem 4%;
-            }
+            h5 { font-size: 1.05rem; }
+            .radio-card { font-size: 0.85rem; padding: 0.8rem 1rem; }
+            .form-floating > label { font-size: 0.8rem; }
+            .btn-gold { padding: 0.85rem 1.5rem; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
+    <div class="mobile-header">
+        <a href="index.php" class="text-decoration-none">
+            <img src="assets/images/brand-logos/logo5.png" alt="Power Watch" class="brand-logo-img">
+        </a>
+    </div>
+
+    <div class="order-summary-toggle" data-bs-toggle="collapse" data-bs-target="#mobileSummary" aria-expanded="false">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-shopping-cart me-2"></i>
+            <span class="me-2">Show order summary</span>
+            <i class="fas fa-chevron-down small"></i>
+        </div>
+        <div class="fw-bold fs-5" id="mobileTotalDisplay">LKR 0.00</div>
+    </div>
+
     <div class="checkout-container">
         
-        <!-- Left Side: Checkout Form -->
         <div class="main-content">
             
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="index.php" class="navbar-brand" style="text-decoration: none;">
-                    <span>POWER <span class="text-gold">WATCH</span></span>
+            <div class="mb-4 desktop-logo">
+                <a href="index.php" class="text-decoration-none">
+                    <img src="assets/images/brand-logos/logo5.png" alt="Power Watch" class="brand-logo-img mb-2">
                 </a>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                        <li class="breadcrumb-item active">Checkout</li>
-                    </ol>
-                </nav>
             </div>
 
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.php">Cart</a></li>
+                    <li class="breadcrumb-item active">Information & Payment</li>
+                </ol>
+            </nav>
+
             <form id="checkoutForm">
-                <!-- Contact Information -->
-                <section class="mb-5">
-                    <h5 class="mb-3">Contact Information</h5>
+                <section class="mb-4">
+                    <div class="d-flex justify-content-between align-items-end mb-2">
+                        <h5 class="mb-2">Contact Information</h5>
+                    </div>
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                         <label for="email">Email address</label>
                     </div>
                 </section>
 
-                <!-- Shipping Address -->
-                <section class="mb-5">
-                    <h5 class="mb-3">Shipping Address</h5>
+                <section class="mb-4">
+                    <h5 class="mb-3">Delivery Address</h5>
                     
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-md-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" required>
@@ -268,17 +312,17 @@ session_start();
                         </div>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-2">
                         <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
                         <label for="address">Address</label>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-2">
                         <input type="text" class="form-control" id="apartment" name="apartment" placeholder="Apartment">
                         <label for="apartment">Apartment, suite, etc. (optional)</label>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-md-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
@@ -293,16 +337,15 @@ session_start();
                         </div>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-4">
                         <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" required>
                         <label for="phone">Phone</label>
                     </div>
                 </section>
 
-                <!-- Payment -->
-                <section class="mb-5">
-                    <h5 class="mb-1">Payment Method</h5>
-                    <p class="text-muted small mb-3">All transactions are secure and encrypted.</p>
+                <section class="mb-4">
+                    <h5 class="mb-1">Payment</h5>
+                    <p class="text-faded small mb-3">All transactions are secure and encrypted.</p>
                     
                     <div class="radio-card-group">
                         <label class="radio-card justify-content-between">
@@ -310,7 +353,7 @@ session_start();
                                 <input type="radio" name="paymentMethod" value="card" checked required>
                                 <span>Credit/Debit Card</span>
                             </div>
-                            <div class="d-flex gap-1">
+                            <div class="d-flex gap-2 text-faded">
                                 <i class="fab fa-cc-visa fa-lg"></i>
                                 <i class="fab fa-cc-mastercard fa-lg"></i>
                             </div>
@@ -321,7 +364,7 @@ session_start();
                                 <input type="radio" name="paymentMethod" value="koko" required>
                                 <span>Pay with <span style="color:#6F95E8; font-weight:bold;">KOKO</span></span>
                             </div>
-                            <span class="badge bg-secondary">3 Installments</span>
+                            <span class="badge bg-secondary opacity-75 fw-normal" style="font-size: 0.7rem;">3 Installments</span>
                         </label>
 
                         <label class="radio-card">
@@ -333,60 +376,61 @@ session_start();
                     </div>
                 </section>
 
-                <!-- Error Message -->
-                <div class="error-message mb-4" id="errorMessage">
-                    <i class="fas fa-exclamation-circle me-2"></i>
+                <div class="error-message mb-3" id="errorMessage">
+                    <i class="fas fa-exclamation-circle me-1"></i>
                     <span id="errorText"></span>
                 </div>
 
-                <!-- Actions -->
-                <div class="d-flex flex-column-reverse flex-md-row justify-content-between align-items-center mt-4">
-                    <a href="index.php" class="mt-3 mt-md-0"><i class="fas fa-chevron-left me-2"></i>Continue Shopping</a>
-                    <button type="submit" class="btn btn-gold px-5 py-3 w-md-auto" id="submitBtn">
-                        <i class="fas fa-lock me-2"></i> Place Order
+                <div class="d-flex flex-column-reverse flex-md-row justify-content-between align-items-center mt-4 pt-2">
+                    <a href="index.php" class="mt-4 mt-md-0 small"><i class="fas fa-chevron-left me-2"></i>Return to shop</a>
+                    <button type="submit" class="btn btn-gold px-5 w-md-auto" id="submitBtn">
+                        <i class="fas fa-lock me-2 opacity-75"></i> Place Order
                     </button>
                 </div>
                 
-                <div class="mt-5 pt-3 border-top border-secondary text-muted small">
-                    <a href="#" class="text-muted me-3">Refund policy</a>
-                    <a href="#" class="text-muted me-3">Shipping policy</a>
-                    <a href="#" class="text-muted me-3">Privacy policy</a>
-                    <a href="#" class="text-muted">Terms of service</a>
+                <div class="mt-5 pt-4 border-top border-secondary text-secondary text-center text-md-start" style="font-size: 0.75rem;">
+                    <a href="#" class="text-secondary me-3">Refund policy</a>
+                    <a href="#" class="text-secondary me-3">Shipping policy</a>
+                    <a href="#" class="text-secondary me-3">Privacy policy</a>
+                    <a href="#" class="text-secondary">Terms of service</a>
                 </div>
             </form>
         </div>
 
-        <!-- Right Side: Order Summary -->
-        <div class="sidebar-summary">
+        <div class="sidebar-summary collapse d-lg-block" id="mobileSummary">
             
-            <h5 class="mb-4">Order Summary</h5>
-
-            <!-- Products List -->
             <div class="products-list mb-3" id="cartItemsList">
-                <div class="empty-cart" id="emptyCart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <h6 class="text-muted">Your cart is empty</h6>
-                    <a href="index.php" class="btn btn-outline-gold mt-3">Start Shopping</a>
+                <div class="text-center py-5" id="emptyCart">
+                    <i class="fas fa-shopping-cart mb-3 text-faded" style="font-size: 3rem; opacity: 0.5;"></i>
+                    <p class="text-faded small">Your cart is empty</p>
+                    <a href="index.php" class="btn btn-sm btn-outline-gold mt-2 px-4 rounded-pill">Start Shopping</a>
                 </div>
             </div>
 
-            <!-- Totals -->
-            <div class="border-top border-secondary pt-4">
-                <div class="d-flex justify-content-between mb-2 text-muted">
+            <div class="d-flex gap-2 my-4">
+                <div class="form-floating flex-grow-1">
+                    <input type="text" class="form-control" id="discountCode" placeholder="Discount code" style="height: calc(3rem + 2px); min-height: calc(3rem + 2px);">
+                    <label for="discountCode">Discount code</label>
+                </div>
+                <button type="button" class="btn btn-secondary px-4" style="background-color: #333; border: 1px solid var(--border-color); color: #ccc; font-weight: 500;">Apply</button>
+            </div>
+
+            <div class="border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-2 text-faded small">
                     <span>Subtotal (<span id="itemCount">0</span> items)</span>
-                    <span id="subtotalAmount">LKR 0.00</span>
+                    <span id="subtotalAmount" class="text-light">LKR 0.00</span>
                 </div>
-                <div class="d-flex justify-content-between mb-2 text-muted">
+                <div class="d-flex justify-content-between mb-2 text-faded small">
                     <span>Shipping</span>
-                    <span class="small">Free</span>
+                    <span class="text-light">Free</span>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary">
-                <span class="h5 mb-0">Total</span>
-                <div class="d-flex align-items-baseline">
-                    <small class="text-muted me-2">LKR</small>
-                    <span class="h3 mb-0 text-gold" id="totalAmount">0.00</span>
+            <div class="d-flex justify-content-between align-items-end mt-3 pt-3 border-top border-secondary">
+                <span class="mb-0 text-light" style="font-size: 1.1rem;">Total</span>
+                <div class="d-flex align-items-baseline gap-2">
+                    <span class="text-faded small">LKR</span>
+                    <span class="font-oswald text-gold" id="totalAmount" style="font-size: 1.8rem; font-weight: 500;">0.00</span>
                 </div>
             </div>
         </div>
@@ -420,20 +464,19 @@ session_start();
 
             items.forEach((item, index) => {
                 const itemHtml = `
-                    <div class="d-flex align-items-center mb-4 cart-item">
-                        <div class="product-thumbnail-wrapper">
+                    <div class="d-flex align-items-center mb-3 cart-item">
+                        <div class="product-thumbnail-wrapper flex-shrink-0">
                             <div class="product-badge">${item.quantity}</div>
                             <img src="${item.image}" alt="${item.name}">
                         </div>
-                        <div class="ms-3 flex-grow-1">
-                            <h6 class="mb-1">${item.name}</h6>
+                        <div class="ms-3 flex-grow-1" style="min-width: 0;">
+                            <h6 class="mb-1 text-white" style="font-size: 0.85rem; font-weight: 500; word-break: break-word; white-space: normal; line-height: 1.4;">${item.name}</h6>
                             ${item.options && Object.keys(item.options).length > 0 ? 
-                                `<small class="text-muted d-block">${Object.entries(item.options).map(([k,v]) => `${k}: ${v}`).join(', ')}</small>` 
+                                `<small class="text-faded d-block" style="font-size: 0.75rem;">${Object.entries(item.options).map(([k,v]) => `${v}`).join(', ')}</small>` 
                                 : ''}
                         </div>
-                        <div class="text-end">
-                            <div class="fw-bold text-gold">${cart.formatCurrency(item.price * item.quantity)}</div>
-                            <button class="btn btn-link text-danger p-0 mt-1 small" onclick="removeCartItem(${index})">Remove</button>
+                        <div class="text-end ms-2 flex-shrink-0">
+                            <div class="fw-bold text-white" style="font-size: 0.9rem;">${cart.formatCurrency(item.price * item.quantity)}</div>
                         </div>
                     </div>
                 `;
@@ -447,16 +490,15 @@ session_start();
         function updateTotals() {
             const subtotal = cart.getSubtotal();
             const count = cart.getCount();
+            const formattedTotal = cart.formatCurrency(subtotal);
             
             document.getElementById('itemCount').textContent = count;
-            document.getElementById('subtotalAmount').textContent = cart.formatCurrency(subtotal);
-            document.getElementById('totalAmount').textContent = subtotal.toFixed(2);
-        }
-
-        // Remove item from cart
-        function removeCartItem(index) {
-            cart.removeItem(index);
-            renderCartItems();
+            document.getElementById('subtotalAmount').textContent = formattedTotal;
+            document.getElementById('totalAmount').textContent = subtotal.toLocaleString('en-LK', {minimumFractionDigits: 2});
+            
+            // Update Mobile Toggle Header
+            const mobileTotal = document.getElementById('mobileTotalDisplay');
+            if(mobileTotal) mobileTotal.textContent = formattedTotal;
         }
 
         // Handle form submission
@@ -488,9 +530,7 @@ session_start();
                 const data = await response.json();
 
                 if (data.success) {
-                    // Clear cart
                     cart.clearCart();
-                    // Redirect to success page
                     window.location.href = `order-success.php?order=${data.order_number}`;
                 } else {
                     showError(data.message || 'Failed to place order. Please try again.');
@@ -512,10 +552,8 @@ session_start();
             errorText.textContent = message;
             errorDiv.style.display = 'block';
             
-            // Scroll to error
             errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            // Auto-hide after 5 seconds
             setTimeout(() => {
                 errorDiv.style.display = 'none';
             }, 5000);

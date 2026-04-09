@@ -186,14 +186,19 @@ function renderSideCart() {
     totalEl.innerText = cart.formatCurrency(subtotal);
 }
 
-// Override addToCart to update Side Panel instead of Toast
+// The Main Add To Cart Trigger
 function addToCart(productData) {
-    cart.addItem(productData);
-    renderSideCart();
-    
-    // Show Offcanvas if it's not already open
-    const cartCanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
-    cartCanvas.show();
+    try {
+        cart.addItem(productData);
+        renderSideCart(); // Updates the data silently in the background
+        
+        // Show the sleek minimal toast instead of opening the drawer
+        showMinimalCartToast(productData.name);
+        return true;
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        return false;
+    }
 }
 
 // Function for Addons
@@ -216,22 +221,62 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSideCart();
 });
 
-/**
- * Add to cart button handler
- */
-function addToCart(productData) {
-    try {
-        const count = cart.addItem(productData);
-        showCartToast(`${productData.name} added to cart!`, 'success');
-        return true;
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        showCartToast('Failed to add item to cart', 'error');
-        return false;
-    }
-}
-
 // Update badge on page load
 document.addEventListener('DOMContentLoaded', () => {
     cart.updateCartBadge();
 });
+
+// The Sleek Vanishing Toast UI (Mobile Responsive)
+function showMinimalCartToast(productName) {
+    // Remove existing toast if user clicks "Add" multiple times quickly
+    const existing = document.getElementById('minimalCartToast');
+    if (existing) existing.remove();
+
+    // The Toast HTML (Now using the responsive container class)
+    const toastHtml = `
+        <div id="minimalCartToast" class="minimal-toast-container">
+            <div class="toast show align-items-center text-white border-0 w-100" role="alert" 
+                 style="background-color: var(--sec-blue); border: 1px solid var(--chp-gold) !important; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-radius: 8px;">
+                <div class="d-flex justify-content-between align-items-center p-2 px-3">
+                    
+                    <div class="toast-body p-1 text-truncate" style="font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-check-circle text-success me-2"></i> 
+                        <span class="text-white">${productName}</span> added.
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3 ms-3 flex-shrink-0">
+                        <button type="button" class="btn btn-link text-gold p-0 text-decoration-none fw-bold" 
+                                style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;" 
+                                onclick="openOffcanvasFromToast()">
+                            View Cart
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+
+    // Auto-vanish after 4 seconds
+    setTimeout(() => {
+        const toast = document.getElementById('minimalCartToast');
+        if (toast) {
+            toast.style.transition = 'opacity 0.4s ease';
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 400); 
+        }
+    }, 4000);
+}
+
+// The "View Cart" Click Handler
+function openOffcanvasFromToast() {
+    // Remove the toast
+    const toast = document.getElementById('minimalCartToast');
+    if (toast) toast.remove();
+    
+    // Slide open the Side Panel Drawer
+    const cartCanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
+    cartCanvas.show();
+}
