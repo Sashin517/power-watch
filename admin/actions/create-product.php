@@ -1,10 +1,19 @@
 <?php
-
 require "../../includes/connection.php";
 
-// 1. Collect Data & Escape Strings to prevent SQL errors
-$product_name = addslashes($_POST["title"]); // <-- FIX: addslashes() added here
-$description = addslashes($_POST["desc"]);   // <-- FIX: addslashes() added here
+$product_name = addslashes($_POST["title"]);
+$description = addslashes($_POST["desc"]);
+$romance_copy = addslashes($_POST["romance_copy"]);
+
+$diameter = !empty($_POST["diameter"]) ? (float)$_POST["diameter"] : 0;
+$thickness = !empty($_POST["thickness"]) ? (float)$_POST["thickness"] : 0;
+$water_atm = !empty($_POST["water_atm"]) ? (int)$_POST["water_atm"] : 0;
+
+$materials = addslashes($_POST["materials"]);
+$glass = addslashes($_POST["glass"]);
+$movement = addslashes($_POST["movement"]);
+$clasp = addslashes($_POST["clasp"]);
+$warranty = !empty($_POST["warranty"]) ? (int)$_POST["warranty"] : 0;
 
 $brand_id = $_POST["brand"];
 $sub_category_id = $_POST["category"]; 
@@ -12,97 +21,60 @@ $original_price = (float)$_POST["oprice"];
 $current_price = (float)$_POST["cprice"];
 $stock_count = (int)$_POST["qty"];
 
-// Checkboxes
 $is_luxury = (isset($_POST["luxury"]) && $_POST["luxury"] == 'true') ? 1 : 0;
 $is_peoples_choice = (isset($_POST["choice"]) && $_POST["choice"] == 'true') ? 1 : 0;
 
-// 2. Validation
 if (empty($product_name)) { echo "Please enter the product name."; exit(); }
 if (empty($brand_id) || $brand_id == "0") { echo "Please select a brand."; exit(); }
 if (empty($sub_category_id) || $sub_category_id == "0") { echo "Please select a category."; exit(); }
-if (empty($description)) { echo "Please enter a description."; exit(); }
 if (empty($current_price) || $current_price <= 0) { echo "Please enter a valid current price."; exit(); }
 
-// 3. Logic Calculations
-$discount_percentage = 0;
-if ($original_price > $current_price) {
-    $discount_percentage = round((($original_price - $current_price) / $original_price) * 100);
-}
-
+$discount_percentage = ($original_price > $current_price) ? round((($original_price - $current_price) / $original_price) * 100) : 0;
 $koko_installment = round($current_price / 3, 2);
 
-// 4. Insert Product (Initially with default image)
 try {
     $op_value = ($original_price > 0) ? "'".$original_price."'" : "NULL";
+    $dia_val = ($diameter > 0) ? "'".$diameter."'" : "NULL";
+    $thick_val = ($thickness > 0) ? "'".$thickness."'" : "NULL";
+    $water_val = ($water_atm > 0) ? "'".$water_atm."'" : "NULL";
+    $warranty_val = ($warranty > 0) ? "'".$warranty."'" : "NULL"; // <--- Properly formats the quotes
     $default_image = 'assets/images/products/default.png';
 
-    // stock_count matches the HTML form name 'qty', schema name 'stock_count'
-    // image_path defaults here, will update later if images are uploaded
+    // Notice that $warranty_val does NOT have single quotes around it
     $query = "INSERT INTO `products` 
-    (`product_name`, `description`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_count`, `is_luxury`, `is_peoples_choice`) 
+    (`product_name`, `description`, `romance_copy`, `case_diameter_mm`, `case_thickness_mm`, `materials`, `glass_type`, `water_resistance_atm`, `movement_details`, `clasp_type`, `warranty_period`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_count`, `is_luxury`, `is_peoples_choice`) 
     VALUES 
-    ('".$product_name."', '".$description."', '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."','".$stock_count."', '".$is_luxury."', '".$is_peoples_choice."')";
+    ('".$product_name."', '".$description."', '".$romance_copy."', $dia_val, $thick_val, '".$materials."', '".$glass."', $water_val, '".$movement."', '".$clasp."', $warranty_val, '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."','".$stock_count."', '".$is_luxury."', '".$is_peoples_choice."')";
 
     Database::iud($query);
-    
-    // GET THE NEW PRODUCT ID
-    // Note: Database::setUpConnection() must be called before insert_id if it's not active
+
     Database::setUpConnection(); 
     $product_id = Database::$connection->insert_id;
 
-    // 5. Handle Multiple Images
     $uploaded_paths = [];
-    
     if(isset($_FILES['images'])) {
         $allowed_types = array("image/jpg", "image/jpeg", "image/png", "image/webp");
-        $file_count = count($_FILES['images']['name']);
-        
-        // Limit to 4 images
-        $limit = ($file_count > 4) ? 4 : $file_count;
-
+        $limit = (count($_FILES['images']['name']) > 4) ? 4 : count($_FILES['images']['name']);
         for($i = 0; $i < $limit; $i++) {
             $file_type = $_FILES['images']['type'][$i];
-            
             if(in_array($file_type, $allowed_types)) {
-                $new_img_extension = "";
-                if ($file_type == "image/jpg") $new_img_extension = ".jpg";
-                elseif ($file_type == "image/jpeg") $new_img_extension = ".jpeg";
-                elseif ($file_type == "image/png") $new_img_extension = ".png";
-                elseif ($file_type == "image/webp") $new_img_extension = ".webp";
-
-                // Unique name for each image
-                $file_name = uniqid() . "_img" . $i . $new_img_extension;
+                $ext = ($file_type == "image/jpg") ? ".jpg" : (($file_type == "image/jpeg") ? ".jpeg" : (($file_type == "image/png") ? ".png" : ".webp"));
+                $file_name = uniqid() . "_img" . $i . $ext;
                 $target_dir = "../../assets/images/products/";
-                $target_file = $target_dir . $file_name;
-                $db_path = "assets/images/products/" . $file_name; // Path for DB
-
-                if (!file_exists($target_dir)) {
-                    mkdir($target_dir, 0777, true);
-                }
-
-                if(move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_file)) {
+                $db_path = "assets/images/products/" . $file_name;
+                if (!file_exists($target_dir)) mkdir($target_dir, 0777, true);
+                if(move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_dir . $file_name)) {
                     $uploaded_paths[] = $db_path;
-                    
-                    // First image is primary
                     $is_primary = ($i == 0) ? 1 : 0;
-                    
-                    // Insert into product_images table
                     Database::iud("INSERT INTO `product_images` (`product_id`, `image_path`, `is_primary`) VALUES ('".$product_id."', '".$db_path."', '".$is_primary."')");
                 }
             }
         }
     }
 
-    // 6. Update Main Product Image Path (Set to the first uploaded image)
     if(count($uploaded_paths) > 0) {
-        $main_image = $uploaded_paths[0];
-        Database::iud("UPDATE `products` SET `image_path` = '".$main_image."' WHERE `product_id` = '".$product_id."'");
+        Database::iud("UPDATE `products` SET `image_path` = '".$uploaded_paths[0]."' WHERE `product_id` = '".$product_id."'");
     }
-
     echo "success";
-
-} catch (Exception $e) {
-    echo "Error saving product: " . $e->getMessage();
-}
-
+} catch (Exception $e) { echo "Error saving product: " . $e->getMessage(); }
 ?>

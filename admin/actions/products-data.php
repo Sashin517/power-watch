@@ -55,6 +55,19 @@ try {
                 'id' => $product_id,
                 'name' => $row['product_name'] ?? '',
                 'description' => $row['description'] ?? '',
+                'romance_copy' => $row['romance_copy'] ?? '',
+                
+                // Grouped Specs
+                'specs' => [
+                    'case_diameter_mm' => isset($row['case_diameter_mm']) ? (float)$row['case_diameter_mm'] : null,
+                    'case_thickness_mm' => isset($row['case_thickness_mm']) ? (float)$row['case_thickness_mm'] : null,
+                    'materials' => $row['materials'] ?? '',
+                    'glass' => $row['glass_type'] ?? '',
+                    'water_resistance_atm' => isset($row['water_resistance_atm']) ? (int)$row['water_resistance_atm'] : null,
+                    'movement' => $row['movement_details'] ?? '',
+                    'clasp' => $row['clasp_type'] ?? '',
+                    'warranty' => isset($row['warranty_period']) ? (int)$row['warranty_period'] : 0
+                ],
                 
                 // Grouped Brand Data
                 'brand' => [

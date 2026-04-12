@@ -19,6 +19,7 @@
             --chp-gold-hover: #b5952f;
             --fd-blue: #D9D9D9; /* Light grey/silver */
             --btn-blue: #6F95E8; /* Periwinkle blue button */
+            --sec-blue: #151f32; /* Darker blue for secondary elements */
             --btn-brown: #8B887F; /* Saddle Brown for "People's Choice" buttons */
             --cream-bg: #F9EDC9; /* Luxury collection bg approximation */
             --dark-grey: #394150;
@@ -1077,7 +1078,7 @@
         }
         .carousel:hover .carousel-control-prev, 
         .carousel:hover .carousel-control-next {
-            opacity: 1;
+            display: none !important;
         }
         .carousel-control-prev-icon, .carousel-control-next-icon {
             background-color: rgba(0,0,0,0.5);
@@ -1211,13 +1212,6 @@
             }
             .banner-wall-clock {
                 background-image: url('assets/images/home/body-banners/bdy-bnr-img-2-mobile.png');
-            }
-        }
-
-        /* Multi-item carousel hack for pure bootstrap */
-        @media (min-width: 992px) {
-            .carousel-inner.multi-item .carousel-item {
-                display: block; /* Force block to allow flex children logic if needed, but we will use groups */
             }
         }
         
@@ -1439,6 +1433,8 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
+            <!-- closes #luxuryCarousel -->
+            <div class="text-center mt-3" id="luxuryDots"></div>
         </div>
     </section>
 
@@ -1469,6 +1465,8 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
+            <!-- closes #peoplesChoiceCarousel -->
+            <div class="text-center mt-3" id="peoplesChoiceDots"></div>
         </div>
     </section>
 
@@ -1509,6 +1507,8 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
+            <!-- closes #favoriteBrandsCarousel -->
+            <div class="text-center mt-3" id="favoriteBrandsDots"></div>
 
             <div class="text-center">
                 <button class="btn btn-gold rounded-pill px-5">See more</button>
@@ -1543,13 +1543,8 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
-             <!-- Dots indicator -->
-             <div class="text-center mt-3">
-                 <span style="display:inline-block; width:8px; height:8px; background:white; border-radius:50%; margin:0 3px;"></span>
-                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
-                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
-                 <span style="display:inline-block; width:8px; height:8px; background:#666; border-radius:50%; margin:0 3px;"></span>
-             </div>
+            <!-- closes #wallClockCarousel -->
+            <div class="text-center mt-3" id="wallClockDots"></div>
         </div>
     </section>
 
@@ -1723,20 +1718,30 @@
             const container = document.getElementById(containerId);
             if(!container) return;
 
+            const dotsMap = {
+                'luxuryCarouselInner':       'luxuryDots',
+                'peoplesChoiceCarouselInner':'peoplesChoiceDots',
+                'favoriteBrandsCarouselInner':'favoriteBrandsDots',
+                'wallClockCarouselInner':    'wallClockDots'
+            };
+
             if (products.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted py-5">No products found in this category.</div>';
+                container.innerHTML = '<div class="text-center text-secondary py-5">No products found in this category.</div>';
                 return;
             }
 
             let html = '';
-            const itemsPerSlide = 6; // Desktop shows 6 items per row (col-lg-2)
+            const itemsPerSlide = window.innerWidth >= 992 ? 6
+                    : window.innerWidth >= 768 ? 4
+                    : window.innerWidth >= 576 ? 3
+                    : 2;
 
             // Loop through products in chunks of 6
             for (let i = 0; i < products.length; i += itemsPerSlide) {
                 const chunk = products.slice(i, i + itemsPerSlide);
                 const isActive = i === 0 ? 'active' : '';
                 
-                html += `<div class="carousel-item ${isActive}"><div class="row g-3">`;
+                html += `<div class="carousel-item ${isActive}"><div class="row g-3 justify-content-center">`;
                 
                 chunk.forEach(p => {
                     // Format Prices
@@ -1788,6 +1793,55 @@
             }
             
             container.innerHTML = html;
+
+            // Show/hide navigation arrows based on number of slides
+            const totalSlides = Math.ceil(products.length / itemsPerSlide);
+            const carouselEl = container.closest('.carousel');
+            if (carouselEl) {
+                if (totalSlides <= 1) {
+                    carouselEl.classList.add('carousel-controls-hidden');
+                } else {
+                    carouselEl.classList.remove('carousel-controls-hidden');
+                }
+            }
+
+            // Render dynamic dots
+            const dotsContainer = document.getElementById(dotsMap[containerId]);
+            if (dotsContainer) {
+                if (totalSlides <= 1) {
+                    dotsContainer.innerHTML = ''; // hide dots if only one slide
+                } else {
+                    let dotsHtml = '';
+                    for (let d = 0; d < totalSlides; d++) {
+                        const activeBg = d === 0 ? 'white' : '#666';
+                        dotsHtml += `<span 
+                            data-slide="${d}" 
+                            data-carousel="${carouselEl ? carouselEl.id : ''}"
+                            style="display:inline-block; width:8px; height:8px; background:${activeBg}; border-radius:50%; margin:0 3px; cursor:pointer; transition:background 0.3s;"
+                        ></span>`;
+                    }
+                    dotsContainer.innerHTML = dotsHtml;
+
+                    // Click on dot to go to that slide
+                    dotsContainer.querySelectorAll('span').forEach(dot => {
+                        dot.addEventListener('click', () => {
+                            const carousel = bootstrap.Carousel.getOrCreateInstance(
+                                document.getElementById(dot.dataset.carousel)
+                            );
+                            carousel.to(parseInt(dot.dataset.slide));
+                        });
+                    });
+
+                    // Sync active dot when carousel slides
+                    if (carouselEl) {
+                        carouselEl.addEventListener('slide.bs.carousel', (e) => {
+                            dotsContainer.querySelectorAll('span').forEach((dot, i) => {
+                                dot.style.background = i === e.to ? 'white' : '#666';
+                            });
+                        });
+                    }
+                }
+            }
         }
 
         // Quick Add to Cart from Home Page
@@ -1804,6 +1858,26 @@
             // This calls the function inside your cart.js
             addToCart(productData); 
         }
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                // Re-render all sections with current product data
+                const luxuryProducts = globalProducts.filter(p => p.is_luxury === true);
+                renderCarouselGrid(luxuryProducts, 'luxuryCarouselInner', 'btn-gold');
+
+                const popularProducts = globalProducts.filter(p => p.is_peoples_choice === true);
+                renderCarouselGrid(popularProducts, 'peoplesChoiceCarouselInner', 'btn-blue');
+
+                const wallDecorProducts = globalProducts.filter(p => p.category === 'Wall Decor');
+                renderCarouselGrid(wallDecorProducts, 'wallClockCarouselInner', 'btn-brown');
+
+                // Re-render active brand tab
+                const activeTab = document.querySelector('.brand-tab.btn-light');
+                if (activeTab) filterByBrand(activeTab.textContent.trim());
+            }, 300); // debounce — waits 300ms after resize stops
+        });
     </script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

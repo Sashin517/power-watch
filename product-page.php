@@ -562,10 +562,89 @@ if(empty($images)) {
             flex-shrink: 0;
         }
         .btn-view-solid:hover { background: var(--chp-gold-hover); transform: scale(1.05); }
+        
+        /* --- 6. Romance Copy & Technical Specs Accordion --- */
+        .romance-copy {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: white;
+            font-style: italic;
+            border-left: 3px solid var(--chp-gold);
+            padding-left: 15px;
+            margin-bottom: 1.5rem;
+        }
 
+        .custom-accordion {
+            --bs-accordion-bg: var(--sec-blue);
+            --bs-accordion-color: var(--text-light);
+            --bs-accordion-border-color: rgba(255,255,255,0.05);
+            --bs-accordion-border-radius: 8px;
+            --bs-accordion-btn-color: white;
+            --bs-accordion-btn-bg: var(--sec-blue);
+            --bs-accordion-active-color: var(--chp-gold);
+            --bs-accordion-active-bg: rgba(212, 175, 55, 0.05);
+        }
+        
+        .custom-accordion .accordion-item {
+            border: 1px solid var(--bs-accordion-border-color);
+            margin-bottom: 1rem;
+            border-radius: var(--bs-accordion-border-radius) !important;
+            overflow: hidden;
+        }
+
+        .custom-accordion .accordion-button {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: none !important;
+            padding: 1.2rem 1.5rem;
+        }
+
+        /* Makes the default Bootstrap accordion arrows white/gold */
+        .custom-accordion .accordion-button::after {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .custom-accordion .accordion-button:not(.collapsed)::after {
+            filter: invert(70%) sepia(40%) saturate(1000%) hue-rotate(5deg) brightness(100%);
+        }
+
+        .custom-accordion .accordion-body {
+            background-color: var(--prm-blue);
+            padding: 1.5rem;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        .spec-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .spec-label { color: var(--text-faded); font-size: 0.9rem; }
+        .spec-value { color: white; font-weight: 500; font-size: 0.9rem; text-align: right; max-width: 60%; }
+
+        /* --- Mobile Responsive Card Fixes --- */
+        @media (max-width: 768px) {
+            /* 1. Scale down padding and fonts safely while keeping the hierarchy */
+            .card-body { padding: 1rem; }
+            .card-title { font-size: 20px; margin-bottom: 0.5rem; } 
+            .current-price { font-size: 16px; }
+            .old-price { font-size: 14px; }
+            .koko-text { font-size: 11px; margin-bottom: 1rem; }
+            
+            /* 2. Keep prices on the same line, but allow wrapping if needed */
+            .price-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 0.25rem; }
+            
+            /* 3. Touch Target Optimization: Stack buttons and make the 'eye' icon a full pill */
+            .card-actions { display: flex; flex-direction: column-reverse; gap: 8px; }
+            .btn-add-cart-outline { width: 100%; font-size: 14px; padding: 12px; }
+            .btn-view-solid { width: 100%; border-radius: 25px; height: 44px; } 
+        }
         /* Recently view btn style */
         .btn-recent-add-cart-outline { 
             flex-grow: 1; 
+            height: 100%;
+            color: #000; 
             background: transparent; 
             border: 2px solid var(--btn-blue); 
             color: white; 
@@ -582,20 +661,21 @@ if(empty($images)) {
             color: #000; 
             border: none; 
             border-radius: 50%; /* Circle from design */
-            width: 42px; 
-            height: 42px;
+            width: 36px; 
+            height: 36px;
             display: flex; 
             align-items: center; 
             justify-content: center; 
             transition: 0.3s;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
         }
         .btn-recent-view-solid:hover { background: var(--btn-blue-hover); color: #fff; transform: scale(1.05); }
 
-        /* Responsive scaling so 26px font doesn't break mobile */
+        /* Responsive scaling */
         @media (max-width: 768px) {
-            .btn-recent-add-cart-outline { font-size: 8px; padding: 8px; }
+            .btn-recent-view-solid {height: 44px; }
+            .btn-recent-add-cart-outline { width: 100%; font-size: 14px; padding: 12px;}
         }
         /* --- Flat Design Product Cards (For Recently Viewed) --- */
         .flat-product-card {
@@ -680,10 +760,34 @@ if(empty($images)) {
 
         .flat-card-actions {
             display: flex;
+            align-items: center;
             gap: 12px;
             margin-top: auto;
             flex-direction: row-reverse;
-        }      
+        }
+        
+        /* --- Minimalist Toast Responsiveness --- */
+        .minimal-toast-container {
+            position: fixed;
+            z-index: 1080;
+            bottom: 24px;
+            right: 24px;
+            width: auto;
+            max-width: 400px;
+        }
+    
+        @media (max-width: 768px) {
+            .minimal-toast-container {
+                bottom: 85px; /* Pushes it up so it sits right above the sticky mobile Add to Cart bar */
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                width: auto;
+            }
+            .minimal-toast-container .toast {
+                width: 100% !important; /* Forces it to stretch beautifully on mobile */
+            }
+        }
 
         /* --- Footer --- */
         footer {
@@ -746,10 +850,6 @@ if(empty($images)) {
         .mobile-sticky-cart.show {
             transform: translateY(0); /* Slides up */
         }
-        @media (max-width: 576px) {
-            .card-body { padding: 0.75rem; }
-            .card-title { font-size: 0.75rem; }
-        }
         /* --- Responsive Tweaks --- */
         @media (max-width: 768px) {
             body { padding-bottom: 70px; } 
@@ -809,9 +909,97 @@ if(empty($images)) {
                         <span class="fw-bold" style="color: #7191D9; font-size: 1.2rem;">KOKO</span>
                     </div>
 
-                    <p class="text-faded mb-4" style="line-height: 1.6; font-size: 0.95rem;">
-                        <?php echo nl2br(htmlspecialchars($product['description'])); ?>
-                    </p>
+                    <div class="accordion custom-accordion mb-4" id="specsAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSpecs">
+                                <button class="accordion-button collapsed text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs" aria-expanded="false" aria-controls="collapseSpecs">
+                                    <i class="fas fa-sliders-h me-2 text-gold"></i> Technical Specifications
+                                </button>
+                            </h2>
+                            <div id="collapseSpecs" class="accordion-collapse collapse" aria-labelledby="headingSpecs" data-bs-parent="#specsAccordion">
+                                <div class="accordion-body">
+                                    
+                                    <?php 
+                                    // Check if AT LEAST ONE specification exists
+                                    $has_specs = !empty($product['case_diameter_mm']) || 
+                                                !empty($product['case_thickness_mm']) || 
+                                                !empty($product['materials']) || 
+                                                !empty($product['glass_type']) || 
+                                                !empty($product['movement_details']) || 
+                                                !empty($product['water_resistance_atm']) || 
+                                                !empty($product['clasp_type']) || 
+                                                !empty($product['warranty_period']);
+                                    
+                                    if ($has_specs): 
+                                    ?>
+
+                                        <?php if(!empty($product['case_diameter_mm'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Case Diameter</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['case_diameter_mm']); ?> mm</span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['case_thickness_mm'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Case Thickness</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['case_thickness_mm']); ?> mm</span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['materials'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Materials</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['materials']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['glass_type'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Glass / Crystal</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['glass_type']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['movement_details'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Movement</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['movement_details']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['water_resistance_atm'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Water Resistance</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['water_resistance_atm']); ?> ATM</span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['clasp_type'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Clasp Type</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['clasp_type']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if(!empty($product['warranty_period'])): ?>
+                                            <div class="spec-row">
+                                                <span class="spec-label">Warranty</span>
+                                                <span class="spec-value"><?php echo htmlspecialchars($product['warranty_period']); ?> Months</span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                    <?php else: ?>
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-info-circle text-shaded mb-2" style="font-size: 1.5rem;"></i>
+                                            <p class="text-shaded mb-0" style="font-size: 0.9rem;">Technical specifications are currently not available for this product.</p>
+                                        </div>
+                                    <?php endif; ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
 
@@ -1011,7 +1199,7 @@ if(empty($images)) {
                     const kokoInstallment = new Intl.NumberFormat('en-LK').format(priceNum / 3);
 
                     container.innerHTML += `
-                        <div class="col-6 col-md-3">
+                        <div class="col-12 col-md-6 col-lg-3">
                             <div class="product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
                                 <div class="card-img-wrapper">
                                     <img src="${img}" alt="${safeName}">
@@ -1117,7 +1305,7 @@ if(empty($images)) {
 
                // Using the new Flat Design layout
                 container.innerHTML += `
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-4">
                         <div class="flat-product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
                             
                             <div class="flat-img-wrapper">

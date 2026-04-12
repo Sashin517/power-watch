@@ -691,6 +691,43 @@
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" id="productDesc" rows="4" placeholder="Product details..."></textarea>
                             </div>
+                            <h5 class="text-white mb-3 mt-4 w-100 border-top border-secondary pt-4">Marketing & Specifications</h5>
+                            <div class="col-12">
+                                <label class="form-label">Romance Hook (2-Sentence Marketing Copy)</label>
+                                <textarea class="form-control" id="romanceCopy" rows="2" placeholder="Sell the lifestyle and aesthetics..."></textarea>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Diameter (mm)</label>
+                                <input type="number" step="0.1" class="form-control" id="specDiameter" placeholder="42">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Thickness (mm)</label>
+                                <input type="number" step="0.1" class="form-control" id="specThickness" placeholder="10">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Materials</label>
+                                <input type="text" class="form-control" id="specMaterials" placeholder="e.g. Stainless Steel">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Glass/Crystal</label>
+                                <input type="text" class="form-control" id="specGlass" placeholder="e.g. Sapphire Crystal">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Water Res. (ATM)</label>
+                                <input type="number" class="form-control" id="specWaterATM" placeholder="e.g. 3 (for 30m)">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Movement</label>
+                                <input type="text" class="form-control" id="specMovement" placeholder="e.g. Japanese Quartz">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Clasp Type</label>
+                                <input type="text" class="form-control" id="specClasp" placeholder="e.g. Deployment Buckle">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Warranty Period</label>
+                                <input type="number" class="form-control" id="specWarranty" placeholder="e.g. 2 Months">
+                            </div>
                         </div>
 
                         <!-- Pricing -->
@@ -1520,6 +1557,17 @@
 
             document.getElementById('productName').value = product.name;
             document.getElementById('productDesc').value = product.description;
+
+            document.getElementById('romanceCopy').value = product.romance_copy || '';
+            document.getElementById('specDiameter').value = product.specs?.case_diameter_mm || '';
+            document.getElementById('specThickness').value = product.specs?.case_thickness_mm || '';
+            document.getElementById('specMaterials').value = product.specs?.materials || '';
+            document.getElementById('specGlass').value = product.specs?.glass || '';
+            document.getElementById('specWaterATM').value = product.specs?.water_resistance_atm || '';
+            document.getElementById('specMovement').value = product.specs?.movement || '';
+            document.getElementById('specClasp').value = product.specs?.clasp || '';
+            document.getElementById('specWarranty').value = product.specs?.warranty || '';
+
             document.getElementById('originalPrice').value = product.pricing.original_price;
             document.getElementById('currentPrice').value = product.pricing.current_price;
             document.getElementById('stockQty').value = product.inventory.stock_count;
@@ -1546,6 +1594,17 @@
             
             document.getElementById('productName').value = '';
             document.getElementById('productDesc').value = '';
+            
+            document.getElementById('romanceCopy').value = '';
+            document.getElementById('specDiameter').value = '';
+            document.getElementById('specThickness').value = '';
+            document.getElementById('specMaterials').value = '';
+            document.getElementById('specGlass').value = '';
+            document.getElementById('specWaterATM').value = '';
+            document.getElementById('specMovement').value = '';
+            document.getElementById('specClasp').value = '';
+            document.getElementById('specWarranty').value = '';
+
             document.getElementById('originalPrice').value = '';
             document.getElementById('currentPrice').value = '';
             document.getElementById('stockQty').value = '';
@@ -1597,6 +1656,15 @@
             form.append("brand", brand.value);
             form.append("category", category.value);
             form.append("desc", desc.value);
+            form.append("romance_copy", document.getElementById('romanceCopy').value);
+            form.append("diameter", document.getElementById('specDiameter').value);
+            form.append("thickness", document.getElementById('specThickness').value);
+            form.append("materials", document.getElementById('specMaterials').value);
+            form.append("glass", document.getElementById('specGlass').value);
+            form.append("water_atm", document.getElementById('specWaterATM').value);
+            form.append("movement", document.getElementById('specMovement').value);
+            form.append("clasp", document.getElementById('specClasp').value);
+            form.append("warranty", document.getElementById('specWarranty').value);
             form.append("oprice", oprice.value);
             form.append("cprice", cprice.value);
             form.append("qty", qty.value);
