@@ -1,3 +1,21 @@
+<?php
+    session_start(); // <--- This MUST be at the very top!
+    require "../includes/connection.php";
+
+    // ... your email/password checking logic ...
+
+    if ($password_is_correct) {
+        // 1. Save the user data to the session
+        $_SESSION["u"] = $user_data_from_db;
+        
+        // 2. Set the initial activity timer so the timeout logic works
+        $_SESSION['last_activity'] = time(); 
+        
+        echo "success";
+    } else {
+        echo "Invalid email or password.";
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

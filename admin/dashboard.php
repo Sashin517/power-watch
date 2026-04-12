@@ -1,6 +1,21 @@
 <?php
     session_start();
 
+    // --- 1. SESSION TIMEOUT LOGIC (30 Minutes) ---
+    $timeout_duration = 1800; // 1800 seconds = 30 minutes
+
+    // Check if 'last_activity' is set and if the time elapsed is greater than the timeout
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
+        session_unset();     // Clear all session variables
+        session_destroy();   // Destroy the session data
+        header("Location: login.php?msg=timeout"); // Redirect to login with a timeout message
+        exit();
+    }
+    // Update the last activity timestamp every time the page loads
+    $_SESSION['last_activity'] = time(); 
+
+
+    // --- 2. AUTHENTICATION CHECK ---
     if(!isset($_SESSION["u"])){
         header("Location: login.php");
         exit();
@@ -560,7 +575,9 @@
                     <p class="m-0 small fw-bold text-white"><?php echo $user_data["fname"]; ?></p>
                     <p class="m-0 small text-muted">Admin</p>
                 </div>
-                <a href="#" class="ms-auto text-muted hover-gold"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="#" onclick="logoutAdmin()" class="ms-auto text-muted hover-gold" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
             </div>
         </div>
     </aside>
@@ -1724,6 +1741,26 @@
             }
 
             new bootstrap.Toast(toastEl, { delay: 4000 }).show();
+        }
+        // ========== LOGOUT FUNCTION ==========
+        function logoutAdmin() {
+            // Optional: Show a quick loading state if you want
+            showNotification("Logging out...", "success");
+
+            fetch('actions/logout.php')
+            .then(response => response.text())
+            .then(data => {
+                if(data.trim() === "success") {
+                    // Redirect to login page immediately
+                    window.location.href = "login.php";
+                } else {
+                    showNotification("Logout failed.", "error");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification("Connection error during logout.", "error");
+            });
         }
     </script>
 </body>
