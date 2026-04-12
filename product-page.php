@@ -50,6 +50,8 @@ if(empty($images)) {
             --sec-blue: #151f32;
             --chp-gold: #D4AF37;
             --chp-gold-hover: #b5952f;
+            --btn-blue: #6F95E8; /* Periwinkle blue button */
+            --btn-blue-hover: #5b7dc4;
             --text-light: #f8f9fa;
             --text-faded: #adb5bd;
             --dark-grey: #394150;
@@ -289,11 +291,11 @@ if(empty($images)) {
             background: rgba(212, 175, 55, 0.4);
             border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {          /* ADDED */
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {          
             background: rgba(212, 175, 55, 0.8);
         }
 
-        /* --- Free Shipping Bar --- */                             /* ADDED */
+        /* --- Free Shipping Bar --- */
         #freeShippingContainer {
             background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);
             padding: 1rem;
@@ -338,7 +340,7 @@ if(empty($images)) {
         .qty-pill button:hover { color: var(--chp-gold); }
         .qty-pill span { font-size: 0.85rem; font-weight: 600; min-width: 20px; text-align: center; }
 
-        /* --- Cart Addon Section --- */                            /* ADDED */
+        /* --- Cart Addon Section --- */                       
         .cart-addon-section {
             padding: 1rem;
             border-color: rgba(255,255,255,0.05) !important;
@@ -372,7 +374,7 @@ if(empty($images)) {
         .cart-addon-name { font-size: 0.85rem; font-weight: 500; margin: 0; }
         .cart-addon-price { font-size: 0.75rem; }
 
-        /* --- Cart Totals Section --- */                           /* ADDED */
+        /* --- Cart Totals Section --- */                     
         .cart-totals-section {
             padding: 1.5rem;
             border-color: rgba(255,255,255,0.05) !important;
@@ -470,32 +472,218 @@ if(empty($images)) {
         .trust-item { display: flex; align-items: center; gap: 10px; color: var(--text-faded); font-size: 0.85rem; }
         .trust-item i { color: var(--chp-gold); font-size: 1.2rem; }
 
-        /* Related Products (Match Index.php) */
-        /* --- 2. Upgraded Product Cards (For Related Section) --- */
+        /* Related Products */
         .product-card { 
-            background: var(--sec-blue); 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
+            background: #4A5568; /* Slate gray background from design */
+            border: none; 
+            border-radius: 12px; 
             overflow: hidden; 
             transition: 0.3s; 
             height: 100%; 
             display: flex; 
             flex-direction: column; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .product-card:hover { border-color: var(--chp-gold); transform: translateY(-5px); }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.3); }
+        
         .card-img-wrapper { 
-            aspect-ratio: 1 / 1; /* Keeps images uniform */
-            padding: 15px; 
+            aspect-ratio: 4 / 3; 
             background: white; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             position: relative; 
+            overflow: hidden;
         }
-        .card-img-wrapper img { max-height: 100%; max-width: 100%; object-fit: contain; }
-        .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
+        .card-img-wrapper img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Makes image fill the area perfectly */
+        }
         
+        .card-body { 
+            padding: 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            flex-grow: 1; 
+        }
+        
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 700; 
+            margin-bottom: 1rem; 
+            line-height: 1.3;
+            color: white;
+            display: -webkit-box; 
+            -webkit-line-clamp: 3; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+        }
+        
+        .price-row { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 12px;
+            margin-bottom: 0.5rem; 
+        }
+        .current-price { font-size: 18px; font-weight: 700; color: var(--chp-gold); }
+        .old-price { font-size: 16px; font-weight: 400; color: var(--text-faded); text-decoration: line-through;}
+        
+        .koko-text { font-size: 12px; color: #e2e8f0; margin-bottom: 1.5rem; }
+        .koko-logo { font-weight: 800; color: #7191D9; letter-spacing: 1px; font-style: italic; }
+
+        .card-actions { display: flex; gap: 12px; margin-top: auto; flex-direction: row-reverse;}
+        
+        .btn-add-cart-outline { 
+            flex-grow: 1; 
+            background: transparent; 
+            border: 2px solid var(--chp-gold); 
+            color: white; 
+            border-radius: 25px; /* Pill shape from design */
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: 0.3s; 
+            padding: 10px;
+        }
+        .btn-add-cart-outline:hover { background: var(--chp-gold); color: #000; }
+        
+        .btn-view-solid { 
+            background: var(--chp-gold); 
+            color: #000; 
+            border: none; 
+            border-radius: 50%; /* Circle from design */
+            width: 45px; 
+            height: 45px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .btn-view-solid:hover { background: var(--chp-gold-hover); transform: scale(1.05); }
+
+        /* Recently view btn style */
+        .btn-recent-add-cart-outline { 
+            flex-grow: 1; 
+            background: transparent; 
+            border: 2px solid var(--btn-blue); 
+            color: white; 
+            border-radius: 25px; /* Pill shape from design */
+            font-weight: 600; 
+            font-size: 10px; 
+            transition: 0.3s; 
+            padding: 8px;
+        }
+        .btn-recent-add-cart-outline:hover { background: var(--btn-blue-hover); color: #fff; }
+        
+        .btn-recent-view-solid { 
+            background: var(--btn-blue); 
+            color: #000; 
+            border: none; 
+            border-radius: 50%; /* Circle from design */
+            width: 42px; 
+            height: 42px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .btn-recent-view-solid:hover { background: var(--btn-blue-hover); color: #fff; transform: scale(1.05); }
+
+        /* Responsive scaling so 26px font doesn't break mobile */
+        @media (max-width: 768px) {
+            .btn-recent-add-cart-outline { font-size: 8px; padding: 8px; }
+        }
+        /* --- Flat Design Product Cards (For Recently Viewed) --- */
+        .flat-product-card {
+            background: #505B6D; /* Slightly lighter slate for contrast */
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            height: 100%;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .flat-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .flat-img-wrapper {
+            flex: 0 0 40%; /* 40% width for the image. Change this number to adjust! */
+            max-width: 40%; 
+            height: 100%; 
+            background: #e2e8f0; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .flat-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            padding: 10px;
+        }
+
+        .flat-card-body {
+            flex: 1; /* This forces the text to take up exactly the remaining space (60%) */
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flat-card-title {
+            font-size: 16px; /* Scaled down slightly to fit the flat design better */
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .flat-price-row {
+            display: block;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .flat-current-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--chp-gold);
+        }
+
+        .flat-old-price {
+            font-size: 10px;
+            font-weight: 500;
+            color: #cbd5e1;
+            text-decoration: line-through;
+        }
+
+        .flat-koko-text {
+            font-size: 10px;
+            color: #e2e8f0;
+            margin-bottom: 0.875rem;
+        }
+
+        .flat-card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+            flex-direction: row-reverse;
+        }      
 
         /* --- Footer --- */
         footer {
@@ -664,13 +852,21 @@ if(empty($images)) {
             Add to Cart
         </button>
     </div>
-
+    <!-- May like section -->
     <section class="py-5" style="background-color: #0f1724;">
         <div class="container">
             <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">You May Also Like</h3>
             <div class="row g-4" id="relatedProductsContainer">
                 <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div>
             </div>
+        </div>
+    </section>
+    <!-- Recently viewed section -->
+    <section class="py-5" id="recentlyViewedSection" style="display: none; background-color: var(--prm-blue);">
+        <div class="container">
+            <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">Recently Viewed</h3>
+            <div class="row g-4" id="recentlyViewedContainer">
+                </div>
         </div>
     </section>
 
@@ -806,9 +1002,13 @@ if(empty($images)) {
 
                 related.forEach(p => {
                     const currentPrice = new Intl.NumberFormat('en-LK').format(p.pricing.current_price);
-                    const oldPrice = p.pricing.discount_percent > 0 ? `<span class="original-price" style="font-size:0.75rem;">LKR ${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}</span>` : '';
+                    const oldPrice = p.pricing.discount_percent > 0 ? `${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}` : '';
                     const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
                     const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                    // Calculate KOKO installment
+                    const priceNum = parseFloat(p.current_price || (p.pricing ? p.pricing.current_price : 0));
+                    const kokoInstallment = new Intl.NumberFormat('en-LK').format(priceNum / 3);
 
                     container.innerHTML += `
                         <div class="col-6 col-md-3">
@@ -817,15 +1017,26 @@ if(empty($images)) {
                                     <img src="${img}" alt="${safeName}">
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-title text-white">${p.name}</h6>
+                                    <h6 class="card-title">${p.name}</h6>
+                                    
                                     <div class="mt-auto">
-                                        <div class="d-flex align-items-baseline gap-2 mb-2">
-                                            <div class="text-gold fw-bold font-oswald" style="font-size: 1.1rem;">LKR ${currentPrice}</div>
-                                            ${oldPrice}
+                                        <div class="price-row">
+                                            <div class="current-price font-oswald">LKR ${currentPrice}</div>
+                                            <div class="old-price">${oldPrice}</div>
                                         </div>
-                                        <button class="btn btn-outline-gold btn-sm w-100 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${p.pricing.current_price}, '${img}')">
-                                            <i class="fas fa-plus me-1"></i> Add
-                                        </button>
+                                        
+                                        <div class="koko-text">
+                                            or pay in 3 x Rs ${kokoInstallment} with <span class="koko-logo">KOKO</span>
+                                        </div>
+
+                                        <div class="card-actions">
+                                            <button class="btn-add-cart-outline" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${priceNum}, '${img}')">
+                                                Add to Cart
+                                            </button>
+                                            <button class="btn-view-solid" onclick="event.stopPropagation(); window.location.href='product-page.php?id=${p.id}'">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -838,6 +1049,110 @@ if(empty($images)) {
                 document.getElementById('relatedProductsContainer').innerHTML = '<p class="text-center text-muted">No related products found.</p>';
             }
         });
+
+        // 7. Recently Viewed Logic (LocalStorage)
+        document.addEventListener('DOMContentLoaded', () => {
+            // A. Save Current Product to Recently Viewed
+            saveToRecentlyViewed();
+
+            // B. Render the Recently Viewed Section
+            renderRecentlyViewed();
+        });
+
+        function saveToRecentlyViewed() {
+            // We use the currentProductData object you already defined at the top of your script
+            if (!currentProductData || !currentProductData.id) return;
+
+            // Get existing history from LocalStorage
+            let history = JSON.parse(localStorage.getItem('pw_recently_viewed')) || [];
+
+            // Remove this product if it's already in the list (so we can move it to the front)
+            history = history.filter(p => p.id !== currentProductData.id);
+
+            // Add current product to the beginning of the array
+            history.unshift({
+                id: currentProductData.id,
+                name: currentProductData.name,
+                price: currentProductData.price,
+                image: currentProductData.image
+            });
+
+            // Keep only the last 4 viewed items to prevent clutter
+            if (history.length > 4) {
+                history = history.slice(0, 4);
+            }
+
+            // Save back to LocalStorage
+            localStorage.setItem('pw_recently_viewed', JSON.stringify(history));
+        }
+
+        function renderRecentlyViewed() {
+            // Get history, but exclude the CURRENT page's product from showing up in its own "Recently Viewed"
+            let history = JSON.parse(localStorage.getItem('pw_recently_viewed')) || [];
+            let displayHistory = history.filter(p => p.id !== currentProductData.id);
+
+            const section = document.getElementById('recentlyViewedSection');
+            const container = document.getElementById('recentlyViewedContainer');
+
+            // If there's nothing to show, keep the section hidden
+            if (displayHistory.length === 0) {
+                return;
+            }
+
+            // Show the section
+            section.style.display = 'block';
+            container.innerHTML = '';
+
+            displayHistory.forEach(p => {
+                const priceNum = parseFloat(p.price);
+                const currentPrice = new Intl.NumberFormat('en-LK').format(priceNum);
+                const kokoInstallment = new Intl.NumberFormat('en-LK').format(priceNum / 3);
+                
+                // Assuming standard 20% markup for "Old Price" since we don't save the full pricing object in history
+                const oldPriceNum = priceNum * 1.2;
+                const oldPrice = `<span class="old-price">LKR ${new Intl.NumberFormat('en-LK').format(oldPriceNum)}</span>`;
+                
+                const img = p.image ? p.image : 'assets/images/products/default.png';
+                const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+               // Using the new Flat Design layout
+                container.innerHTML += `
+                    <div class="col-12 col-md-3">
+                        <div class="flat-product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
+                            
+                            <div class="flat-img-wrapper">
+                                <img src="${img}" alt="${safeName}">
+                            </div>
+                            
+                            <div class="flat-card-body">
+                                <h6 class="flat-card-title">${p.name}</h6>
+                                
+                                <div class="mt-auto">
+                                    <div class="flat-price-row">
+                                        <div class="flat-current-price font-oswald">LKR ${currentPrice}</div>
+                                        ${oldPrice.replace('old-price', 'flat-old-price')}
+                                    </div>
+                                    
+                                    <div class="flat-koko-text">
+                                        or pay in 3 x Rs ${kokoInstallment} with <span class="koko-logo">KOKO</span>
+                                    </div>
+
+                                    <div class="flat-card-actions">
+                                        <button class="btn-recent-add-cart-outline w-100" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${priceNum}, '${img}')">
+                                            Add to Cart
+                                        </button>
+                                        <button class="btn-recent-view-solid" onclick="event.stopPropagation(); window.location.href='product-page.php?id=${p.id}'">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
         // 6. Sticky Mobile Bar Observer
         // This makes the sticky bar appear ONLY when the main Add to Cart button scrolls out of view
@@ -858,5 +1173,6 @@ if(empty($images)) {
             observer.observe(mainAddToCartBtn);
         }
     </script>
+    
 </body>
 </html>

@@ -1310,7 +1310,7 @@
 
         function deleteProduct(id, name) {
             productIdToDelete = id;
-            document.getElementById('deleteProductName').innerText = name || "this product";
+            document.getElementById('deleteProductName').innerText = name.slice(0,19) || "this product";
             
             if (!deleteModalInstance) {
                 deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));

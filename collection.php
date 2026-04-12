@@ -85,24 +85,32 @@ LEFT JOIN sub_categories sc ON p.sub_category_id = sc.sub_category_id
 {$where_sql}
 ORDER BY {$order_by}";
 
+// Safely execute using your Connection class
+Database::setUpConnection();
 $stmt = Database::$connection->prepare($query);
+
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
+
 $stmt->execute();
 $result = $stmt->get_result();
 
 $products = [];
-while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
+if($result) {
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
 }
 
 // Get all brands for filter
-$brands_query = "SELECT DISTINCT brand_name FROM brands ORDER BY brand_name";
-$brands_result = Database::$connection->query($brands_query);
+$brands_query = "SELECT DISTINCT brand_name FROM brands WHERE brand_name IS NOT NULL ORDER BY brand_name";
+$brands_result = Database::search($brands_query);
 $all_brands = [];
-while ($b = $brands_result->fetch_assoc()) {
-    $all_brands[] = $b['brand_name'];
+if($brands_result) {
+    while ($b = $brands_result->fetch_assoc()) {
+        $all_brands[] = $b['brand_name'];
+    }
 }
 
 // Get all categories
@@ -828,7 +836,7 @@ $categories = [
 </head>
 <body>
 
-    <?php include 'components/navbar.php'; ?>
+    <?php include 'includes/nav.php'; ?>
 
     <!-- Page Header -->
     <section class="page-header">
@@ -1068,7 +1076,7 @@ $categories = [
         </div>
     </section>
 
-    <?php include 'components/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
     <?php include 'components/cart-offcanvas.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

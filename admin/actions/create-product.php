@@ -2,14 +2,15 @@
 
 require "../../includes/connection.php";
 
-// 1. Collect Data
-$product_name = $_POST["title"];
+// 1. Collect Data & Escape Strings to prevent SQL errors
+$product_name = addslashes($_POST["title"]); // <-- FIX: addslashes() added here
+$description = addslashes($_POST["desc"]);   // <-- FIX: addslashes() added here
+
 $brand_id = $_POST["brand"];
 $sub_category_id = $_POST["category"]; 
-$description = $_POST["desc"];
 $original_price = (float)$_POST["oprice"];
 $current_price = (float)$_POST["cprice"];
-$stock_count = $_POST["qty"];
+$stock_count = (int)$_POST["qty"];
 
 // Checkboxes
 $is_luxury = (isset($_POST["luxury"]) && $_POST["luxury"] == 'true') ? 1 : 0;
@@ -45,6 +46,8 @@ try {
     Database::iud($query);
     
     // GET THE NEW PRODUCT ID
+    // Note: Database::setUpConnection() must be called before insert_id if it's not active
+    Database::setUpConnection(); 
     $product_id = Database::$connection->insert_id;
 
     // 5. Handle Multiple Images
@@ -61,7 +64,7 @@ try {
             $file_type = $_FILES['images']['type'][$i];
             
             if(in_array($file_type, $allowed_types)) {
-                $new_img_extension;
+                $new_img_extension = "";
                 if ($file_type == "image/jpg") $new_img_extension = ".jpg";
                 elseif ($file_type == "image/jpeg") $new_img_extension = ".jpeg";
                 elseif ($file_type == "image/png") $new_img_extension = ".png";

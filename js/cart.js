@@ -146,7 +146,7 @@ function renderSideCart() {
     if (items.length === 0) {
         cartContainer.innerHTML = `
             <div class="text-center py-5 mt-4">
-                <i class="fas fa-shopping-bag text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                <i class="fas fa-shopping-bag text-secondary mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
                 <p class="text-white mb-1 fw-medium">Your cart is empty</p>
                 <button class="btn btn-outline-gold mt-3 px-4 rounded-pill" data-bs-dismiss="offcanvas">Start Shopping</button>
             </div>`;
@@ -167,8 +167,8 @@ function renderSideCart() {
                             <p class="cart-item-title" title="${item.name}">${item.name}</p>
                         </div>
                         
-                        <button class="btn btn-link p-0 text-muted flex-shrink-0" style="font-size: 0.85rem;" onclick="cart.removeItem(${index}); renderSideCart();">
-                            <i class="fas fa-trash-alt hover-danger"></i>
+                        <button class="btn btn-link p-0 text-secondary text-decoration-none flex-shrink-0" style="font-size: 0.85rem; transition: 0.2s;" onmouseover="this.className='btn btn-link p-0 text-danger text-decoration-none flex-shrink-0'" onmouseout="this.className='btn btn-link p-0 text-secondary text-decoration-none flex-shrink-0'" onclick="cart.removeItem(${index}); renderSideCart();">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                     
