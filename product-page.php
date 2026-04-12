@@ -893,12 +893,14 @@ if(empty($images)) {
                     <span class="product-brand-label"><?php echo htmlspecialchars($product['brand_name']); ?></span>
                     <h1 class="product-main-title font-oswald text-white"><?php echo htmlspecialchars($product['product_name']); ?></h1>
                     
-                    <div class="d-flex align-items-baseline mb-3 mt-4">
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-baseline mb-3 mt-4 gap-2 gap-md-0">
                         <span class="product-price">LKR <?php echo number_format($product['current_price'], 2); ?></span>
-                        <?php if($product['discount_percentage'] > 0): ?>
-                            <span class="original-price">LKR <?php echo number_format($product['original_price'], 2); ?></span>
-                            <span class="badge bg-danger ms-3" style="font-size: 0.9rem; padding: 6px 10px;">Save <?php echo $product['discount_percentage']; ?>%</span>
-                        <?php endif; ?>
+                        <div>
+                            <span class="original-price ms-0 ms-md-3">LKR <?php echo number_format($product['original_price'], 2); ?></span>
+                            <?php if($product['discount_percentage'] > 10): ?>                            
+                                    <span class="badge bg-danger ms-2" style="font-size: 0.9rem; padding: 6px 10px;">Save <?php echo $product['discount_percentage']; ?>%</span>                                
+                            <?php endif; ?>
+                        </div>
                     </div>
 
                     <div class="koko-box d-flex justify-content-between align-items-center">
