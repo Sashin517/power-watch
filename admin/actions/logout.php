@@ -1,12 +1,16 @@
 <?php
 session_start();
+require "../../includes/connection.php";
 
-// Clear the session variables
+if(isset($_SESSION["u"])){
+    $user_id = $_SESSION["u"]["id"];
+    // Release the session lock in the database
+    Database::iud("UPDATE `users` SET `active_session_id`=NULL, `last_active_time`=0 WHERE `id`='".$user_id."'");
+}
+
+// Clear the session variables and destroy
 session_unset();
-
-// Destroy the session
 session_destroy();
 
-// Send a success response back to the Javascript fetch request
 echo "success";
 ?>

@@ -1,25 +1,30 @@
 <?php
     session_start();
+    // Include database connection so we can update the active time
+    require "../includes/connection.php"; 
 
-    // --- 1. SESSION TIMEOUT LOGIC (30 Minutes) ---
-    $timeout_duration = 1800; // 1800 seconds = 30 minutes
+    $timeout_duration = 1800; // 30 minutes
 
-    // Check if 'last_activity' is set and if the time elapsed is greater than the timeout
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
-        session_unset();     // Clear all session variables
-        session_destroy();   // Destroy the session data
-        header("Location: login.php?msg=timeout"); // Redirect to login with a timeout message
+        // If timed out, clear the session lock in the database before destroying session
+        if (isset($_SESSION["u"])) {
+            Database::iud("UPDATE `users` SET `active_session_id`=NULL, `last_active_time`=0 WHERE `id`='".$_SESSION["u"]["id"]."'");
+        }
+        session_unset();     
+        session_destroy();   
+        header("Location: login.php?msg=timeout"); 
         exit();
     }
-    // Update the last activity timestamp every time the page loads
-    $_SESSION['last_activity'] = time(); 
 
-
-    // --- 2. AUTHENTICATION CHECK ---
     if(!isset($_SESSION["u"])){
         header("Location: login.php");
         exit();
     }
+
+    // --- KEEP DB SESSION ALIVE ---
+    $current_time = time();
+    $_SESSION['last_activity'] = $current_time; 
+    Database::iud("UPDATE `users` SET `last_active_time`='".$current_time."' WHERE `id`='".$_SESSION["u"]["id"]."'");
 
     $user_data = $_SESSION["u"];
 ?>

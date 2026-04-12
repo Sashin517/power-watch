@@ -115,6 +115,20 @@ if ($login_method === "google") {
 
     if($n == 1){
         $d = $rs->fetch_assoc();
+
+        // --- CONCURRENT LOGIN CHECK ---
+        $current_time = time();
+        $timeout = 1800; // 30 minutes
+        
+        // If an active session exists AND it hasn't expired yet
+        if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
+            // Ensure it's not the same browser just refreshing
+            if ($d['active_session_id'] !== session_id()) {
+                echo "You are already logged in on another device. Please log out there first, or wait 30 minutes for inactivity.";
+                exit();
+            }
+        }
+        // ---------------------------------
         if($d['status'] == '1'){
             $_SESSION["u"] = $d;
             $_SESSION['last_activity'] = time();
