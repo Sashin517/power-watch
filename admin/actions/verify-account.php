@@ -86,6 +86,7 @@ if ($login_method === "google") {
         $d = $rs->fetch_assoc();
         if($d['status'] == '1'){
             $_SESSION["u"] = $d;
+            $_SESSION['last_activity'] = time();
             
             // Trigger Email Notification
             sendLoginAlertEmail($email, $d['fname'], 'google');
@@ -116,6 +117,7 @@ if ($login_method === "google") {
         $d = $rs->fetch_assoc();
         if($d['status'] == '1'){
             $_SESSION["u"] = $d;
+            $_SESSION['last_activity'] = time();
 
             if($rememberMe == "1"){
                 setcookie("email", $email, time() + (60*60*24*365));
