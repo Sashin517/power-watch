@@ -16,190 +16,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+    <link rel="stylesheet" href="../assets/css/global.css">    
+
     <style>
-        :root {
-            /* Palette Extraction */
-            --prm-blue: #0A111F; 
-            --chp-gold: #D4AF37; 
-            --chp-gold-hover: #b5952f;
-            --btn-blue: #6F95E8; 
-            --dark-card-bg: #2c3440; 
-            --input-bg: #1a2332;
-            --border-color: #2d3748;
-            --text-light: #f8f9fa;
-            --text-muted: #adb5bd;
-        }
+        .login-section, .signup-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(rgba(10, 17, 31, 0.85), rgba(10, 17, 31, 0.95)), url('https://images.unsplash.com/photo-1612177344073-78e21244d543?q=80'); background-size: cover; background-position: center; padding: 2rem 0; }
+        .login-card { background-color: rgba(44, 52, 64, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 3rem; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+        .signup-section .login-card { max-width: 500px; }
 
-        .brand-logo-img {
-            max-height: 44px;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            background-color: var(--prm-blue);
-            color: var(--text-light);
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        h1, h2, h3, h4, h5, h6, .brand-font {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-
-        /* --- Utilities --- */
-        .text-gold { color: var(--chp-gold); }
-        .bg-prm-blue { background-color: var(--prm-blue); }
-        
-        a { text-decoration: none; transition: 0.3s; color: var(--text-muted); }
-        a:hover { color: var(--chp-gold); }
-
-        .btn-gold {
-            background-color: var(--chp-gold);
-            color: #000;
-            border: none;
-            font-weight: 700;
-            border-radius: 4px;
-            padding: 12px 20px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            width: 100%;
-            letter-spacing: 1px;
-        }
-        .btn-gold:hover {
-            background-color: var(--chp-gold-hover);
-            color: #000;
-            transform: translateY(-1px);
-        }
-        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        /* --- Login Section --- */
-        .login-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: linear-gradient(rgba(10, 17, 31, 0.85), rgba(10, 17, 31, 0.95)), url('https://images.unsplash.com/photo-1612177344073-78e21244d543?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 2rem 0;
-        }
-
-        .login-card {
-            background-color: rgba(44, 52, 64, 0.95);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .form-floating > .form-control {
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: white;
-        }
-        
-        .form-floating > .form-control:focus {
-            background-color: var(--input-bg);
-            border-color: var(--chp-gold);
-            color: white;
-            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.15);
-        }
-        
+        .form-floating > .form-control { background-color: var(--input-bg); border: 1px solid var(--border-color); color: white; }
+        .form-floating > .form-control:focus { background-color: var(--input-bg); border-color: var(--chp-gold); color: white; box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.15); }
         .form-floating > label { color: #888; }
-        
-        .form-floating > .form-control:focus ~ label,
-        .form-floating > .form-control:not(:placeholder-shown) ~ label {
-            color: var(--chp-gold);
-            opacity: 1;
-        }
+        .form-floating > .form-control:focus ~ label, .form-floating > .form-control:not(:placeholder-shown) ~ label { color: var(--chp-gold); opacity: 1; }
+        .form-control.is-invalid { border-color: var(--danger-red); }
+        .form-control.is-valid { border-color: var(--success-green); }
 
-        .social-login-btn {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        .social-login-btn:hover {
-            background-color: rgba(255,255,255,0.05);
-            border-color: white;
-        }
+        .social-login-btn { background-color: transparent; border: 1px solid var(--border-color); color: white; padding: 10px; border-radius: 4px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; cursor: pointer; position: relative; }
+        .social-login-btn:hover { background-color: rgba(255,255,255,0.05); border-color: white; }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 1.5rem 0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
+        #g_id_onload { display: none; }
+        .google-btn-wrapper { position: relative; width: 100%; overflow: hidden; }
+
+        .divider { display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: var(--text-muted); font-size: 0.85rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
         .divider::before { margin-right: .5em; }
         .divider::after { margin-left: .5em; }
 
-        /* Brand Logo */
-        .login-brand-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2rem;
-            text-decoration: none;
-        }
-
-        /* Password Toggle Icon */
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--text-muted);
-            z-index: 5;
-        }
+        .login-brand-logo { display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+        .password-toggle { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); z-index: 5; }
         .password-toggle:hover { color: var(--chp-gold); }
 
-        /* Alert Messages */
-        .alert-custom {
-            padding: 12px 16px;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            display: none;
-        }
+        .alert-custom { padding: 12px 16px; border-radius: 4px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
         .alert-custom.show { display: block; }
-        .alert-error {
-            background-color: rgba(220, 53, 69, 0.2);
-            border: 1px solid rgba(220, 53, 69, 0.5);
-            color: #ff6b6b;
-        }
-        .alert-success {
-            background-color: rgba(40, 167, 69, 0.2);
-            border: 1px solid rgba(40, 167, 69, 0.5);
-            color: #51cf66;
-        }
+        .alert-error { background-color: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.5); color: #ff6b6b; }
+        .alert-success { background-color: rgba(40, 167, 69, 0.2); border: 1px solid rgba(40, 167, 69, 0.5); color: #51cf66; }
 
-        /* Loading Spinner */
         .spinner-border-sm { width: 1rem; height: 1rem; border-width: 0.15em; }
 
-        /* Responsive */
         @media (max-width: 576px) { .login-card { padding: 2rem; width: 90%; } }
     </style>
 </head>

@@ -1,0 +1,156 @@
+/* =========================================
+   1. GLOBAL VARIABLES & TYPOGRAPHY
+   ========================================= */
+:root {
+    /* Primary Brand Colors */
+    --prm-blue: #0A111F;
+    --sec-blue: #151f32;
+    --chp-gold: #D4AF37;
+    --chp-gold-hover: #b5952f;
+    
+    /* Text & UI Colors */
+    --text-light: #f8f9fa;
+    /* --text-muted: #adb5bd; */
+    --text-faded: #adb5bd;
+    --border-color: #2d3748;
+    --input-bg: #1a2332;
+    
+    /* Card & Element Backgrounds */
+    --dark-grey: #394150;
+    --card-bg: #394150; 
+    --fd-blue: #D9D9D9; 
+    --cream-bg: #F9EDC9;
+    
+    /* Status & Button Colors */
+    --btn-blue: #6F95E8;
+    --btn-blue-hover: #5b7dc4;
+    --btn-brown: #8B887F;
+    --discount-green: #08CB00;
+    --success-green: #2ecc71;
+    --danger-red: #e74c3c;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--prm-blue);
+    color: var(--text-light);
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, .font-oswald, .navbar-brand {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   2. GLOBAL UTILITIES & BUTTONS
+   ========================================= */
+/* Override Bootstrap's default text-muted for dark theme readability */
+.text-muted { color: var(--text-muted) !important; }
+/* Also ensure faded text uses the same variable */
+.text-faded { color: var(--text-faded) !important; }
+.text-gold { color: var(--chp-gold) !important; }
+.bg-gold { background-color: var(--chp-gold) !important; }
+.bg-prm-blue { background-color: var(--prm-blue) !important; }
+.bg-cream { background-color: var(--cream-bg) !important; }
+
+a { text-decoration: none; transition: 0.3s; color: var(--text-muted); }
+a:hover { color: var(--chp-gold); }
+
+/* Buttons */
+.btn-gold { background-color: var(--chp-gold); color: #000; border: none; font-weight: 600; border-radius: 4px; padding: 12px 20px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; }
+.btn-gold:hover { background-color: var(--chp-gold-hover); color: #000; transform: translateY(-1px); }
+.btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-outline-gold { background: transparent; color: var(--chp-gold); border: 2px solid var(--chp-gold); font-weight: 600; border-radius: 8px; padding: 12px 30px; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+.btn-outline-gold:hover { background-color: var(--chp-gold); color: #000; }
+
+.btn-blue { background-color: var(--btn-blue); color: white; border: none; font-weight: 600; border-radius: 4px; transition: all 0.3s ease; }
+.btn-blue:hover { background-color: var(--btn-blue-hover); color: white; }
+
+.btn-brown { background-color: var(--btn-brown); color: white; border: none; font-weight: 600; border-radius: 4px; transition: all 0.3s ease; }
+.btn-brown:hover { background-color: #787469; color: white; }
+
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 0px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.8); }
+
+/* =========================================
+   3. HEADER, NAVBAR & FOOTER
+   ========================================= */
+.top-bar { background-color: #C8A030; color: #000; padding: 8px 0; overflow: hidden; }
+.marquee-container { overflow: hidden; white-space: nowrap; position: relative; display: flex; }
+.marquee-content { display: flex; animation: marquee 20s linear infinite; flex-shrink: 0; }
+.marquee-content span { padding: 0 50px; flex-shrink: 0; font-weight: 600; font-size: 0.85rem; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+.marquee-container:hover .marquee-content { animation-play-state: paused; }
+
+.navbar { background-color: var(--prm-blue); padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.brand-logo-img { height: 40px; width: auto; }
+.navbar-brand { color: white !important; font-size: 1.5rem; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+.nav-link { color: rgba(255,255,255,0.8) !important; font-weight: 500; margin: 0 10px; text-transform: uppercase; font-size: 0.9rem; transition: all 0.3s ease; display: flex; align-items: center; }
+.nav-link:hover { color: var(--chp-gold) !important; }
+.nav-link.dropdown-toggle::after { display: none; }
+.nav-link i.fa-chevron-down { font-size: 0.7rem; transition: transform 0.3s ease; }
+.nav-link[aria-expanded="true"] i.fa-chevron-down { transform: rotate(180deg); }
+
+.dropdown-menu { background-color: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; margin-top: 0.5rem; padding: 0.5rem 0; min-width: 200px; }
+.dropdown-item { padding: 0.6rem 1.5rem; color: #333; font-size: 0.9rem; transition: all 0.2s ease; }
+.dropdown-item:hover { background-color: var(--prm-blue); color: white; padding-left: 2rem; }
+.dropdown-divider { margin: 0.5rem 0; border-color: rgba(0,0,0,0.1); }
+
+.nav-icons .btn { color: white; font-size: 1.1rem; transition: all 0.3s ease; }
+.nav-icons .btn:hover { color: var(--chp-gold); transform: scale(1.1); }
+.cart-badge { font-size: 0.65rem; padding: 0.25em 0.5em; }
+.navbar-toggler { border-color: rgba(255,255,255,0.5); transition: all 0.3s ease; }
+.navbar-toggler:hover { border-color: var(--chp-gold); }
+.navbar-toggler:hover i { color: var(--chp-gold) !important; }
+
+footer { background-color: #000; color: #aaa; padding: 4rem 0 2rem; font-size: 0.9rem; }
+.footer-brand-logo-img { height: 68px; width: auto; }
+footer h5 { color: white; margin-bottom: 1.5rem; font-size: 1.1rem; }
+footer ul { list-style: none; padding: 0; }
+footer ul li { margin-bottom: 10px; }
+footer a { color: #aaa; text-decoration: none; transition: color 0.3s; }
+footer a:hover { color: var(--chp-gold); }
+.footer-bottom { border-top: 1px solid #333; margin-top: 3rem; padding-top: 1.5rem; }
+.social-icons a { font-size: 1.2rem; margin-right: 15px; }
+
+/* =========================================
+   4. GLOBAL CART OFFCANVAS & TOASTS
+   ========================================= */
+#cartOffcanvas { width: 400px; max-width: 100vw; background-color: var(--prm-blue); border-left: 1px solid var(--border-color); }
+.offcanvas-header { border-color: rgba(255,255,255,0.05) !important; padding: 1.5rem; }
+.offcanvas-title { font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 1.2rem; }
+#sideCartItems { overflow-x: hidden !important; overflow-y: auto; }
+
+#freeShippingContainer { background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%); padding: 1rem; text-align: center; }
+#freeShippingText { font-size: 0.8rem; font-weight: 500; margin-bottom: 0.5rem; }
+#freeShippingBar { border-radius: 10px; transition: width 0.4s ease; }
+
+.cart-item-title { font-size: 0.85rem; font-weight: 500; line-height: 1.4; color: white; margin-bottom: 0.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; }
+.qty-pill { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 50px; display: inline-flex; align-items: center; overflow: hidden; }
+.qty-pill button { background: transparent; border: none; color: var(--text-light); padding: 2px 10px; transition: 0.2s; }
+.qty-pill button:hover { color: var(--chp-gold); }
+.qty-pill span { font-size: 0.85rem; font-weight: 600; min-width: 20px; text-align: center; }
+.cart-item-image { width: 70px; height: 70px; object-fit: contain; background: white; border-radius: 8px; padding: 4px; border: 1px solid var(--border-color); }
+
+.minimal-toast-container { position: fixed; z-index: 1080; bottom: 24px; right: 24px; width: auto; max-width: 400px; }
+
+/* Responsive Defaults */
+@media (max-width: 991px) {
+    .dropdown-menu { background-color: rgba(255,255,255,0.1); border-left: 3px solid var(--chp-gold); margin-left: 1rem; box-shadow: none; }
+    .dropdown-item { color: rgba(255,255,255,0.8); font-size: 0.85rem; }
+    .dropdown-item:hover { background-color: rgba(255,255,255,0.1); color: var(--chp-gold); padding-left: 1.5rem; }
+    .nav-link { padding: 0.5rem 0; }
+}
+@media (max-width: 768px) {
+    .brand-logo-img { height: 32px; }
+    .footer-brand-logo-img { height: 54px; }
+    .minimal-toast-container { bottom: 85px; right: 16px; left: 16px; max-width: none; }
+    .minimal-toast-container .toast { width: 100% !important; }
+}

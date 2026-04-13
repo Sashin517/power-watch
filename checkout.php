@@ -11,241 +11,57 @@ session_start();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="assets/css/global.css">    
+
     <style>
-        :root {
-            --prm-blue: #0A111F;
-            --sec-blue: #111b2e;
-            --chp-gold: #D4AF37;
-            --chp-gold-hover: #b5952f;
-            --text-light: #f8f9fa;
-            --text-faded: #adb5bd;
-            --border-color: #2d3748;
-            --input-bg: #1a2332;
-            --success-green: #2ecc71;
-            --danger-red: #e74c3c;
-        }
-
-        /* --- Refined Typography --- */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--prm-blue);
-            color: var(--text-light);
-            min-height: 100vh;
-            font-size: 0.9rem; /* Standardized e-commerce base font size */
-        }
-
-        h1, h2, h3, h4, h5, h6, .brand-font {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        h5 { font-size: 1.1rem; margin-bottom: 1rem; }
-
-        .brand-logo-img { height: 32px; width: auto; }
-
-        /* --- Layout & Grid --- */
-        .checkout-container {
-            display: flex;
-            flex-wrap: wrap;
-            min-height: 100vh;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 3rem 5%;
-            border-right: 1px solid var(--border-color);
-        }
-
-        .sidebar-summary {
-            flex: 0 0 42%;
-            background-color: #0f1724;
-            padding: 3rem 5%;
-            border-left: 1px solid var(--border-color);
-        }
-
-        /* --- Links & Breadcrumbs --- */
-        a { color: var(--chp-gold); text-decoration: none; transition: 0.3s; }
-        a:hover { color: var(--chp-gold-hover); }
+        .checkout-container { display: flex; flex-wrap: wrap; min-height: 100vh; }
+        .main-content { flex: 1; padding: 3rem 5%; border-right: 1px solid var(--border-color); }
+        .sidebar-summary { flex: 0 0 42%; background-color: #0f1724; padding: 3rem 5%; border-left: 1px solid var(--border-color); }
         
         .breadcrumb { margin-bottom: 2rem; }
         .breadcrumb-item + .breadcrumb-item::before { color: var(--text-faded); font-size: 0.8rem; }
         .breadcrumb a { color: var(--chp-gold); font-size: 0.8rem; font-weight: 500; }
         .breadcrumb-item.active { color: var(--text-light); font-weight: 500; font-size: 0.8rem; }
 
-        /* --- Sleeker Forms --- */
-        .form-floating > .form-control, .form-floating > .form-select {
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: white;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            height: calc(3.2rem + 2px); /* Slimmer inputs */
-            min-height: calc(3.2rem + 2px);
-        }
-        .form-floating > label {
-            padding: 0.8rem 0.75rem;
-            color: #888;
-            font-size: 0.85rem;
-        }
-        .form-floating > .form-control:focus, .form-floating > .form-select:focus {
-            background-color: var(--input-bg);
-            border-color: var(--chp-gold);
-            color: white;
-            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-        }
+        .form-floating > .form-control, .form-floating > .form-select { background-color: var(--input-bg); border: 1px solid var(--border-color); color: white; font-size: 0.9rem; border-radius: 6px; height: calc(3.2rem + 2px); min-height: calc(3.2rem + 2px); }
+        .form-floating > label { padding: 0.8rem 0.75rem; color: #888; font-size: 0.85rem; }
+        .form-floating > .form-control:focus, .form-floating > .form-select:focus { background-color: var(--input-bg); border-color: var(--chp-gold); color: white; box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2); }
         .form-control::placeholder { color: transparent; }
-        .form-floating > .form-control:focus ~ label,
-        .form-floating > .form-control:not(:placeholder-shown) ~ label {
-            color: var(--chp-gold);
-            transform: scale(.85) translateY(-0.75rem) translateX(0.15rem);
-        }
+        .form-floating > .form-control:focus ~ label, .form-floating > .form-control:not(:placeholder-shown) ~ label { color: var(--chp-gold); transform: scale(.85) translateY(-0.75rem) translateX(0.15rem); }
 
-        /* --- Compact Radio Cards --- */
-        .radio-card-group {
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: var(--input-bg);
-        }
-        .radio-card {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background 0.2s;
-            margin: 0;
-        }
+        .radio-card-group { border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background-color: var(--input-bg); }
+        .radio-card { padding: 1rem; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; margin: 0; }
         .radio-card:last-child { border-bottom: none; }
         .radio-card:hover { background-color: #242e42; }
-        .radio-card input[type="radio"] {
-            accent-color: var(--chp-gold);
-            width: 1.1em;
-            height: 1.1em;
-            margin-right: 0.8rem;
-            cursor: pointer;
-        }
+        .radio-card input[type="radio"] { accent-color: var(--chp-gold); width: 1.1em; height: 1.1em; margin-right: 0.8rem; cursor: pointer; }
 
-        /* --- Buttons --- */
-        .btn-gold {
-            background-color: var(--chp-gold);
-            color: #000;
-            font-weight: 600;
-            padding: 1rem 1.5rem;
-            border-radius: 6px;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: none;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-        .btn-gold:hover {
-            background-color: var(--chp-gold-hover);
-            transform: translateY(-1px);
-        }
-        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        /* --- Product Thumbnail & List --- */
-        .product-thumbnail-wrapper {
-            position: relative;
-            width: 64px;
-            height: 64px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            background: rgba(255,255,255,0.02);
-            padding: 4px;
-        }
-        .product-thumbnail-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .product-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: rgba(212, 175, 55, 0.9);
-            color: #000;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .products-list {
-            max-height: 40vh;
-            overflow-y: auto;
-            padding-right: 10px;
-            padding-top: 7px;
-        }
+        .product-thumbnail-wrapper { position: relative; width: 64px; height: 64px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.02); padding: 4px; }
+        .product-thumbnail-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+        .product-badge { position: absolute; top: -8px; right: -8px; background-color: rgba(212, 175, 55, 0.9); color: #000; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .products-list { max-height: 40vh; overflow-y: auto; padding-right: 10px; padding-top: 7px; }
         .products-list::-webkit-scrollbar { width: 4px; }
         .products-list::-webkit-scrollbar-track { background: transparent; }
         .products-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
-        /* --- Mobile Header & Toggle --- */
-        .mobile-header {
-            display: none;
-            padding: 1.25rem 5%;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            background-color: var(--prm-blue);
-        }
-        .order-summary-toggle {
-            background-color: #0f1724;
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.25rem 5%;
-            display: none;
-            color: var(--chp-gold);
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
+        .mobile-header { display: none; padding: 1.25rem 5%; border-bottom: 1px solid var(--border-color); text-align: center; background-color: var(--prm-blue); }
+        .order-summary-toggle { background-color: #0f1724; border-bottom: 1px solid var(--border-color); padding: 1.25rem 5%; display: none; color: var(--chp-gold); cursor: pointer; font-size: 0.95rem; }
         .order-summary-toggle .fa-chevron-down { transition: transform 0.3s; }
         .order-summary-toggle[aria-expanded="true"] .fa-chevron-down { transform: rotate(180deg); }
 
-        .error-message {
-            background: rgba(231, 76, 60, 0.1);
-            border: 1px solid var(--danger-red);
-            color: var(--danger-red);
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            display: none;
-        }
+        .error-message { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; display: none; }
 
-        /* --- Responsive Magic --- */
         @media (max-width: 991px) {
             .checkout-container { flex-direction: column-reverse; }
             .mobile-header { display: block; }
             .order-summary-toggle { display: flex; justify-content: space-between; align-items: center; }
-            
-            .sidebar-summary {
-                flex: 0 0 100%;
-                border-left: none;
-                border-bottom: 1px solid var(--border-color);
-                padding: 1.5rem 5%;
-                background-color: #0f1724;
-            }
+            .sidebar-summary { flex: 0 0 100%; border-left: none; border-bottom: 1px solid var(--border-color); padding: 1.5rem 5%; background-color: #0f1724; }
             .sidebar-summary:not(.show) { display: none; }
-            
-            .main-content {
-                border-right: none;
-                padding: 1.5rem 5%;
-            }
-            
-            /* Hide desktop logo */
+            .main-content { border-right: none; padding: 1.5rem 5%; }
             .desktop-logo { display: none !important; }
         }
-
         @media (max-width: 576px) {
-            h5 { font-size: 1.05rem; }
             .radio-card { font-size: 0.85rem; padding: 0.8rem 1rem; }
             .form-floating > label { font-size: 0.8rem; }
-            .btn-gold { padding: 0.85rem 1.5rem; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -344,7 +160,7 @@ session_start();
                 </section>
 
                 <section class="mb-4">
-                    <h5 class="mb-1">Payment</h5>
+                    <!-- <h5 class="mb-1">Payment</h5>
                     <p class="text-faded small mb-3">All transactions are secure and encrypted.</p>
                     
                     <div class="radio-card-group">
@@ -371,6 +187,29 @@ session_start();
                             <div class="d-flex align-items-center">
                                 <input type="radio" name="paymentMethod" value="cod" required>
                                 <span>Cash on Delivery (COD)</span>
+                            </div>
+                        </label>
+                    </div> -->
+                    <h5 class="text-white font-oswald mb-3 mt-5"><i class="fas fa-credit-card text-gold me-2"></i> Payment Method</h5>
+                    
+                    <div class="radio-card-group mb-4">
+                        <label class="radio-card">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <div class="ms-2">
+                                <span class="d-block fw-bold text-white mb-1">Direct Bank Transfer</span>
+                                <span class="text-muted small" style="line-height: 1.4; display: block;">
+                                    Place your order now and transfer the funds directly to our bank account. Instructions and account details will be provided on the next screen.
+                                </span>
+                            </div>
+                        </label>
+
+                        <label class="radio-card">
+                            <input type="radio" name="paymentMethod" value="cod">
+                            <div class="ms-2">
+                                <span class="d-block fw-bold text-white mb-1">Cash on Delivery (COD)</span>
+                                <span class="text-muted small" style="line-height: 1.4; display: block;">
+                                    Pay with cash directly to the courier when your watch is delivered to your doorstep.
+                                </span>
                             </div>
                         </label>
                     </div>
@@ -522,7 +361,7 @@ session_start();
             formData.append('total', cart.getSubtotal());
 
             try {
-                const response = await fetch('actions/create-order.php', {
+                const response = await fetch('admin/actions/create-order.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -531,7 +370,8 @@ session_start();
 
                 if (data.success) {
                     cart.clearCart();
-                    window.location.href = `order-success.php?order=${data.order_number}`;
+                    // encodeURIComponent safely converts the '#' so PHP can read it!
+                    window.location.href = `order-success.php?order=${encodeURIComponent(data.order_number)}`;
                 } else {
                     showError(data.message || 'Failed to place order. Please try again.');
                     submitBtn.disabled = false;
