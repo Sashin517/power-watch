@@ -334,22 +334,27 @@
             })
             .then(response => response.text())
             .then(data => {
-                console.log("Server Response:", data); // CRITICAL: Check Console for this!
+                // Remove loading spinners
+                if(loginBtn) { loginBtn.disabled = false; }
+                if(btnText) { btnText.textContent = 'Sign In'; }
+                if(btnSpinner) { btnSpinner.style.display = 'none'; }
 
-                // Reset Button
-                if(loginBtn) {
-                    loginBtn.disabled = false;
-                    btnText.textContent = 'Sign In';
-                    btnSpinner.style.display = 'none';
+                let response = data.trim();
+                console.log("Server Response: ", response); // For debugging
+
+                if (response === 'success') {
+                    showAlert('Login successful! Redirecting...', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.php'; }, 1000);
+                } 
+                else if (response === '') {
+                    showAlert('Server returned an empty response. Check PHP logs.', 'error');
+                } 
+                else if (response.includes('<html') || response.includes('<' + '?php')) {
+                    showAlert('Server 500 Error: Backend crashed.', 'error');
                 }
-
-                if (data.trim() === 'success') {
-                    showAlert('Google Login Successful! Redirecting...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.php';
-                    }, 1000);
-                } else {
-                    showAlert(data, 'error');
+                else {
+                    // Displays the actual caught error message!
+                    showAlert(response, 'error'); 
                 }
             })
             .catch(error => {
@@ -424,15 +429,27 @@
             })
             .then(response => response.text())
             .then(data => {
-                loginBtn.disabled = false;
-                btnText.textContent = 'Sign In';
-                btnSpinner.style.display = 'none';
+                // Remove loading spinners
+                if(loginBtn) { loginBtn.disabled = false; }
+                if(btnText) { btnText.textContent = 'Sign In'; }
+                if(btnSpinner) { btnSpinner.style.display = 'none'; }
 
-                if (data.trim() === 'success') {
+                let response = data.trim();
+                console.log("Server Response: ", response); // For debugging
+
+                if (response === 'success') {
                     showAlert('Login successful! Redirecting...', 'success');
                     setTimeout(() => { window.location.href = 'dashboard.php'; }, 1000);
-                } else {
-                    showAlert(data, 'error');
+                } 
+                else if (response === '') {
+                    showAlert('Server returned an empty response. Check PHP logs.', 'error');
+                } 
+                else if (response.includes('<html') || response.includes('<' + '?php')) {
+                    showAlert('Server 500 Error: Backend crashed.', 'error');
+                } 
+                else {
+                    // Displays the actual caught error message!
+                    showAlert(response, 'error'); 
                 }
             })
             .catch(error => {

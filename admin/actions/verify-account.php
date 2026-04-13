@@ -2,9 +2,9 @@
 session_start();
 require "../../includes/connection.php";
 
-// Disable error display in production
+// 1. FORCE ERRORS TO DISPLAY (No more blank boxes!)
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 
 // --- EMAIL NOTIFICATION FUNCTION ---
 function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
@@ -12,82 +12,29 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
     $login_time = date('Y-m-d h:i A');
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $method_display = ($login_method === 'google') ? 'Google Sign-In' : 'Standard Password';
-
     $subject = "New Login Alert - Power Watch";
     
     $message = "
-    <html>
-    <head>
-    <style>
-        body { font-family: 'Montserrat', Arial, sans-serif; background-color: #0A111F; color: #f8f9fa; padding: 20px; margin: 0; }
-        .container { max-width: 500px; margin: 0 auto; background-color: #151f32; padding: 30px; border-radius: 8px; border: 1px solid #2d3748; }
-        .header { text-align: center; border-bottom: 1px solid #2d3748; padding-bottom: 20px; margin-bottom: 20px; }
-        .logo { color: #D4AF37; font-size: 24px; font-weight: 700; text-transform: uppercase; font-family: 'Oswald', sans-serif; text-decoration: none; letter-spacing: 1px;}
-        .content { line-height: 1.6; color: #e2e8f0; }
-        .content h2 { color: #ffffff; }
-        .details-box { background-color: #0f1623; padding: 15px 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #D4AF37; }
-        .details-box p { margin: 8px 0; font-size: 14px; }
-        .footer { margin-top: 30px; border-top: 1px solid #2d3748; padding-top: 20px; text-align: center; font-size: 12px; color: #adb5bd; }
-    </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <span class='logo'>POWER WATCH</span>
-            </div>
-            <div class='content'>
-                <h2>Hello ".$user_fname.",</h2>
-                <p>We noticed a new login to your Power Watch account. If this was you, no further action is required.</p>
-                
-                <div class='details-box'>
-                    <p><strong>Time:</strong> ".$login_time." (LKT)</p>
-                    <p><strong>IP Address:</strong> ".$ip_address."</p>
-                    <p><strong>Method:</strong> ".$method_display."</p>
-                </div>
+    <html><head><style>body { font-family: sans-serif; background: #0A111F; color: white; padding: 20px; }</style></head>
+    <body><h2>Hello ".$user_fname.",</h2><p>New login detected from IP: ".$ip_address." via ".$method_display.".</p></body></html>";
 
-                <p style='font-size: 13px; color: #adb5bd;'>If you did not authorize this login, please change your password or contact our support team immediately to secure your account.</p>
-            </div>
-            <div class='footer'>
-                &copy; ".date('Y')." Power Watch. All rights reserved.<br>
-                Secure Account Notification
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
-
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: Power Watch Security <admin@sldevs.web.lk>" . "\r\n";
-
+    $headers = "MIME-Version: 1.0\r\nContent-type:text/html;charset=UTF-8\r\nFrom: Power Watch Security <admin@sldevs.web.lk>\r\n";
     @mail($user_email, $subject, $message, $headers);
 }
-// --- END EMAIL FUNCTION ---
 
 try {
-    // Get login method
+    // 2. CRITICAL: ENSURE CONNECTION IS OPEN BEFORE USING prepare()
+    if (empty(Database::$connection)) {
+        Database::setUpConnection();
+    }
+
     $login_method = isset($_POST["login_method"]) ? trim($_POST["login_method"]) : "standard";
     
-    // Validate email
-    if (!isset($_POST["e"]) || empty(trim($_POST["e"]))) {
-        echo "Please enter your Email";
-        exit();
-    }
-    
+    if (!isset($_POST["e"]) || empty(trim($_POST["e"]))) { echo "Please enter your Email"; exit(); }
     $email = trim($_POST["e"]);
-    
-    // Email validation
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Please enter a valid email address";
-        exit();
-    }
 
     // ===== GOOGLE LOGIN =====
     if ($login_method === "google") {
-
-        Database::setUpConnection();
-        
-        // Use prepared statement to prevent SQL injection
         $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -95,50 +42,31 @@ try {
         
         if ($rs->num_rows == 1) {
             $d = $rs->fetch_assoc();
+            if ($d['status'] != '1') { echo "Your account has been deactivated."; exit(); }
             
-            // Check if account is active
-            if ($d['status'] != '1') {
-                echo "Your account has been deactivated. Please contact support.";
-                exit();
-            }
-            
-            // 1. Generate unique session token
-            $session_token = bin2hex(random_bytes(32)); // 64 character token
+            $session_token = bin2hex(random_bytes(32));
             $_SESSION["session_token"] = $session_token;
             $_SESSION['last_activity'] = time();
             $_SESSION["u"] = $d;
             
-            // 2. Update database with new session token
             $update_stmt = Database::$connection->prepare("UPDATE `users` SET `active_session_id` = ?, `last_active_time` = ? WHERE `id` = ?");
             $current_time = time();
             $update_stmt->bind_param("sii", $session_token, $current_time, $d['id']);
             $update_stmt->execute();
             
-            // 3. Send email notification
             sendLoginAlertEmail($email, $d['fname'], 'google');
-            
             echo "success";
         } else {
             echo "Account not found. Please Sign Up first.";
         }
         
     } 
-    // ===== STANDARD PASSWORD LOGIN =====
+    // ===== STANDARD LOGIN =====
     else {
-        
-        // Validate password
-        if (!isset($_POST["p"]) || empty($_POST["p"])) {
-            echo "Please enter your Password";
-            exit();
-        }
-        
+        if (!isset($_POST["p"]) || empty($_POST["p"])) { echo "Please enter your Password"; exit(); }
         $password = $_POST["p"];
         $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
         
-        // Ensure Database is connected first!
-        Database::setUpConnection();
-        
-        // Use prepared statement
         $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ? AND `password` = ?");
         $stmt->bind_param("ss", $email, $password);
         $stmt->execute();
@@ -146,46 +74,34 @@ try {
         
         if ($rs->num_rows == 1) {
             $d = $rs->fetch_assoc();
+            if ($d['status'] != '1') { echo "Your account is deactivated."; exit(); }
             
-            // Check if account is active
-            if ($d['status'] != '1') {
-                echo "Your account has been deactivated. Please contact support.";
-                exit();
-            }
-            
-            // 1. Generate unique session token
             $session_token = bin2hex(random_bytes(32));
             $_SESSION["session_token"] = $session_token;
             $_SESSION['last_activity'] = time();
             $_SESSION["u"] = $d;
             
-            // 2. Update database with new session token
             $update_stmt = Database::$connection->prepare("UPDATE `users` SET `active_session_id` = ?, `last_active_time` = ? WHERE `id` = ?");
             $current_time = time();
             $update_stmt->bind_param("sii", $session_token, $current_time, $d['id']);
             $update_stmt->execute();
             
-            // 3. Handle Remember Me
             if ($rememberMe == "1") {
-                setcookie("email", $email, time() + (60*60*24*365), "/"); // 1 year
+                setcookie("email", $email, time() + (60*60*24*365), "/"); 
                 setcookie("password", $password, time() + (60*60*24*365), "/");
             } else {
                 setcookie("email", "", time() - 3600, "/");
                 setcookie("password", "", time() - 3600, "/");
             }
             
-            // 4. Send email notification
             sendLoginAlertEmail($email, $d['fname'], 'standard');
-            
             echo "success";
         } else {
             echo "Invalid Email or Password";
         }
     }
-    
-} catch (Exception $e) {
-    // Log error for debugging (don't show to user)
-    error_log("Login Error: " . $e->getMessage());
-    echo "An error occurred. Please try again later.";
+} catch (Throwable $e) { 
+    // 3. THROWABLE CATCHES FATAL ERRORS SO THE BOX IS NEVER BLANK
+    echo "SERVER CRASH: " . $e->getMessage() . " on line " . $e->getLine();
 }
 ?>

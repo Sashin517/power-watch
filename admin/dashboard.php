@@ -2,6 +2,11 @@
     session_start();
     require "../includes/connection.php"; 
 
+    // CRITICAL: Connect to DB before prepare()
+    if (empty(Database::$connection)) {
+        Database::setUpConnection();
+    }
+
     // 1. Basic Auth Check
     if(!isset($_SESSION["u"]) || !isset($_SESSION["session_token"])){
         header("Location: login.php");
@@ -10,9 +15,6 @@
 
     $user_id = $_SESSION["u"]["id"];
     $local_token = $_SESSION["session_token"];
-
-    // Ensure Database is connected
-    Database::setUpConnection();
 
     // 2. CONCURRENT LOGIN CHECK
     $stmt = Database::$connection->prepare("SELECT active_session_id FROM users WHERE id = ?");
@@ -31,8 +33,9 @@
         }
     }
 
-    // 3. INACTIVITY TIMEOUT (30 minutes)
+    // 3. INACTIVITY TIMEOUT
     $timeout_duration = 1800; 
+
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
         $stmt = Database::$connection->prepare("UPDATE users SET active_session_id = NULL, last_active_time = 0 WHERE id = ?");
         $stmt->bind_param("i", $user_id);
