@@ -932,8 +932,8 @@
             }
             
             .btn-card {
-                padding: 6px;
-                font-size: 0.6rem;
+                padding: 8px;
+                font-size: 0.725rem;
                 letter-spacing: 0.2px;
             }
             
@@ -1016,18 +1016,6 @@
             }
         }
 
-        /* Carousel controls for product sections */
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 45px;
-            opacity: 0.6;
-        }
-
-        .carousel-control-prev:hover,
-        .carousel-control-next:hover {
-            opacity: 1;
-        }
-
         @media (max-width: 767px) {
             .carousel-control-prev,
             .carousel-control-next {
@@ -1072,13 +1060,12 @@
 
         /* --- Carousel Controls --- */
         .carousel-control-prev, .carousel-control-next {
-            width: 5%;
-            opacity: 0;
+            width: 45px;
+            opacity: 0.7;
             transition: opacity 0.3s;
         }
-        .carousel:hover .carousel-control-prev, 
-        .carousel:hover .carousel-control-next {
-            display: none !important;
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            opacity: 1;
         }
         .carousel-control-prev-icon, .carousel-control-next-icon {
             background-color: rgba(0,0,0,0.5);
@@ -1425,13 +1412,6 @@
                 <div class="carousel-inner" id="luxuryCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-gold" role="status"></div></div>
                 </div>
-                <!-- Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#luxuryCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#luxuryCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
             </div>
             <!-- closes #luxuryCarousel -->
             <div class="text-center mt-3" id="luxuryDots"></div>
@@ -1458,12 +1438,6 @@
                 <div class="carousel-inner" id="peoplesChoiceCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#peoplesChoiceCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#peoplesChoiceCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
             </div>
             <!-- closes #peoplesChoiceCarousel -->
             <div class="text-center mt-3" id="peoplesChoiceDots"></div>
@@ -1499,13 +1473,6 @@
                 <div class="carousel-inner" id="favoriteBrandsCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
-                <!-- Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#favoriteBrandsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#favoriteBrandsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
             </div>
             <!-- closes #favoriteBrandsCarousel -->
             <div class="text-center mt-3" id="favoriteBrandsDots"></div>
@@ -1536,12 +1503,6 @@
                 <div class="carousel-inner" id="wallClockCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#wallClockCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
             </div>
             <!-- closes #wallClockCarousel -->
             <div class="text-center mt-3" id="wallClockDots"></div>
@@ -1796,12 +1757,22 @@
 
             // Show/hide navigation arrows based on number of slides
             const totalSlides = Math.ceil(products.length / itemsPerSlide);
+            // Only inject nav buttons if more than 1 slide
             const carouselEl = container.closest('.carousel');
             if (carouselEl) {
-                if (totalSlides <= 1) {
-                    carouselEl.classList.add('carousel-controls-hidden');
-                } else {
-                    carouselEl.classList.remove('carousel-controls-hidden');
+                // Remove any previously injected buttons first (for re-renders e.g. brand tab switch)
+                carouselEl.querySelectorAll('.carousel-control-prev, .carousel-control-next').forEach(b => b.remove());
+
+                if (totalSlides > 1) {
+                    const carouselId = carouselEl.id;
+                    carouselEl.insertAdjacentHTML('beforeend', `
+                        <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    `);
                 }
             }
 

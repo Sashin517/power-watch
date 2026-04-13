@@ -494,11 +494,12 @@ if(empty($images)) {
             justify-content: center; 
             position: relative; 
             overflow: hidden;
+            flex-shrink: 0;
         }
         .card-img-wrapper img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; /* Makes image fill the area perfectly */
+            object-fit: contain; /* Makes image fill the area perfectly */
         }
         
         .card-body { 
@@ -625,20 +626,21 @@ if(empty($images)) {
 
         /* --- Mobile Responsive Card Fixes --- */
         @media (max-width: 768px) {
+            .card-img-wrapper {height: 170px; min-height: 170px; padding: 15px;}
             /* 1. Scale down padding and fonts safely while keeping the hierarchy */
             .card-body { padding: 1rem; }
-            .card-title { font-size: 20px; margin-bottom: 0.5rem; } 
-            .current-price { font-size: 16px; }
-            .old-price { font-size: 14px; }
-            .koko-text { font-size: 11px; margin-bottom: 1rem; }
+            .card-title { font-size: 14px; margin-bottom: 0.5rem; } 
+            .current-price { font-size: 14px; }
+            .old-price { font-size: 12px; }
+            .koko-text { font-size: 9px; margin-bottom: 1rem; }
             
             /* 2. Keep prices on the same line, but allow wrapping if needed */
-            .price-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 0.25rem; }
+            .price-row { display: block; margin-bottom: 0.25rem; }
             
             /* 3. Touch Target Optimization: Stack buttons and make the 'eye' icon a full pill */
             .card-actions { display: flex; flex-direction: column-reverse; gap: 8px; }
-            .btn-add-cart-outline { width: 100%; font-size: 14px; padding: 12px; }
-            .btn-view-solid { width: 100%; border-radius: 25px; height: 44px; } 
+            .btn-add-cart-outline { width: 100%; font-size: 12px; padding: 12px; }
+            .btn-view-solid { width: 100%; font-size: 12px; border-radius: 25px; height: 44px; } 
         }
         /* Recently view btn style */
         .btn-recent-add-cart-outline { 
@@ -674,7 +676,7 @@ if(empty($images)) {
 
         /* Responsive scaling */
         @media (max-width: 768px) {
-            .btn-recent-view-solid {height: 44px; }
+            .btn-recent-view-solid {width: 44px; height: 44px; }
             .btn-recent-add-cart-outline { width: 100%; font-size: 14px; padding: 12px;}
         }
         /* --- Flat Design Product Cards (For Recently Viewed) --- */
@@ -1046,7 +1048,7 @@ if(empty($images)) {
     <section class="py-5" style="background-color: #0f1724;">
         <div class="container">
             <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">You May Also Like</h3>
-            <div class="row g-4" id="relatedProductsContainer">
+            <div class="row g-3" id="relatedProductsContainer">
                 <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div>
             </div>
         </div>
@@ -1055,7 +1057,7 @@ if(empty($images)) {
     <section class="py-5" id="recentlyViewedSection" style="display: none; background-color: var(--prm-blue);">
         <div class="container">
             <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">Recently Viewed</h3>
-            <div class="row g-4" id="recentlyViewedContainer">
+            <div class="row g-3" id="recentlyViewedContainer">
                 </div>
         </div>
     </section>
@@ -1201,7 +1203,7 @@ if(empty($images)) {
                     const kokoInstallment = new Intl.NumberFormat('en-LK').format(priceNum / 3);
 
                     container.innerHTML += `
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-6 col-md-3">
                             <div class="product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
                                 <div class="card-img-wrapper">
                                     <img src="${img}" alt="${safeName}">

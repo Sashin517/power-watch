@@ -11,7 +11,6 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
 
     $subject = "New Login Alert - Power Watch";
     
-    // HTML Email Template matching your theme
     $message = "
     <html>
     <head>
@@ -53,103 +52,110 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
     </html>
     ";
 
-    // Set content-type header for sending HTML email
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    // Additional headers
     $headers .= "From: Power Watch Security <admin@sldevs.web.lk>" . "\r\n";
 
-    // Send email (Suppressed with @ to prevent UI errors if mail server isn't configured locally)
     @mail($user_email, $subject, $message, $headers);
 }
 // --- END EMAIL FUNCTION ---
 
+try {
+    $login_method = isset($_POST["login_method"]) ? $_POST["login_method"] : "standard";
+    $email = $_POST["e"];
 
-// 1. Check if the login method is set (default to standard)
-$login_method = isset($_POST["login_method"]) ? $_POST["login_method"] : "standard";
-$email = $_POST["e"];
-
-// 2. Validate Email
-if(empty($email)){
-    echo ("Please enter your Email");
-    exit();
-}
-
-// 3. LOGIC BRANCHING
-if ($login_method === "google") {
-    // --- GOOGLE LOGIN (No Password Check) ---
-    
-    $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."'");
-    $n = $rs->num_rows;
-
-    if($n == 1){
-        $d = $rs->fetch_assoc();
-        if($d['status'] == '1'){
-            $_SESSION["u"] = $d;
-            $_SESSION['last_activity'] = time();
-            
-            // Trigger Email Notification
-            sendLoginAlertEmail($email, $d['fname'], 'google');
-            
-            echo ("success");
-        } else {
-            echo ("Your account has been deactivated.");
-        }
-    } else {
-        echo ("Account not found. Please Sign Up first.");
-    }
-
-} else {
-    // --- STANDARD LOGIN (Password Check) ---
-    
-    if(!isset($_POST["p"]) || empty($_POST["p"])){
-        echo ("Please enter your Password");
+    if(empty($email)){
+        echo "Please enter your Email";
         exit();
     }
-    
-    $password = $_POST["p"];
-    $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
 
-    $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."' AND `password`='".$password."'");
-    $n = $rs->num_rows;
+    if ($login_method === "google") {
+        $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."'");
+        $n = $rs->num_rows;
 
-    if($n == 1){
-        $d = $rs->fetch_assoc();
-
-        // --- CONCURRENT LOGIN CHECK ---
-        $current_time = time();
-        $timeout = 1800; // 30 minutes
-        
-        // If an active session exists AND it hasn't expired yet
-        if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
-            // Ensure it's not the same browser just refreshing
-            if ($d['active_session_id'] !== session_id()) {
-                echo "You are already logged in on another device. Please log out there first, or wait 30 minutes for inactivity.";
-                exit();
+        if($n == 1){
+            $d = $rs->fetch_assoc();
+            
+            // --- CONCURRENT LOGIN CHECK ---
+            $current_time = time();
+            $timeout = 1800; // 30 minutes
+            
+            if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
+                if ($d['active_session_id'] !== session_id()) {
+                    echo "You are already logged in on another device. Please log out there first, or wait 30 minutes.";
+                    exit();
+                }
             }
-        }
-        // ---------------------------------
-        if($d['status'] == '1'){
-            $_SESSION["u"] = $d;
-            $_SESSION['last_activity'] = time();
 
-            if($rememberMe == "1"){
-                setcookie("email", $email, time() + (60*60*24*365));
-                setcookie("password", $password, time() + (60*60*24*365));
+            if($d['status'] == '1'){
+                $_SESSION["u"] = $d;
+                $_SESSION['last_activity'] = $current_time;
+                
+                $session_id = session_id();
+                Database::iud("UPDATE `users` SET `active_session_id`='".$session_id."', `last_active_time`='".$current_time."' WHERE `id`='".$d['id']."'");
+
+                sendLoginAlertEmail($email, $d['fname'], 'google');
+                echo "success";
             } else {
-                setcookie("email", "", -1);
-                setcookie("password", "", -1);
+                echo "Your account has been deactivated.";
+            }
+        } else {
+            echo "Account not found. Please Sign Up first.";
+        }
+
+    } else {
+        // --- STANDARD PASSWORD LOGIN ---
+        if(!isset($_POST["p"]) || empty($_POST["p"])){
+            echo "Please enter your Password";
+            exit();
+        }
+        
+        $password = $_POST["p"];
+        $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
+
+        $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."' AND `password`='".$password."'");
+        $n = $rs->num_rows;
+
+        if($n == 1){
+            $d = $rs->fetch_assoc();
+            
+            // --- CONCURRENT LOGIN CHECK ---
+            $current_time = time();
+            $timeout = 1800; // 30 minutes
+            
+            if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
+                if ($d['active_session_id'] !== session_id()) {
+                    echo "You are already logged in on another device. Please log out there first, or wait 30 minutes.";
+                    exit();
+                }
             }
 
-            // Trigger Email Notification
-            sendLoginAlertEmail($email, $d['fname'], 'standard');
+            if($d['status'] == '1'){
+                $_SESSION["u"] = $d;
+                $_SESSION['last_activity'] = $current_time;
 
-            echo ("success");
+                $session_id = session_id();
+                Database::iud("UPDATE `users` SET `active_session_id`='".$session_id."', `last_active_time`='".$current_time."' WHERE `id`='".$d['id']."'");
+
+                if($rememberMe == "1"){
+                    setcookie("email", $email, time() + (60*60*24*365));
+                    setcookie("password", $password, time() + (60*60*24*365));
+                } else {
+                    setcookie("email", "", -1);
+                    setcookie("password", "", -1);
+                }
+
+                sendLoginAlertEmail($email, $d['fname'], 'standard');
+                echo "success";
+            } else {
+                echo "Your account has been deactivated.";
+            }
         } else {
-            echo ("Your account has been deactivated.");
+            echo "Invalid Email or Password";
         }
-    } else {
-        echo ("Invalid Email or Password");
     }
+} catch (Exception $e) {
+    // If the database crashes, print the error inside the red alert box
+    echo "System Error: " . $e->getMessage();
 }
 ?>
