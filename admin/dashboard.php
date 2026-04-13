@@ -11,34 +11,43 @@
     $user_id = $_SESSION["u"]["id"];
     $local_token = $_SESSION["session_token"];
 
-    // 2. CONCURRENT LOGIN CHECK (The "Kick Out" logic)
-    $rs = Database::search("SELECT active_session_id FROM users WHERE id='".$user_id."'");
+    // 2. CONCURRENT LOGIN CHECK
+    $stmt = Database::$connection->prepare("SELECT active_session_id FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $rs = $stmt->get_result();
+
     if($rs->num_rows == 1) {
         $db_token = $rs->fetch_assoc()['active_session_id'];
         
-        // If the tokens don't match, this device has been replaced by a new login!
         if($local_token !== $db_token) {
             session_unset();
             session_destroy();
-            header("Location: login.php?err=concurrent"); // Send them back to login with a specific error code
+            header("Location: login.php?err=concurrent");
             exit();
         }
     }
 
-    // 3. INACTIVITY TIMEOUT CHECK (30 Minutes)
+    // 3. INACTIVITY TIMEOUT (30 minutes)
     $timeout_duration = 1800; 
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
-        Database::iud("UPDATE `users` SET `active_session_id`=NULL, `last_active_time`=0 WHERE `id`='".$user_id."'");
+        $stmt = Database::$connection->prepare("UPDATE users SET active_session_id = NULL, last_active_time = 0 WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        
         session_unset();     
         session_destroy();   
         header("Location: login.php?err=timeout"); 
         exit();
     }
 
-    // Keep DB Session Alive
+    // Update last activity
     $current_time = time();
-    $_SESSION['last_activity'] = $current_time; 
-    Database::iud("UPDATE `users` SET `last_active_time`='".$current_time."' WHERE `id`='".$user_id."'");
+    $_SESSION['last_activity'] = $current_time;
+
+    $stmt = Database::$connection->prepare("UPDATE users SET last_active_time = ? WHERE id = ?");
+    $stmt->bind_param("ii", $current_time, $user_id);
+    $stmt->execute();
 
     $user_data = $_SESSION["u"];
 ?>

@@ -2,6 +2,10 @@
 session_start();
 require "../../includes/connection.php";
 
+// Disable error display in production
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
 // --- EMAIL NOTIFICATION FUNCTION ---
 function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
     date_default_timezone_set("Asia/Colombo");
@@ -61,70 +65,122 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
 // --- END EMAIL FUNCTION ---
 
 try {
-    $login_method = isset($_POST["login_method"]) ? $_POST["login_method"] : "standard";
-    $email = $_POST["e"];
+    // Get login method
+    $login_method = isset($_POST["login_method"]) ? trim($_POST["login_method"]) : "standard";
+    
+    // Validate email
+    if (!isset($_POST["e"]) || empty(trim($_POST["e"]))) {
+        echo "Please enter your Email";
+        exit();
+    }
+    
+    $email = trim($_POST["e"]);
+    
+    // Email validation
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Please enter a valid email address";
+        exit();
+    }
 
-    if(empty($email)){ echo "Please enter your Email"; exit(); }
-
+    // ===== GOOGLE LOGIN =====
     if ($login_method === "google") {
-        $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."'");
-        $n = $rs->num_rows;
-
-        if($n == 1){
+        
+        // Use prepared statement to prevent SQL injection
+        $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $rs = $stmt->get_result();
+        
+        if ($rs->num_rows == 1) {
             $d = $rs->fetch_assoc();
-            if($d['status'] == '1'){
-                $_SESSION["u"] = $d;
-                
-                // 1. GENERATE A UNIQUE SESSION TOKEN
-                $session_token = bin2hex(random_bytes(16));
-                $_SESSION["session_token"] = $session_token;
-                $_SESSION['last_activity'] = time();
-                
-                // 2. SAVE IT TO THE DB (This steals the session from any other device)
-                Database::iud("UPDATE `users` SET `active_session_id`='".$session_token."', `last_active_time`='".time()."' WHERE `id`='".$d['id']."'");
-
-                sendLoginAlertEmail($email, $d['fname'], 'google');
-                echo "success";
-            } else { echo "Your account has been deactivated."; }
-        } else { echo "Account not found. Please Sign Up first."; }
-
-    } else {
-        // --- STANDARD PASSWORD LOGIN ---
-        if(!isset($_POST["p"]) || empty($_POST["p"])){ echo "Please enter your Password"; exit(); }
+            
+            // Check if account is active
+            if ($d['status'] != '1') {
+                echo "Your account has been deactivated. Please contact support.";
+                exit();
+            }
+            
+            // 1. Generate unique session token
+            $session_token = bin2hex(random_bytes(32)); // 64 character token
+            $_SESSION["session_token"] = $session_token;
+            $_SESSION['last_activity'] = time();
+            $_SESSION["u"] = $d;
+            
+            // 2. Update database with new session token
+            $update_stmt = Database::$connection->prepare("UPDATE `users` SET `active_session_id` = ?, `last_active_time` = ? WHERE `id` = ?");
+            $current_time = time();
+            $update_stmt->bind_param("sii", $session_token, $current_time, $d['id']);
+            $update_stmt->execute();
+            
+            // 3. Send email notification
+            sendLoginAlertEmail($email, $d['fname'], 'google');
+            
+            echo "success";
+        } else {
+            echo "Account not found. Please Sign Up first.";
+        }
+        
+    } 
+    // ===== STANDARD PASSWORD LOGIN =====
+    else {
+        
+        // Validate password
+        if (!isset($_POST["p"]) || empty($_POST["p"])) {
+            echo "Please enter your Password";
+            exit();
+        }
         
         $password = $_POST["p"];
         $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
-
-        $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."' AND `password`='".$password."'");
-        $n = $rs->num_rows;
-
-        if($n == 1){
+        
+        // Use prepared statement
+        $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ? AND `password` = ?");
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $rs = $stmt->get_result();
+        
+        if ($rs->num_rows == 1) {
             $d = $rs->fetch_assoc();
-            if($d['status'] == '1'){
-                $_SESSION["u"] = $d;
-                
-                // 1. GENERATE A UNIQUE SESSION TOKEN
-                $session_token = bin2hex(random_bytes(16));
-                $_SESSION["session_token"] = $session_token;
-                $_SESSION['last_activity'] = time();
-
-                // 2. SAVE IT TO THE DB (This steals the session from any other device)
-                Database::iud("UPDATE `users` SET `active_session_id`='".$session_token."', `last_active_time`='".time()."' WHERE `id`='".$d['id']."'");
-
-                if($rememberMe == "1"){
-                    setcookie("email", $email, time() + (60*60*24*365));
-                    setcookie("password", $password, time() + (60*60*24*365));
-                } else {
-                    setcookie("email", "", -1);
-                    setcookie("password", "", -1);
-                }
-
-                sendLoginAlertEmail($email, $d['fname'], 'standard');
-                echo "success";
-            } else { echo "Your account has been deactivated."; }
-        } else { echo "Invalid Email or Password"; }
+            
+            // Check if account is active
+            if ($d['status'] != '1') {
+                echo "Your account has been deactivated. Please contact support.";
+                exit();
+            }
+            
+            // 1. Generate unique session token
+            $session_token = bin2hex(random_bytes(32));
+            $_SESSION["session_token"] = $session_token;
+            $_SESSION['last_activity'] = time();
+            $_SESSION["u"] = $d;
+            
+            // 2. Update database with new session token
+            $update_stmt = Database::$connection->prepare("UPDATE `users` SET `active_session_id` = ?, `last_active_time` = ? WHERE `id` = ?");
+            $current_time = time();
+            $update_stmt->bind_param("sii", $session_token, $current_time, $d['id']);
+            $update_stmt->execute();
+            
+            // 3. Handle Remember Me
+            if ($rememberMe == "1") {
+                setcookie("email", $email, time() + (60*60*24*365), "/"); // 1 year
+                setcookie("password", $password, time() + (60*60*24*365), "/");
+            } else {
+                setcookie("email", "", time() - 3600, "/");
+                setcookie("password", "", time() - 3600, "/");
+            }
+            
+            // 4. Send email notification
+            sendLoginAlertEmail($email, $d['fname'], 'standard');
+            
+            echo "success";
+        } else {
+            echo "Invalid Email or Password";
+        }
     }
+    
 } catch (Exception $e) {
-    echo "System Error: " . $e->getMessage();
+    // Log error for debugging (don't show to user)
+    error_log("Login Error: " . $e->getMessage());
+    echo "An error occurred. Please try again later.";
 }
 ?>
