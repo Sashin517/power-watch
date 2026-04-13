@@ -6,15 +6,23 @@ require "../../includes/connection.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// --- EMAIL NOTIFICATION FUNCTION (Restored to your original beautiful design) ---
+// IMPORT PHPMAILER CLASSES AT THE VERY TOP OF YOUR FILE
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// REQUIRE THE FILES
+require '../../includes/PHPMailer/Exception.php';
+require '../../includes/PHPMailer/PHPMailer.php';
+require '../../includes/PHPMailer/SMTP.php';
+
+// --- UPDATED EMAIL NOTIFICATION FUNCTION ---
 function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
     date_default_timezone_set("Asia/Colombo");
     $login_time = date('Y-m-d h:i A');
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $method_display = ($login_method === 'google') ? 'Google Sign-In' : 'Standard Password';
 
-    $subject = "New Login Alert - Power Watch";
-    
+    // The beautiful HTML template
     $message = "
     <html>
     <head>
@@ -37,32 +45,43 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
             </div>
             <div class='content'>
                 <h2>Hello ".$user_fname.",</h2>
-                <p>We noticed a new login to your Power Watch account. If this was you, no further action is required.</p>
-                
+                <p>We noticed a new login to your Power Watch account.</p>
                 <div class='details-box'>
                     <p><strong>Time:</strong> ".$login_time." (LKT)</p>
                     <p><strong>IP Address:</strong> ".$ip_address."</p>
                     <p><strong>Method:</strong> ".$method_display."</p>
                 </div>
-
-                <p style='font-size: 13px; color: #adb5bd;'>If you did not authorize this login, please change your password or contact our support team immediately to secure your account.</p>
-            </div>
-            <div class='footer'>
-                &copy; ".date('Y')." Power Watch. All rights reserved.<br>
-                Secure Account Notification
+                <p style='font-size: 13px; color: #adb5bd;'>If you did not authorize this login, please change your password immediately.</p>
             </div>
         </div>
     </body>
-    </html>
-    ";
+    </html>";
 
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: Power Watch Security <admin@sldevs.web.lk>" . "\r\n";
+    $mail = new PHPMailer(true);
 
-    // Wrapped in function_exists just in case you ever test this on a local server where mail() is disabled, preventing crashes.
-    if (function_exists('mail')) {
-        @mail($user_email, $subject, $message, $headers);
+    try {
+        // Server settings
+        $mail->isSMTP();                                            
+        $mail->Host       = 'mail.sldevs.web.lk'; // Your cPanel mail server
+        $mail->SMTPAuth   = true;                                   
+        $mail->Username   = 'admin@sldevs.web.lk'; // The email you created in cPanel
+        $mail->Password   = 'YOUR_EMAIL_PASSWORD'; // The password for that email
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Enable SSL
+        $mail->Port       = 465; // Standard SSL port
+
+        // Recipients
+        $mail->setFrom('admin@sldevs.web.lk', 'Power Watch Security');
+        $mail->addAddress($user_email);     
+
+        // Content
+        $mail->isHTML(true);                                  
+        $mail->Subject = 'New Login Alert - Power Watch';
+        $mail->Body    = $message;
+
+        $mail->send();
+    } catch (Exception $e) {
+        // Silently log the error so the user isn't stopped from logging in
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
     }
 }
 // --- END EMAIL FUNCTION ---
