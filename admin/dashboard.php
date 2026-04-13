@@ -688,22 +688,22 @@
                 <div class="col-md-4">
                     <div class="dashboard-card">
                         <div class="stat-icon bg-icon-gold"><i class="fas fa-coins"></i></div>
-                        <h3 class="h2 fw-bold text-white mb-1">LKR 450k</h3>
+                        <h3 id="stat-total-sales" class="h2 fw-bold text-white mb-1">LKR 0</h3>
                         <p class="text-muted m-0">Total Sales (This Month)</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="dashboard-card">
                         <div class="stat-icon bg-icon-blue"><i class="fas fa-box"></i></div>
-                        <h3 id="prod-num" class="h2 fw-bold text-white mb-1">null</h3>
+                        <h3 id="prod-num" class="h2 fw-bold text-white mb-1">0</h3>
                         <p class="text-muted m-0">Total Products</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="dashboard-card">
                         <div class="stat-icon bg-icon-green"><i class="fas fa-check-circle"></i></div>
-                        <h3 class="h2 fw-bold text-white mb-1">18</h3>
-                        <p class="text-muted m-0">New Orders</p>
+                        <h3 id="stat-new-orders" class="h2 fw-bold text-white mb-1">0</h3>
+                        <p class="text-muted m-0">New Orders (This Month)</p>
                     </div>
                 </div>
             </div>
@@ -1834,18 +1834,49 @@
                 const response = await fetch('actions/orders-data.php');
                 allOrders = await response.json();
                 
-                // Calculate stats based on ALL orders
+                // Track standard order statuses
                 let counts = { pending: 0, processing: 0, shipped: 0, delivered: 0 };
+                
+                // Track monthly stats
+                let monthlySales = 0;
+                let newOrdersThisMonth = 0;
+                
+                // Get current month and year to compare against the database timestamps
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+
                 allOrders.forEach(order => {
+                    // 1. Calculate Status Counts
                     if (counts[order.order_status] !== undefined) counts[order.order_status]++;
+                    
+                    // 2. Calculate Monthly Stats
+                    const orderDate = new Date(order.created_at);
+                    if (orderDate.getMonth() === currentMonth && orderDate.getFullYear() === currentYear) {
+                        newOrdersThisMonth++;
+                        
+                        // Add to sales total (ignoring cancelled orders for accurate revenue)
+                        if (order.order_status !== 'cancelled') {
+                            monthlySales += parseFloat(order.total_amount);
+                        }
+                    }
                 });
                 
+                // Update specific status tiles
                 document.getElementById('count-pending').innerText = counts.pending;
                 document.getElementById('count-processing').innerText = counts.processing;
                 document.getElementById('count-shipped').innerText = counts.shipped;
                 document.getElementById('count-delivered').innerText = counts.delivered;
 
-                // --- NEW: NOTIFICATION ENGINE ---
+                // Update the Top Overview Dashboard Tiles
+                document.getElementById('stat-new-orders').innerText = newOrdersThisMonth;
+                document.getElementById('stat-total-sales').innerText = new Intl.NumberFormat('en-LK', { 
+                    style: 'currency', 
+                    currency: 'LKR', 
+                    maximumFractionDigits: 0 
+                }).format(monthlySales);
+
+                // --- NOTIFICATION ENGINE ---
                 const pendingOrders = allOrders.filter(o => o.order_status === 'pending');
                 const badge = document.getElementById('notificationBadge');
                 const countText = document.getElementById('notificationCount');

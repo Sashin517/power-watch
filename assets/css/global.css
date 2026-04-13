@@ -154,3 +154,40 @@ footer a:hover { color: var(--chp-gold); }
     .minimal-toast-container { bottom: 85px; right: 16px; left: 16px; max-width: none; }
     .minimal-toast-container .toast { width: 100% !important; }
 }
+
+/* --- Navbar Live Search --- */
+.nav-search-container { position: relative; display: flex; align-items: center; }
+.nav-search-input {
+    width: 0; opacity: 0; padding: 0; border: none; background: transparent; color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); outline: none; border-radius: 20px; font-size: 0.9rem;
+}
+.nav-search-container.active .nav-search-input {
+    width: 220px; opacity: 1; padding: 6px 40px 6px 15px; background: rgba(255,255,255,0.1); 
+    border: 1px solid rgba(255,255,255,0.2); margin-right: -35px; /* Pulls the icon inside the input */
+}
+.nav-search-container.active .nav-search-input:focus { border-color: var(--chp-gold); background: rgba(255,255,255,0.15); }
+.nav-search-input::placeholder { color: rgba(255,255,255,0.6); }
+.search-trigger-btn { position: relative; z-index: 2; color: white !important; transition: 0.3s; }
+.nav-search-container.active .search-trigger-btn { color: var(--chp-gold) !important; }
+
+.nav-search-dropdown {
+    position: absolute; top: 110%; right: 0; width: 300px; background-color: #151f32; 
+    border: 1px solid var(--border-color); border-radius: 8px; z-index: 1050; 
+    max-height: 350px; overflow-y: auto; overflow-x: hidden;
+}
+.nav-search-dropdown::-webkit-scrollbar { width: 4px; }
+.nav-search-dropdown::-webkit-scrollbar-thumb { background-color: rgba(212, 175, 55, 0.5); border-radius: 10px; }
+
+.nav-search-item {
+    padding: 10px 15px; display: flex; align-items: center; gap: 12px; text-decoration: none; 
+    color: white; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
+}
+.nav-search-item:hover { background-color: rgba(212, 175, 55, 0.1); color: var(--chp-gold); }
+.nav-search-item img { width: 40px; height: 40px; object-fit: contain; background: white; border-radius: 4px; padding: 2px; }
+.nav-search-title { font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;}
+.nav-search-price { font-size: 0.75rem; color: var(--text-muted); display: block; }
+
+@media (max-width: 991px) {
+    .nav-search-container.active .nav-search-input { width: 160px; }
+    .nav-search-dropdown { position: fixed; top: 70px; left: 0; right: 0; width: 100vw; border-radius: 0; border-left: none; border-right: none; }
+}

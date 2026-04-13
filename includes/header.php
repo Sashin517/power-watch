@@ -58,10 +58,17 @@
                         </ul>
                     </li>
                 </ul>
-                <div class="nav-icons d-flex gap-2">
-                    <button class="btn btn-link" aria-label="Search">
-                        <i class="fas fa-search"></i>
-                    </button>
+                <div class="nav-icons d-flex gap-2 align-items-center">
+                    
+                    <div class="nav-search-container" id="navSearchContainer">
+                        <form action="collection.php" method="GET" class="d-flex align-items-center m-0">
+                            <input type="text" name="search" id="navSearchInput" class="nav-search-input" placeholder="Search watches..." autocomplete="off">
+                            <button type="submit" class="btn btn-link search-trigger-btn" aria-label="Search" id="navSearchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                        <div id="navSearchDropdown" class="nav-search-dropdown shadow d-none"></div>
+                    </div>
                     
                     <button class="btn btn-link position-relative" aria-label="Shopping Cart" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
                         <i class="fas fa-shopping-cart"></i>
