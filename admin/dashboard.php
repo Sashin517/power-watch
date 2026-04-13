@@ -536,6 +536,36 @@
         .toast.toast-error { border-left: 4px solid var(--danger-red); }
         .toast.toast-error i { color: var(--danger-red); }
 
+        /* --- Custom Notification Dropdown --- */
+        .notification-dropdown {
+            width: 350px; /* Slightly wider for better readability */
+            max-width: 95vw; /* CRITICAL FOR MOBILE: Prevents it from bleeding off the screen on tiny phones */
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* CRITICAL FIX: Overrides Bootstrap's default behavior so text drops to the next line instead of cutting off */
+        .notification-dropdown .dropdown-item {
+            white-space: normal; 
+            line-height: 1.4;
+        }
+
+        /* Webkit Styling: Makes it look sleek like a native mobile/Mac app */
+        .notification-dropdown::-webkit-scrollbar {
+            width: 5px; 
+        }
+        .notification-dropdown::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        .notification-dropdown::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.46); 
+            border-radius: 10px;
+        }
+        .notification-dropdown::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(212, 175, 55, 0.5); 
+        }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
@@ -604,7 +634,9 @@
 
         <div class="sidebar-footer">
             <div class="d-flex align-items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Admin" class="rounded-circle" width="40" height="40">
+                <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: var(--chp-gold); color: #000; font-weight: 700; font-size: 1.2rem;">
+                    <?php echo strtoupper(substr($user_data["fname"], 0, 1)); ?>
+                </div>
                 <div>
                     <p class="m-0 small fw-bold text-white"><?php echo $user_data["fname"]; ?></p>
                     <p class="m-0 small text-muted">Admin</p>
@@ -625,9 +657,28 @@
                 <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <h2 class="h4 m-0 brand-font text-white" id="pageTitle">Overview</h2>
             </div>
-            <div class="d-flex gap-3">
-                <button class="btn btn-outline-gold rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fas fa-bell"></i></button>
-                <button class="btn btn-gold">Visit Store <i class="fas fa-external-link-alt ms-2 d-none d-sm-inline"></i></button>
+            <div class="d-flex gap-3 align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-outline-gold rounded-circle p-0 d-flex align-items-center justify-content-center position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px;">
+                        <i class="fas fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-dark rounded-circle d-none" id="notificationBadge">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow p-0 mt-2 notification-dropdown" style="z-index: 1060;">
+                        <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 text-white">Action Required</h6>
+                            <span class="badge bg-danger rounded-pill" id="notificationCount">0</span>
+                        </div>
+                        <div id="notificationItems">
+                            <div class="p-4 text-center text-muted small">No pending orders</div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="../index.php" target="_blank" class="btn btn-gold text-decoration-none">
+                    Visit Store <i class="fas fa-external-link-alt ms-2 d-none d-sm-inline"></i>
+                </a>
             </div>
         </header>
 
@@ -922,37 +973,40 @@
             </div>
         </div>
 
-        <!-- View: Orders -->
         <div id="view-orders" class="d-none-view">
             <div class="row g-3 mb-4">
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-blue mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-clipboard-list"></i></div>
-                        <div><h5 class="m-0 text-white">12</h5><small class="text-muted">Pending</small></div>
+                        <div><h5 class="m-0 text-white" id="count-pending">0</h5><small class="text-muted">Pending</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-gold mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-box"></i></div>
-                        <div><h5 class="m-0 text-white">5</h5><small class="text-muted">Processing</small></div>
+                        <div><h5 class="m-0 text-white" id="count-processing">0</h5><small class="text-muted">Processing</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
                         <div class="stat-icon bg-icon-green mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-truck"></i></div>
-                        <div><h5 class="m-0 text-white">48</h5><small class="text-muted">Shipped</small></div>
+                        <div><h5 class="m-0 text-white" id="count-shipped">0</h5><small class="text-muted">Shipped</small></div>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="dashboard-card p-3 d-flex align-items-center gap-3">
-                        <div class="stat-icon bg-icon-orange mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-undo"></i></div>
-                        <div><h5 class="m-0 text-white">2</h5><small class="text-muted">Returns</small></div>
+                        <div class="stat-icon bg-icon-orange mb-0" style="width:40px; height:40px; font-size:1rem;"><i class="fas fa-check"></i></div>
+                        <div><h5 class="m-0 text-white" id="count-delivered">0</h5><small class="text-muted">Delivered</small></div>
                     </div>
                 </div>
             </div>
 
+            <div class="dashboard-card mb-4 p-3 d-flex justify-content-between align-items-center">
+                <input type="text" id="orderSearch" class="form-control w-100 w-md-50" placeholder="Search by Order ID (e.g. #PWORD1) or Customer Name..." oninput="filterOrders()">
+            </div>
+
             <div class="custom-table-container">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow-y: visible;">
                     <table class="table table-dark-custom">
                         <thead>
                             <tr>
@@ -960,29 +1014,17 @@
                                 <th>Date</th>
                                 <th>Customer</th>
                                 <th>Total</th>
-                                <th>Payment</th>
+                                <th>Method</th> <th>Payment</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="ordersTableBody">
                             <tr>
-                                <td class="fw-bold" style="color: var(--chp-gold);">#ORD-2451</td>
-                                <td>Oct 24, 2025</td>
-                                <td>Kamal Perera</td>
-                                <td>LKR 12,000</td>
-                                <td><span class="badge status-paid">Paid</span></td>
-                                <td><span class="badge status-pending">Pending</span></td>
-                                <td><button class="btn btn-sm btn-outline-light">View</button></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold" style="color: var(--chp-gold);">#ORD-2450</td>
-                                <td>Oct 23, 2025</td>
-                                <td>Nimali Silva</td>
-                                <td>LKR 36,500</td>
-                                <td><span class="badge status-unpaid">COD</span></td>
-                                <td><span class="badge status-shipped">Shipped</span></td>
-                                <td><button class="btn btn-sm btn-outline-light">View</button></td>
+                                <td colspan="8" class="text-center py-4">
+                                    <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
+                                    <span class="ms-2 text-muted">Loading orders...</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -993,8 +1035,7 @@
         <!-- View: Customers -->
         <div id="view-customers" class="d-none-view">
             <div class="dashboard-card mb-4 p-3 d-flex justify-content-between align-items-center">
-                <input type="text" class="form-control w-100 w-md-50" placeholder="Search customers by name or email...">
-                <button class="btn btn-outline-gold ms-3"><i class="fas fa-file-export"></i> Export</button>
+                <input type="text" id="customerSearch" class="form-control w-100 w-md-50" placeholder="Search customers by name or email..." oninput="filterCustomers()">
             </div>
 
             <div class="custom-table-container">
@@ -1004,38 +1045,18 @@
                             <tr>
                                 <th>Customer</th>
                                 <th>Email</th>
-                                <th>Orders</th>
+                                <th>Total Orders</th>
                                 <th>Total Spent</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="customersTableBody">
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=50&q=80" class="customer-avatar">
-                                        <span class="text-white">Kamal Perera</span>
-                                    </div>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="spinner-border text-gold spinner-border-sm" role="status"></div>
+                                    <span class="ms-2 text-muted">Loading customers...</span>
                                 </td>
-                                <td>kamal@gmail.com</td>
-                                <td>5</td>
-                                <td>LKR 45,000</td>
-                                <td><span class="badge status-instock">Active</span></td>
-                                <td><button class="btn-icon-action"><i class="fas fa-ellipsis-v"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=50&q=80" class="customer-avatar">
-                                        <span class="text-white">Nimali Silva</span>
-                                    </div>
-                                </td>
-                                <td>nimali@yahoo.com</td>
-                                <td>2</td>
-                                <td>LKR 36,500</td>
-                                <td><span class="badge status-instock">Active</span></td>
-                                <td><button class="btn-icon-action"><i class="fas fa-ellipsis-v"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1795,6 +1816,223 @@
                 console.error('Error:', error);
                 showNotification("Connection error during logout.", "error");
             });
+        }
+
+        // ========== ORDERS & CUSTOMERS FETCHING ==========
+        let allCustomers = [];
+        let allOrders = []; // Added global variable for Orders to allow searching
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getProductsData();
+            getOrdersData();
+            getCustomersData();
+        });
+
+        // --- Fetch & Render Orders ---
+        async function getOrdersData() {
+            try {
+                const response = await fetch('actions/orders-data.php');
+                allOrders = await response.json();
+                
+                // Calculate stats based on ALL orders
+                let counts = { pending: 0, processing: 0, shipped: 0, delivered: 0 };
+                allOrders.forEach(order => {
+                    if (counts[order.order_status] !== undefined) counts[order.order_status]++;
+                });
+                
+                document.getElementById('count-pending').innerText = counts.pending;
+                document.getElementById('count-processing').innerText = counts.processing;
+                document.getElementById('count-shipped').innerText = counts.shipped;
+                document.getElementById('count-delivered').innerText = counts.delivered;
+
+                // --- NEW: NOTIFICATION ENGINE ---
+                const pendingOrders = allOrders.filter(o => o.order_status === 'pending');
+                const badge = document.getElementById('notificationBadge');
+                const countText = document.getElementById('notificationCount');
+                const notifItems = document.getElementById('notificationItems');
+                
+                if (pendingOrders.length > 0) {
+                    badge.classList.remove('d-none');
+                    countText.innerText = pendingOrders.length;
+                    
+                    notifItems.innerHTML = pendingOrders.slice(0, 5).map(order => `
+                        <a href="#" class="dropdown-item border-bottom border-secondary py-3 px-3" onclick="viewOrderFromNotif('${order.order_number}')">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-icon-orange rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div style="min-width: 0;">
+                                    <div class="small fw-bold text-white mb-1">Order ${order.order_number} <span class="text-muted fw-normal">requires attention</span></div>
+                                    <div class="text-muted text-truncate" style="font-size: 0.8rem;">${order.customer_fname} • LKR ${parseFloat(order.total_amount).toLocaleString('en-LK')}</div>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                    
+                    if (pendingOrders.length > 5) {
+                        notifItems.innerHTML += `<div class="p-2 text-center"><a href="#" class="small text-gold text-decoration-none" onclick="switchView('orders', document.querySelectorAll('.menu-link')[3])">View all ${pendingOrders.length} pending orders</a></div>`;
+                    }
+                } else {
+                    badge.classList.add('d-none');
+                    countText.innerText = "0";
+                    notifItems.innerHTML = `<div class="p-4 text-center text-muted small"><i class="fas fa-check-circle fa-2x mb-2 opacity-50 d-block"></i>You're all caught up!</div>`;
+                }
+                // --------------------------------
+
+                renderOrders(allOrders);
+            } catch (error) {
+                console.error('Failed to fetch orders:', error);
+            }
+        }
+
+        // --- NEW: Helper function to open an order directly from a notification ---
+        function viewOrderFromNotif(orderNum) {
+            // Switch to the Orders tab
+            switchView('orders', document.querySelectorAll('.menu-link')[3]);
+            
+            // Put the order number in the search box and trigger the filter
+            const searchInput = document.getElementById('orderSearch');
+            if (searchInput) {
+                searchInput.value = orderNum;
+                filterOrders();
+            }
+        }
+
+        // --- Order Search Filter ---
+        function filterOrders() {
+            const query = document.getElementById('orderSearch').value.toLowerCase();
+            const filtered = allOrders.filter(o => 
+                o.order_number.toLowerCase().includes(query) || 
+                o.customer_fname.toLowerCase().includes(query) || 
+                o.customer_lname.toLowerCase().includes(query)
+            );
+            renderOrders(filtered);
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">No orders found.</td></tr>`;
+                return;
+            }
+
+            orders.forEach(order => {
+                const formattedPrice = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(order.total_amount);
+                const date = new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                const paymentBadge = order.payment_status === 'paid' ? 'status-paid' : (order.payment_status === 'refunded' ? 'status-cancelled' : 'status-unpaid');
+                const orderBadge = `status-${order.order_status === 'cancelled' ? 'cancelled' : (order.order_status === 'shipped' || order.order_status === 'delivered' ? 'success' : 'pending')}`;
+
+                const trHtml = `
+                    <tr>
+                        <td class="fw-bold" style="color: var(--chp-gold);">${order.order_number}</td>
+                        <td>${date}</td>
+                        <td>${order.customer_fname} ${order.customer_lname}</td>
+                        <td>${formattedPrice}</td>
+                        <td><span class="text-uppercase small fw-bold text-muted">${order.payment_method}</span></td>
+                        <td><span class="badge ${paymentBadge} text-capitalize">${order.payment_status}</span></td>
+                        <td><span class="badge ${orderBadge} text-capitalize">${order.order_status}</span></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn-icon-action border-0 bg-transparent text-white" type="button" data-bs-toggle="dropdown" data-bs-boundary="window" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow" style="font-size: 0.85rem; z-index: 1060;">
+                                    <li><h6 class="dropdown-header text-gold">Payment</h6></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'payment_status', 'paid')">Mark as Paid</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'payment_status', 'unpaid')">Mark as Unpaid</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header text-gold">Fulfillment</h6></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'order_status', 'processing')">Processing</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'order_status', 'shipped')">Shipped</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'order_status', 'delivered')">Delivered</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateOrderStatus(${order.order_id}, 'order_status', 'cancelled')">Cancel Order</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
+
+        function updateOrderStatus(orderId, column, newStatus) {
+            const form = new FormData();
+            form.append("order_id", orderId);
+            form.append("column", column);
+            form.append("status", newStatus);
+
+            fetch('actions/update-order.php', { method: 'POST', body: form })
+            .then(res => res.text())
+            .then(data => {
+                if(data.trim() === 'success') {
+                    showNotification(`Status updated to ${newStatus}`, 'success');
+                    getOrdersData(); // Refreshes UI and Stats
+                } else {
+                    showNotification("Failed to update status", "error");
+                }
+            })
+            .catch(err => showNotification("Connection error", "error"));
+        }
+
+        // --- Fetch & Render Customers ---
+        async function getCustomersData() {
+            try {
+                const response = await fetch('actions/customers-data.php');
+                allCustomers = await response.json();
+                renderCustomers(allCustomers);
+            } catch (error) {
+                console.error('Failed to fetch customers:', error);
+            }
+        }
+
+        function renderCustomers(customers) {
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = '';
+
+            if (!customers || customers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No customers found.</td></tr>`;
+                return;
+            }
+
+            customers.forEach(customer => {
+                const formattedPrice = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(customer.total_spent);
+                
+                const trHtml = `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="customer-avatar d-flex align-items-center justify-content-center text-white fw-bold bg-secondary">
+                                    ${customer.fname.charAt(0)}${customer.lname.charAt(0)}
+                                </div>
+                                <span class="text-white">${customer.fname} ${customer.lname}</span>
+                            </div>
+                        </td>
+                        <td>${customer.email}</td>
+                        <td>${customer.order_count}</td>
+                        <td style="color: var(--chp-gold); font-weight: 500;">${formattedPrice}</td>
+                        <td><span class="badge status-instock">Active</span></td>
+                        <td>
+                            <a href="mailto:${customer.email}?subject=Power Watch Inquiry" class="btn-icon-action text-decoration-none" title="Send Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
+
+        function filterCustomers() {
+            const query = document.getElementById('customerSearch').value.toLowerCase();
+            const filtered = allCustomers.filter(c => 
+                c.fname.toLowerCase().includes(query) || 
+                c.lname.toLowerCase().includes(query) || 
+                c.email.toLowerCase().includes(query)
+            );
+            renderCustomers(filtered);
         }
     </script>
 </body>

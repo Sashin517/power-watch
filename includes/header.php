@@ -70,9 +70,9 @@
                             <span class="visually-hidden">items in cart</span>
                         </span>
                     </button>
-                    <button class="btn btn-link" aria-label="User Account">
+                    <!-- <button class="display-none btn btn-link" aria-label="User Account">
                         <i class="fas fa-user"></i>
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>

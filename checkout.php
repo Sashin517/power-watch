@@ -194,7 +194,7 @@ session_start();
                     
                     <div class="radio-card-group mb-4">
                         <label class="radio-card">
-                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <input type="radio" name="paymentMethod" value="bank transfer" checked>
                             <div class="ms-2">
                                 <span class="d-block fw-bold text-white mb-1">Direct Bank Transfer</span>
                                 <span class="text-muted small" style="line-height: 1.4; display: block;">

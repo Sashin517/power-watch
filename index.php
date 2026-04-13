@@ -52,7 +52,7 @@
         .discount-badge { position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, var(--discount-green) 0%, #2bc04e 100%); color: white; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 0.7rem; box-shadow: 0 2px 6px rgba(60, 231, 74, 0.3); z-index: 10; letter-spacing: 0.3px; }
         .product-img { max-height: 100%; max-width: 100%; object-fit: contain; }
         .card-body { padding: 1.25rem; background-color: var(--card-bg); color: white; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 0.8rem; font-weight: 500; margin-bottom: 0.5rem; line-height: 1.4; min-height: 34px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .card-title { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; line-height: 1.4; min-height: 34px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
         .price-section { margin-bottom: 0.5rem; }
         .price-row { display: flex; justify-content: space-between; align-items: center; }
         .price-container { display: flex; flex-direction: column; gap: 2px; }
@@ -90,7 +90,7 @@
             .banner-gold-watch { background-image: url('assets/images/home/body-banners/bdy-bnr-img-1-mobile.png'); }
             .banner-wall-clock { background-image: url('assets/images/home/body-banners/bdy-bnr-img-2-mobile.png'); }
             .card-img-wrapper { height: 160px; min-height: 160px; padding: 10px; }
-            .card-title { font-size: 0.72rem; }
+            .card-title { font-size: 0.875rem; }
             .carousel-control-prev, .carousel-control-next { width: 35px; }
             .carousel-control-prev-icon, .carousel-control-next-icon { width: 22px; height: 22px; }
         }
@@ -122,85 +122,8 @@
             </div>
         </div>
     </div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <!-- Logo image long version-->
-                <img src="assets/images/brand-logos/logo5.png" alt="Logo" class="brand-logo-img">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars text-white"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="wristwatchDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Wristwatch <i class="fas fa-chevron-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="wristwatchDropdown">
-                            <li><a class="dropdown-item" href="#">Men's Watches</a></li>
-                            <li><a class="dropdown-item" href="#">Women's Watches</a></li>
-                            <li><a class="dropdown-item" href="#">Smart Watches</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Luxury Collection</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="wallDecorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Wall Decor <i class="fas fa-chevron-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="wallDecorDropdown">
-                            <li><a class="dropdown-item" href="#">Wall Clocks</a></li>
-                            <li><a class="dropdown-item" href="#">Photo Frames</a></li>
-                            <li><a class="dropdown-item" href="#">Wall Art</a></li>
-                            <li><a class="dropdown-item" href="#">Mirrors</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="brandsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Brands <i class="fas fa-chevron-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="brandsDropdown">
-                            <li><a class="dropdown-item" href="#">Rolex</a></li>
-                            <li><a class="dropdown-item" href="#">Omega</a></li>
-                            <li><a class="dropdown-item" href="#">Casio</a></li>
-                            <li><a class="dropdown-item" href="#">Seiko</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">View All Brands</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Services <i class="fas fa-chevron-down ms-1"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                            <li><a class="dropdown-item" href="#">Watch Repair</a></li>
-                            <li><a class="dropdown-item" href="#">Battery Replacement</a></li>
-                            <li><a class="dropdown-item" href="#">Custom Engraving</a></li>
-                            <li><a class="dropdown-item" href="#">Warranty Service</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="nav-icons d-flex gap-2">
-                    <button class="btn btn-link" aria-label="Search">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    
-                    <button class="btn btn-link position-relative" aria-label="Shopping Cart" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                            <span class="visually-hidden">items in cart</span>
-                        </span>
-                    </button>
-                    <button class="btn btn-link" aria-label="User Account">
-                        <i class="fas fa-user"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    
+    <?php include 'includes/header.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -411,53 +334,8 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-md-4">
-                     <a class="navbar-brand mb-3" href="#">
-                        <!-- Logo mock -->
-                        <img src="assets/images/brand-logos/logo4.png" alt="Logo" class="footer-brand-logo-img">
-                    </a>
-                </div>
-                <div class="col-md-2 col-6">
-                    <h5>Quick Links</h5>
-                    <ul>
-                        <li><a href="#">Men's</a></li>
-                        <li><a href="#">Women's</a></li>
-                        <li><a href="#">About Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 col-6">
-                    <h5>Customer Care</h5>
-                    <ul>
-                        <li><a href="#">Warranty Info</a></li>
-                        <li><a href="#">Returns Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Panadura Address</h5>
-                    <p>No. 123, Main Street, Panadura, Sri Lanka.</p>
-                </div>
-            </div>
-            
-            <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
-                <p class="mb-0">&copy; 2026 Power Watch Panadura. All rights reserved.</p>
-                <div class="social-icons my-3 my-md-0">
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                </div>
-                <div class="payment-methods">
-                     <span class="text-white me-2">We Accept:</span>
-                     <i class="fab fa-cc-mastercard fa-lg text-light me-2"></i>
-                     <i class="fab fa-cc-visa fa-lg text-light me-2"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
+
     <!-- Cart -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--prm-blue); border-left: 1px solid var(--border-color); width: 400px;">
         

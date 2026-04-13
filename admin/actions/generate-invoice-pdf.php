@@ -213,6 +213,9 @@ class InvoicePDF extends FPDF {
     
     // Payment instructions
     function PaymentInstructions() {
+
+        $mobileNumber = '0768863075';
+
         $this->SetFont('Arial', 'B', 11);
         $this->SetTextColor($this->darkBlue[0], $this->darkBlue[1], $this->darkBlue[2]);
         $this->Cell(0, 8, 'PAYMENT ACTION REQUIRED', 0, 1, 'L');
@@ -256,7 +259,7 @@ class InvoicePDF extends FPDF {
         $this->SetY($yStart + 40);
         $this->SetFont('Arial', 'I', 9);
         $this->SetTextColor(100, 100, 100);
-        $this->MultiCell(0, 5, 'Please transfer the total amount and send the payment receipt via WhatsApp to +94 77 123 4567. Include your Order No (#'.$this->orderData['order_number'].') in the bank reference.', 0, 'L');
+        $this->MultiCell(0, 5, 'Please transfer the total amount and send the payment receipt via WhatsApp to ' . $mobileNumber . '. Include your Order No (' . $this->orderData['order_number'] . ') in the bank reference.', 0, 'L');
     }
 }
 
