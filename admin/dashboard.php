@@ -1,30 +1,44 @@
 <?php
     session_start();
-    // Include database connection so we can update the active time
     require "../includes/connection.php"; 
 
-    $timeout_duration = 1800; // 30 minutes
-
-    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
-        // If timed out, clear the session lock in the database before destroying session
-        if (isset($_SESSION["u"])) {
-            Database::iud("UPDATE `users` SET `active_session_id`=NULL, `last_active_time`=0 WHERE `id`='".$_SESSION["u"]["id"]."'");
-        }
-        session_unset();     
-        session_destroy();   
-        header("Location: login.php?msg=timeout"); 
-        exit();
-    }
-
-    if(!isset($_SESSION["u"])){
+    // 1. Basic Auth Check
+    if(!isset($_SESSION["u"]) || !isset($_SESSION["session_token"])){
         header("Location: login.php");
         exit();
     }
 
-    // --- KEEP DB SESSION ALIVE ---
+    $user_id = $_SESSION["u"]["id"];
+    $local_token = $_SESSION["session_token"];
+
+    // 2. CONCURRENT LOGIN CHECK (The "Kick Out" logic)
+    $rs = Database::search("SELECT active_session_id FROM users WHERE id='".$user_id."'");
+    if($rs->num_rows == 1) {
+        $db_token = $rs->fetch_assoc()['active_session_id'];
+        
+        // If the tokens don't match, this device has been replaced by a new login!
+        if($local_token !== $db_token) {
+            session_unset();
+            session_destroy();
+            header("Location: login.php?err=concurrent"); // Send them back to login with a specific error code
+            exit();
+        }
+    }
+
+    // 3. INACTIVITY TIMEOUT CHECK (30 Minutes)
+    $timeout_duration = 1800; 
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
+        Database::iud("UPDATE `users` SET `active_session_id`=NULL, `last_active_time`=0 WHERE `id`='".$user_id."'");
+        session_unset();     
+        session_destroy();   
+        header("Location: login.php?err=timeout"); 
+        exit();
+    }
+
+    // Keep DB Session Alive
     $current_time = time();
     $_SESSION['last_activity'] = $current_time; 
-    Database::iud("UPDATE `users` SET `last_active_time`='".$current_time."' WHERE `id`='".$_SESSION["u"]["id"]."'");
+    Database::iud("UPDATE `users` SET `last_active_time`='".$current_time."' WHERE `id`='".$user_id."'");
 
     $user_data = $_SESSION["u"];
 ?>

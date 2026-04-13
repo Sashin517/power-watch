@@ -64,10 +64,7 @@ try {
     $login_method = isset($_POST["login_method"]) ? $_POST["login_method"] : "standard";
     $email = $_POST["e"];
 
-    if(empty($email)){
-        echo "Please enter your Email";
-        exit();
-    }
+    if(empty($email)){ echo "Please enter your Email"; exit(); }
 
     if ($login_method === "google") {
         $rs = Database::search("SELECT * FROM `users` WHERE `email`='".$email."'");
@@ -75,40 +72,25 @@ try {
 
         if($n == 1){
             $d = $rs->fetch_assoc();
-            
-            // --- CONCURRENT LOGIN CHECK ---
-            $current_time = time();
-            $timeout = 1800; // 30 minutes
-            
-            if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
-                if ($d['active_session_id'] !== session_id()) {
-                    echo "You are already logged in on another device. Please log out there first, or wait 30 minutes.";
-                    exit();
-                }
-            }
-
             if($d['status'] == '1'){
                 $_SESSION["u"] = $d;
-                $_SESSION['last_activity'] = $current_time;
                 
-                $session_id = session_id();
-                Database::iud("UPDATE `users` SET `active_session_id`='".$session_id."', `last_active_time`='".$current_time."' WHERE `id`='".$d['id']."'");
+                // 1. GENERATE A UNIQUE SESSION TOKEN
+                $session_token = bin2hex(random_bytes(16));
+                $_SESSION["session_token"] = $session_token;
+                $_SESSION['last_activity'] = time();
+                
+                // 2. SAVE IT TO THE DB (This steals the session from any other device)
+                Database::iud("UPDATE `users` SET `active_session_id`='".$session_token."', `last_active_time`='".time()."' WHERE `id`='".$d['id']."'");
 
                 sendLoginAlertEmail($email, $d['fname'], 'google');
                 echo "success";
-            } else {
-                echo "Your account has been deactivated.";
-            }
-        } else {
-            echo "Account not found. Please Sign Up first.";
-        }
+            } else { echo "Your account has been deactivated."; }
+        } else { echo "Account not found. Please Sign Up first."; }
 
     } else {
         // --- STANDARD PASSWORD LOGIN ---
-        if(!isset($_POST["p"]) || empty($_POST["p"])){
-            echo "Please enter your Password";
-            exit();
-        }
+        if(!isset($_POST["p"]) || empty($_POST["p"])){ echo "Please enter your Password"; exit(); }
         
         $password = $_POST["p"];
         $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
@@ -118,24 +100,16 @@ try {
 
         if($n == 1){
             $d = $rs->fetch_assoc();
-            
-            // --- CONCURRENT LOGIN CHECK ---
-            $current_time = time();
-            $timeout = 1800; // 30 minutes
-            
-            if (!empty($d['active_session_id']) && ($current_time - $d['last_active_time']) < $timeout) {
-                if ($d['active_session_id'] !== session_id()) {
-                    echo "You are already logged in on another device. Please log out there first, or wait 30 minutes.";
-                    exit();
-                }
-            }
-
             if($d['status'] == '1'){
                 $_SESSION["u"] = $d;
-                $_SESSION['last_activity'] = $current_time;
+                
+                // 1. GENERATE A UNIQUE SESSION TOKEN
+                $session_token = bin2hex(random_bytes(16));
+                $_SESSION["session_token"] = $session_token;
+                $_SESSION['last_activity'] = time();
 
-                $session_id = session_id();
-                Database::iud("UPDATE `users` SET `active_session_id`='".$session_id."', `last_active_time`='".$current_time."' WHERE `id`='".$d['id']."'");
+                // 2. SAVE IT TO THE DB (This steals the session from any other device)
+                Database::iud("UPDATE `users` SET `active_session_id`='".$session_token."', `last_active_time`='".time()."' WHERE `id`='".$d['id']."'");
 
                 if($rememberMe == "1"){
                     setcookie("email", $email, time() + (60*60*24*365));
@@ -147,15 +121,10 @@ try {
 
                 sendLoginAlertEmail($email, $d['fname'], 'standard');
                 echo "success";
-            } else {
-                echo "Your account has been deactivated.";
-            }
-        } else {
-            echo "Invalid Email or Password";
-        }
+            } else { echo "Your account has been deactivated."; }
+        } else { echo "Invalid Email or Password"; }
     }
 } catch (Exception $e) {
-    // If the database crashes, print the error inside the red alert box
     echo "System Error: " . $e->getMessage();
 }
 ?>

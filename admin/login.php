@@ -289,6 +289,21 @@
             }
         };
 
+        // Check for URL errors (Kicked out or Timed out)
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if(urlParams.get('err') === 'concurrent') {
+                showAlert('You were logged out because your account was accessed from another device.', 'error');
+                // Remove the ?err from the URL so it doesn't show again if they refresh
+                window.history.replaceState(null, null, window.location.pathname);
+            } 
+            else if (urlParams.get('err') === 'timeout') {
+                showAlert('Your session expired due to inactivity. Please sign in again.', 'error');
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+        });
+
         function handleGoogleResponse(response) {
             const responsePayload = decodeJwtResponse(response.credential);
             const email = responsePayload.email;
