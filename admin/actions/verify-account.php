@@ -65,7 +65,7 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
         $mail->Host       = 'mail.sldevs.web.lk'; // Your cPanel mail server
         $mail->SMTPAuth   = true;                                   
         $mail->Username   = 'admin@sldevs.web.lk'; // The email you created in cPanel
-        $mail->Password   = 'YOUR_EMAIL_PASSWORD'; // The password for that email
+        $mail->Password   = 'sA26O&xG5Z}yxn9s'; // The password for that email
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Enable SSL
         $mail->Port       = 465; // Standard SSL port
 
@@ -80,8 +80,8 @@ function sendLoginAlertEmail($user_email, $user_fname, $login_method) {
 
         $mail->send();
     } catch (Exception $e) {
-        // Silently log the error so the user isn't stopped from logging in
-        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        // Force the email error to crash the script so it shows up in your red alert box!
+        throw new Exception("PHPMailer Failed: " . $mail->ErrorInfo);
     }
 }
 // --- END EMAIL FUNCTION ---
