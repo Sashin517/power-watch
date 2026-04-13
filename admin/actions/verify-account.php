@@ -84,6 +84,8 @@ try {
 
     // ===== GOOGLE LOGIN =====
     if ($login_method === "google") {
+
+        Database::setUpConnection();
         
         // Use prepared statement to prevent SQL injection
         $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ?");
@@ -132,6 +134,9 @@ try {
         
         $password = $_POST["p"];
         $rememberMe = isset($_POST["rm"]) ? $_POST["rm"] : "0";
+        
+        // Ensure Database is connected first!
+        Database::setUpConnection();
         
         // Use prepared statement
         $stmt = Database::$connection->prepare("SELECT * FROM `users` WHERE `email` = ? AND `password` = ?");

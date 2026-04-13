@@ -11,6 +11,9 @@
     $user_id = $_SESSION["u"]["id"];
     $local_token = $_SESSION["session_token"];
 
+    // Ensure Database is connected
+    Database::setUpConnection();
+
     // 2. CONCURRENT LOGIN CHECK
     $stmt = Database::$connection->prepare("SELECT active_session_id FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
