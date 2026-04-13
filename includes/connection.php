@@ -1,4 +1,9 @@
 <?php
+    error_reporting(E_ALL);
+    ini_set('display_errors', 0);
+
+    // Also force MySQL to throw secure Exceptions instead of leaky Warnings
+    mysqli_report(MYSQLI_REPORT_STRICT | MYSQLI_REPORT_ERROR);
     
 class Database {
 

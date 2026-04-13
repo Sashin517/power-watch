@@ -1,38 +1,50 @@
 <?php
-// --- 1. SECURITY PRECAUTION: Hide raw PHP warnings from the UI ---
-error_reporting(E_ALL);           // Track all errors...
-ini_set('display_errors', 0);     // ...but NEVER print them to the screen!
-// -----------------------------------------------------------------
-
 session_start();
 
-// Get order number from URL
+$order_number = isset($_GET['order']) ? htmlspecialchars($_GET['order']) : '';
+$order_total = "0.00";
+$customer_name = "Valued Customer";
+$customer_email = "";
+$order_date = date("Y-m-d H:i:s");
+$email_sent = false;
 
-    $order_number = isset($_GET['order']) ? htmlspecialchars($_GET['order']) : '';
-    $order_total = "0.00";
-    $customer_name = "Valued Customer";
-    $order_date = date("Y-m-d H:i:s");
-
-    try {
-        require_once "includes/connection.php";
-        if (empty(Database::$connection)) {
-            Database::setUpConnection();
-        }
-        if(!empty($order_number)) {
-            $stmt = Database::$connection->prepare("SELECT * FROM orders WHERE order_number = ?");
-            $stmt->bind_param("s", $order_number);
-            $stmt->execute();
-            $res = $stmt->get_result();
-            if($res->num_rows > 0) {
-                $order = $res->fetch_assoc();
-                $order_total = number_format($order['total_amount'], 2);
-                $customer_name = htmlspecialchars($order['customer_fname'] . ' ' . $order['customer_lname']);
-                $order_date = date("F j, Y, g:i a", strtotime($order['created_at']));
+try {
+    require_once "includes/connection.php";
+    if (empty(Database::$connection)) {
+        Database::setUpConnection();
+    }
+    if(!empty($order_number)) {
+        $stmt = Database::$connection->prepare("SELECT * FROM orders WHERE order_number = ?");
+        $stmt->bind_param("s", $order_number);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if($res->num_rows > 0) {
+            $order = $res->fetch_assoc();
+            $order_total = number_format($order['total_amount'], 2);
+            $customer_name = htmlspecialchars($order['customer_fname'] . ' ' . $order['customer_lname']);
+            $customer_email = $order['customer_email'];
+            $order_date = date("F j, Y, g:i a", strtotime($order['created_at']));
+            
+            // Auto-send email if not sent yet
+            if(!isset($order['email_sent']) || $order['email_sent'] != 1) {
+                // Trigger email sending
+                $email_response = @file_get_contents(dirname(__FILE__) . '/actions/send-order-email.php?order=' . urlencode($order_number));
+                
+                if($email_response === 'success') {
+                    $email_sent = true;
+                    // Update email_sent flag
+                    $update_stmt = Database::$connection->prepare("UPDATE orders SET email_sent = 1 WHERE order_id = ?");
+                    $update_stmt->bind_param("i", $order['order_id']);
+                    $update_stmt->execute();
+                }
             }
         }
-} catch (Exception $e) {}
+    }
+} catch (Exception $e) {
+    error_log("Order Success Error: " . $e->getMessage());
+}
 
-$whatsapp_number = "94771234567"; // Edit your WhatsApp Number
+$whatsapp_number = "94771234567";
 $whatsapp_message = urlencode("Hello Power Watch! Here is the payment slip for my order: " . $order_number);
 $whatsapp_link = "https://wa.me/{$whatsapp_number}?text={$whatsapp_message}";
 ?>
@@ -118,6 +130,16 @@ $whatsapp_link = "https://wa.me/{$whatsapp_number}?text={$whatsapp_message}";
         .confetti { position: fixed; width: 10px; height: 10px; background: var(--chp-gold); position: absolute; animation: confetti-fall 3s linear forwards; z-index: 0; }
         @keyframes confetti-fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 
+        .email-notification {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 1rem 0;
+            color: #2ecc71;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 576px) {
             .success-container { padding: 2rem 1.5rem; }
             .order-number { font-size: 1.8rem; }
@@ -130,10 +152,6 @@ $whatsapp_link = "https://wa.me/{$whatsapp_number}?text={$whatsapp_message}";
 </head>
 <body>
 
-    <div id="pdfTemplate">
-        <div class="print-wrapper">
-        </div>
-    </div>
     <div class="success-container">
         
         <div class="success-icon">
@@ -142,6 +160,13 @@ $whatsapp_link = "https://wa.me/{$whatsapp_number}?text={$whatsapp_message}";
 
         <h1 class="mb-2 text-white font-oswald text-uppercase">Order Received!</h1>
         <p class="order-number"><?php echo $order_number; ?></p>
+        
+        <?php if($email_sent): ?>
+        <div class="email-notification">
+            <i class="fas fa-envelope-circle-check me-2"></i>
+            Order confirmation sent to <?php echo htmlspecialchars($customer_email); ?>
+        </div>
+        <?php endif; ?>
         
         <div class="divider"></div>
 
@@ -177,7 +202,7 @@ $whatsapp_link = "https://wa.me/{$whatsapp_number}?text={$whatsapp_message}";
             <i class="fab fa-whatsapp fa-xl me-2"></i> Send Slip via WhatsApp
         </a>
 
-        <a href="admin/actions/generate-invoice-pdf.php?order=<?php echo urlencode($order_number); ?>" class="btn-pdf" target="_blank">
+        <a href="actions/generate-invoice-pdf.php?order=<?php echo urlencode($order_number); ?>" class="btn-pdf" target="_blank">
             <i class="fas fa-file-pdf fa-lg me-2"></i> Download Official Invoice
         </a>
 
