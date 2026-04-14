@@ -93,7 +93,7 @@ try {
                     'stock_count' => (int)$row['stock_count'],
                     'stock_status' => $row['stock_status'] ?? ''
                 ],
-                'is_luxury' => (bool)$row['is_luxury'],
+                'is_premium' => (bool)$row['is_premium'],
                 'is_peoples_choice' => (bool)$row['is_peoples_choice'],
                 
                 // Visuals

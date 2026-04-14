@@ -779,7 +779,7 @@
                                         <option value="1">Men's Watches</option>
                                         <option value="2">Women's Watches</option>
                                         <option value="3">Smart Watches</option>
-                                        <option value="4">Luxury Collection</option>
+                                        <option value="4">Premium Collection</option>
                                     </optgroup>
                                     <optgroup label="Wall Decor">
                                         <option value="5">Wall Clocks</option>
@@ -889,8 +889,8 @@
                             <div class="col-md-4">
                                 <div class="d-flex flex-column gap-3 mt-2">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="luxurySwitch">
-                                        <label class="form-check-label" for="luxurySwitch">Show in "Luxury Collection"</label>
+                                        <input class="form-check-input" type="checkbox" id="premiumSwitch">
+                                        <label class="form-check-label" for="premiumSwitch">Show in "Premium Collection"</label>
                                     </div>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="choiceSwitch">
@@ -925,7 +925,7 @@
                         <option value="Men's Watches">Men's Watches</option>
                         <option value="Women's Watches">Women's Watches</option>
                         <option value="Smart Watches">Smart Watches</option>
-                        <option value="Luxury Collection">Luxury Collection</option>
+                        <option value="Premium Collection">Premium Collection</option>
                         <option value="Wall Clocks">Wall Clocks</option>
                         <option value="Photo Frames">Photo Frames</option>
                         <option value="Wall Art">Wall Art</option>
@@ -1647,7 +1647,7 @@
             document.getElementById('productBrand').value = product.brand.id;
             setSelectByText('productCategory', product.sub_category);
 
-            document.getElementById('luxurySwitch').checked = product.is_luxury;
+            document.getElementById('premiumSwitch').checked = product.is_premium;
             document.getElementById('choiceSwitch').checked = product.is_peoples_choice;
 
             calculateDiscount();
@@ -1682,7 +1682,7 @@
             document.getElementById('stockQty').value = '';
             document.getElementById('productBrand').value = '0';
             document.getElementById('productCategory').value = '0';
-            document.getElementById('luxurySwitch').checked = false;
+            document.getElementById('premiumSwitch').checked = false;
             document.getElementById('choiceSwitch').checked = false;
             
             selectedFiles = [];
@@ -1703,7 +1703,7 @@
             const oprice = document.getElementById('originalPrice');
             const cprice = document.getElementById('currentPrice');
             const qty = document.getElementById('stockQty');
-            const luxury = document.getElementById('luxurySwitch');
+            const premium = document.getElementById('premiumSwitch');
             const choice = document.getElementById('choiceSwitch');
             const saveBtn = document.getElementById('saveProductBtn');
 
@@ -1740,7 +1740,7 @@
             form.append("oprice", oprice.value);
             form.append("cprice", cprice.value);
             form.append("qty", qty.value);
-            form.append("luxury", luxury.checked ? 'true' : 'false');
+            form.append("premium", premium.checked ? 'true' : 'false');
             form.append("choice", choice.checked ? 'true' : 'false');
             
             selectedFiles.forEach((file) => {

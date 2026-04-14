@@ -40,10 +40,10 @@
         .brand-item img { width: 100%; height: 100%; object-fit: contain; display: block; }
         
         /* Carousel Structure Resets */
-        #luxuryCarousel, #luxuryCarousel .carousel-inner, #luxuryCarousel .carousel-item,
+        #premiumCarousel, #premiumCarousel .carousel-inner, #premiumCarousel .carousel-item,
         #peoplesChoiceCarousel, #peoplesChoiceCarousel .carousel-inner, #peoplesChoiceCarousel .carousel-item { height: auto; }
-        #luxuryCarousel .row, #peoplesChoiceCarousel .row { display: flex; flex-wrap: wrap; }
-        #luxuryCarousel .row > [class*='col-'], #peoplesChoiceCarousel .row > [class*='col-'] { display: flex; flex-direction: column; }
+        #premiumCarousel .row, #peoplesChoiceCarousel .row { display: flex; flex-wrap: wrap; }
+        #premiumCarousel .row > [class*='col-'], #peoplesChoiceCarousel .row > [class*='col-'] { display: flex; flex-direction: column; }
 
         /* --- Product Cards (COMPACT VERSION for Index) --- */
         .product-card { background: white; border: none; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 15px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
@@ -156,7 +156,7 @@
                     <picture>
                         <source media="(max-width: 576px)" srcset="assets/images/home/hero-section-banners/hr-sec-img-2-mobile.png">
                         <source media="(max-width: 992px)" srcset="assets/images/home/hero-section-banners/hr-sec-img-2-tablet.png">
-                        <img src="assets/images/home/hero-section-banners/hr-sec-img-2.png" alt="Luxury Watch" class="hero-img d-block w-100">
+                        <img src="assets/images/home/hero-section-banners/hr-sec-img-2.png" alt="Premium Watch" class="hero-img d-block w-100">
                     </picture>
                     <div class="hero-overlay">
                         <div class="container">
@@ -228,18 +228,18 @@
         </div>
     </section>
 
-    <!-- The Luxury Collection -->
+    <!-- The Premium Collection -->
     <section class="py-5" style="background-color: var(--cream-bg);">
         <div class="container">
             <h2 class="section-title text-uppercase" style="color: var(--prm-blue) !important; font-weight: 700;">The Premium Collection</h2>
             
-            <div id="luxuryCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner" id="luxuryCarouselInner">
+            <div id="premiumCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" id="premiumCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-gold" role="status"></div></div>
                 </div>
             </div>
-            <!-- closes #luxuryCarousel -->
-            <div class="text-center mt-3" id="luxuryDots"></div>
+            <!-- closes #premiumCarousel -->
+            <div class="text-center mt-3" id="premiumDots"></div>
         </div>
     </section>
 
@@ -293,7 +293,7 @@
                 <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Seiko'); updateActiveTab(this);">Seiko</button>
             </div>
 
-            <!-- Carousel Grid (similar to Luxury Collection) -->
+            <!-- Carousel Grid (similar to Premium Collection) -->
             <div id="favoriteBrandsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
                 <div class="carousel-inner" id="favoriteBrandsCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
@@ -369,11 +369,11 @@
                             <i class="fas fa-gift text-gold"></i>
                         </div>
                         <div>
-                            <p class="m-0 text-white fw-medium" style="font-size: 0.85rem;">Luxury Gift Box</p>
+                            <p class="m-0 text-white fw-medium" style="font-size: 0.85rem;">Premium Gift Box</p>
                             <span class="text-white" style="font-size: 0.75rem;">LKR 1,500</span>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-gold rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" onclick="quickAddToCart(19, 'Luxury Gift Box', 1500, 'assets/images/products/69dcb97048195_img0.png')">Add</button>
+                    <button class="btn btn-sm btn-outline-gold rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" onclick="quickAddToCart(19, 'Premium Gift Box', 1500, 'assets/images/products/69dcb97048195_img0.png')">Add</button>
                 </div>
             </div>
 
@@ -424,9 +424,9 @@
                 
                 globalProducts = await response.json();
                 
-                // 1. Filter for Luxury Collection (is_luxury == true)
-                const luxuryProducts = globalProducts.filter(p => p.is_luxury === true);
-                renderCarouselGrid(luxuryProducts, 'luxuryCarouselInner', 'btn-gold');
+                // 1. Filter for Premium Collection (is_premium == true)
+                const premiumProducts = globalProducts.filter(p => p.is_premium === true);
+                renderCarouselGrid(premiumProducts, 'premiumCarouselInner', 'btn-gold');
                 
                 // 2. Filter for People's Choice (is_peoples_choice == true)
                 const popularProducts = globalProducts.filter(p => p.is_peoples_choice === true);
@@ -441,7 +441,7 @@
 
             } catch (error) {
                 console.error("Give us a second. We’re winding the collection.:", error);
-                document.getElementById('luxuryCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
+                document.getElementById('premiumCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
                 document.getElementById('peoplesChoiceCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
                 document.getElementById('favoriteBrandsCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
                 document.getElementById('wallClockCarouselInner').innerHTML = '<div class="text-center text-danger py-4">Give us a second. We’re winding the collection.</div>';
@@ -460,7 +460,7 @@
             if(!container) return;
 
             const dotsMap = {
-                'luxuryCarouselInner':       'luxuryDots',
+                'premiumCarouselInner':       'premiumDots',
                 'peoplesChoiceCarouselInner':'peoplesChoiceDots',
                 'favoriteBrandsCarouselInner':'favoriteBrandsDots',
                 'wallClockCarouselInner':    'wallClockDots'
@@ -564,8 +564,8 @@
                 } else {
                     let dotsHtml = '';
                     for (let d = 0; d < totalSlides; d++) {
-                        // If the container is the luxury carousel (cream bg), use dark blue. Otherwise, use white.
-                        const activeBg = d === 0 ? (containerId === 'luxuryCarouselInner' ? 'var(--prm-blue)' : 'white') : '#666';
+                        // If the container is the premium carousel (cream bg), use dark blue. Otherwise, use white.
+                        const activeBg = d === 0 ? (containerId === 'premiumCarouselInner' ? 'var(--prm-blue)' : 'white') : '#666';
                         dotsHtml += `<span 
                             data-slide="${d}" 
                             data-carousel="${carouselEl ? carouselEl.id : ''}"
@@ -616,8 +616,8 @@
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
                 // Re-render all sections with current product data
-                const luxuryProducts = globalProducts.filter(p => p.is_luxury === true);
-                renderCarouselGrid(luxuryProducts, 'luxuryCarouselInner', 'btn-gold');
+                const premiumProducts = globalProducts.filter(p => p.is_premium === true);
+                renderCarouselGrid(premiumProducts, 'premiumCarouselInner', 'btn-gold');
 
                 const popularProducts = globalProducts.filter(p => p.is_peoples_choice === true);
                 renderCarouselGrid(popularProducts, 'peoplesChoiceCarouselInner', 'btn-blue');

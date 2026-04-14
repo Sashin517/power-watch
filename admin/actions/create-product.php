@@ -21,7 +21,7 @@ $original_price = (float)$_POST["oprice"];
 $current_price = (float)$_POST["cprice"];
 $stock_count = (int)$_POST["qty"];
 
-$is_luxury = (isset($_POST["luxury"]) && $_POST["luxury"] == 'true') ? 1 : 0;
+$is_premium = (isset($_POST["premium"]) && $_POST["premium"] == 'true') ? 1 : 0;
 $is_peoples_choice = (isset($_POST["choice"]) && $_POST["choice"] == 'true') ? 1 : 0;
 
 if (empty($product_name)) { echo "Please enter the product name."; exit(); }
@@ -42,9 +42,9 @@ try {
 
     // Notice that $warranty_val does NOT have single quotes around it
     $query = "INSERT INTO `products` 
-    (`product_name`, `description`, `romance_copy`, `case_diameter_mm`, `case_thickness_mm`, `materials`, `glass_type`, `water_resistance_atm`, `movement_details`, `clasp_type`, `warranty_period`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_count`, `is_luxury`, `is_peoples_choice`) 
+    (`product_name`, `description`, `romance_copy`, `case_diameter_mm`, `case_thickness_mm`, `materials`, `glass_type`, `water_resistance_atm`, `movement_details`, `clasp_type`, `warranty_period`, `brand_id`, `sub_category_id`, `original_price`, `current_price`, `discount_percentage`, `koko_installment`, `image_path`, `stock_count`, `is_premium`, `is_peoples_choice`) 
     VALUES 
-    ('".$product_name."', '".$description."', '".$romance_copy."', $dia_val, $thick_val, '".$materials."', '".$glass."', $water_val, '".$movement."', '".$clasp."', $warranty_val, '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."','".$stock_count."', '".$is_luxury."', '".$is_peoples_choice."')";
+    ('".$product_name."', '".$description."', '".$romance_copy."', $dia_val, $thick_val, '".$materials."', '".$glass."', $water_val, '".$movement."', '".$clasp."', $warranty_val, '".$brand_id."', '".$sub_category_id."', $op_value, '".$current_price."', '".$discount_percentage."', '".$koko_installment."', '".$default_image."','".$stock_count."', '".$is_premium."', '".$is_peoples_choice."')";
 
     Database::iud($query);
 

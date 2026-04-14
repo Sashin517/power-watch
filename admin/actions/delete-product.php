@@ -12,9 +12,8 @@ if(isset($_POST["id"])){
     $product_id = $_POST["id"];
 
     try {
-        // Optional: If you want to physically delete the image files from the server, 
-        // you would SELECT them here and use unlink() before deleting the database rows.
-        /*
+        // physically delete the image files from the server
+        
         $img_rs = Database::search("SELECT image_path FROM `product_images` WHERE product_id='".$product_id."'");
         while($img_data = $img_rs->fetch_assoc()) {
             $file_path = "../../" . $img_data['image_path'];
@@ -22,7 +21,7 @@ if(isset($_POST["id"])){
                 unlink($file_path);
             }
         }
-        */
+        
 
         // 1. Delete associated images from product_images table
         Database::iud("DELETE FROM `product_images` WHERE `product_id`='".$product_id."'");
