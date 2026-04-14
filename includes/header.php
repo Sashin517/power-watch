@@ -84,3 +84,104 @@
             </div>
         </div>
     </nav>
+<script>
+    // ========== NAVBAR SEARCH ENGINE ==========
+        const navSearchContainer = document.getElementById('navSearchContainer');
+        const navSearchInput = document.getElementById('navSearchInput');
+        const navSearchBtn = document.getElementById('navSearchBtn');
+        const navSearchDropdown = document.getElementById('navSearchDropdown');
+        let navSearchTimeout;
+
+        // --- NEW: Dynamic Mobile Positioning Engine ---
+        function updateSearchDropdownPosition() {
+            // Only apply the dynamic math if we are on mobile AND the dropdown is open
+            if (window.innerWidth <= 991 && !navSearchDropdown.classList.contains('d-none')) {
+                // getBoundingClientRect calculates the exact real-time position on the screen
+                const searchBoxPos = navSearchContainer.getBoundingClientRect();
+                navSearchDropdown.style.top = `${searchBoxPos.bottom + 5}px`; // 5px gap
+            } else {
+                navSearchDropdown.style.top = ''; // Let CSS handle desktop layout naturally
+            }
+        }
+
+        // Automatically track the search bar when the user scrolls
+        window.addEventListener('scroll', updateSearchDropdownPosition, { passive: true });
+
+        // Toggle animation & form submission protection
+        navSearchBtn.addEventListener('click', (e) => {
+            if (!navSearchContainer.classList.contains('active')) {
+                e.preventDefault(); // Stop form from submitting immediately
+                navSearchContainer.classList.add('active');
+                navSearchInput.focus();
+            } else if (navSearchInput.value.trim() === '') {
+                e.preventDefault(); // If empty, just close the bar
+                navSearchContainer.classList.remove('active');
+                navSearchDropdown.classList.add('d-none');
+            }
+            // If it IS active and HAS text, let the form submit naturally to collection.php
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#navSearchContainer')) {
+                navSearchContainer.classList.remove('active');
+                navSearchDropdown.classList.add('d-none');
+            }
+        });
+
+        // Live Filtering
+        navSearchInput.addEventListener('input', (e) => {
+            clearTimeout(navSearchTimeout);
+            const query = e.target.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                navSearchDropdown.classList.add('d-none');
+                return;
+            }
+
+            navSearchTimeout = setTimeout(() => {
+                // Search by Name, Brand, or Category
+                const results = globalProducts.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    (p.brand && p.brand.name.toLowerCase().includes(query)) ||
+                    (p.category && p.category.toLowerCase().includes(query))
+                ).slice(0, 5); // Show top 5 results for clean UI
+
+                if (results.length === 0) {
+                    navSearchDropdown.innerHTML = `
+                        <div class="p-4 text-center text-muted small">
+                            <i class="fas fa-search d-block mb-2 fs-4 opacity-50"></i>
+                            No products found for "${query}"
+                        </div>`;
+                } else {
+                    let html = results.map(p => {
+                        const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
+                        const price = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', minimumFractionDigits: 0 }).format(p.pricing.current_price);
+                        
+                        // UI/UX Standard: Specific items go to the product page
+                        return `
+                            <a href="product-page.php?id=${p.id}" class="nav-search-item">
+                                <img src="${img}" alt="Product">
+                                <div style="min-width: 0;">
+                                    <span class="nav-search-title">${p.name}</span>
+                                    <span class="nav-search-price">${price}</span>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                    
+                    // UI/UX Standard: "View All" goes to collection.php to show the full grid
+                    html += `
+                        <a href="collection.php?search=${encodeURIComponent(query)}" class="d-block p-3 text-center text-gold small fw-bold text-decoration-none" style="background: rgba(0,0,0,0.2);">
+                            View all results for "${query}" <i class="fas fa-arrow-right ms-1"></i>
+                        </a>`;
+                    
+                    navSearchDropdown.innerHTML = html;
+                }
+                navSearchDropdown.classList.remove('d-none');
+
+                // Trigger the calculation the moment results appear!
+                updateSearchDropdownPosition();
+            }, 300); // 300ms debounce for performance
+        });
+</script>
