@@ -91,8 +91,8 @@
             .banner-wall-clock { background-image: url('assets/images/home/body-banners/bdy-bnr-img-2-mobile.png'); }
             .card-img-wrapper { height: 160px; min-height: 160px; padding: 10px; }
             .card-title { font-size: 0.875rem; }
-            .carousel-control-prev, .carousel-control-next { width: 35px; }
-            .carousel-control-prev-icon, .carousel-control-next-icon { width: 22px; height: 22px; }
+            .carousel-control-prev, .carousel-control-next { width: 45.6px;}
+            .carousel-control-prev-icon, .carousel-control-next-icon { background-size: 22.8px; width: 38px; height: 38px; }
         }
         @media (max-width: 575px) {
             .hero-section { height: 400px; }

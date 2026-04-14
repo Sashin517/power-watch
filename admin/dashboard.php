@@ -1856,7 +1856,7 @@
                         newOrdersThisMonth++;
                         
                         // Add to sales total (ignoring cancelled orders for accurate revenue)
-                        if (order.order_status !== 'cancelled') {
+                        if (order.order_status !== 'cancelled' && order.payment_status === 'paid') {
                             monthlySales += parseFloat(order.total_amount);
                         }
                     }
