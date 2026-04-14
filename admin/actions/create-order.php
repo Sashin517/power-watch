@@ -48,7 +48,7 @@ try {
     $payment_method = $_POST['paymentMethod'];
     
     // Validate payment method
-    $valid_payments = ['card', 'cod'];
+    $valid_payments = ['bank transfer', 'cod'];
     if (!in_array($payment_method, $valid_payments)) {
         throw new Exception("Invalid payment method.");
     }
