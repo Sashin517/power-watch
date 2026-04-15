@@ -35,10 +35,10 @@
             <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
                 <p class="mb-0">&copy; 2026 Power Watch Panadura. All rights reserved.</p>
                 <div class="social-icons my-3 my-md-0">
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.tiktok.com/@powerwatchofficial" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/powerwatchofficial" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/powerwatchofficial" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/94771616084" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
                 </div>
                 <div class="payment-methods d-none">
                      <span class="text-white me-2">We Accept:</span>
