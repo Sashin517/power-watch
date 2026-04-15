@@ -72,22 +72,68 @@
         .trust-item i { color: var(--chp-gold); font-size: 1.2rem; }
 
         /* --- Related Products (Business Card Style) --- */
-        .product-card { background: var(--dark-grey); border: none; border-radius: 12px; overflow: hidden; transition: 0.3s; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.3); }
-        .card-img-wrapper { aspect-ratio: 4 / 3; background: white; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
-        .card-img-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+        .product-card { background: var(--dark-grey); border: none; border-radius: 12px; overflow: hidden; transition: 0.3s; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; cursor: pointer; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.3); border-color: var(--chp-gold); }
+        .card-img-wrapper { aspect-ratio: 4 / 3; background: white; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .badge-overlay { position: absolute; top: 10px; left: 10px; z-index: 10; }
+        .discount-badge { background: var(--danger-red); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        
         .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 1rem; line-height: 1.3; color: white; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 1rem; line-height: 1.3; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
         .price-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 0.5rem; }
         .current-price { font-size: 18px; font-weight: 700; color: var(--chp-gold); }
-        .old-price { font-size: 16px; font-weight: 400; color: var(--text-faded); text-decoration: line-through;}
-        .koko-text { font-size: 12px; color: #e2e8f0; margin-bottom: 1.5rem; }
+        .old-price { font-size: 14px; font-weight: 400; color: var(--text-muted); text-decoration: line-through;}
+        
+        .koko-text { font-size: 11px; color: #e2e8f0; margin-bottom: 1.5rem; }
         .koko-logo { font-weight: 800; color: #7191D9; letter-spacing: 1px; font-style: italic; }
-        .card-actions { display: flex; gap: 12px; margin-top: auto; flex-direction: row-reverse;}
+
+        .card-actions { display: flex; gap: 10px; margin-top: auto; flex-direction: row-reverse;}
         .btn-add-cart-outline { flex-grow: 1; background: transparent; border: 2px solid var(--chp-gold); color: white; border-radius: 25px; font-weight: 600; font-size: 14px; transition: 0.3s; padding: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .btn-add-cart-outline:hover { background: var(--chp-gold); color: #000; }
+        .btn-add-cart-outline:hover:not(:disabled) { background: var(--chp-gold); color: #000; }
+        .btn-add-cart-outline:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        
         .btn-view-solid { background: var(--chp-gold); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: 0.3s; font-size: 16px; flex-shrink: 0; }
-        .btn-view-solid:hover { background: var(--chp-gold-hover); transform: scale(1.05); }
+        .btn-view-solid:hover { transform: scale(1.05); }
+
+        /* --- Skeleton Loader Animation --- */
+        .skeleton-card { border-radius: 12px; overflow: hidden; background: var(--sec-blue); border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column; }
+        .skeleton-img { aspect-ratio: 4/3; background: linear-gradient(90deg, #1e2a3a 25%, #243040 50%, #1e2a3a 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .skeleton-body { padding: 1.5rem; flex-grow: 1; }
+        .skeleton-line { height: 12px; border-radius: 6px; margin-bottom: 10px; background: linear-gradient(90deg, #1e2a3a 25%, #243040 50%, #1e2a3a 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .skeleton-line.short { width: 50%; }
+        .skeleton-line.medium { width: 75%; }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* Mobile Adjustments for Cards */
+        @media (max-width: 767px) {
+            .page-title { font-size: 1.8rem; }
+            .toolbar { padding: 0.75rem 1rem; }
+            .product-count-text { font-size: 0.78rem; }
+    
+            /* 2-column grid on mobile */
+            .product-col { padding: 6px !important; }
+            .card-body { padding: 0.85rem 0.9rem 1rem; }
+            .card-title { font-size: 0.82rem; min-height: 2.4em; }
+            .price-row { display: flex; flex-direction: column-reverse; gap: 4px; align-items: flex-start; }
+
+            .current-price { font-size: 0.9rem; }
+            .old-price { font-size:  0.7rem; }
+
+            .koko-text { font-size: 0.66rem; margin-bottom: 0.75rem; }
+            .btn-add-cart-outline { font-size: 0.7rem; padding: 7px 8px; }
+            .btn-view-solid { width: 36px; height: 36px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 400px) {
+            .card-title { font-size: 0.76rem; }
+            .current-price { font-size: 0.85rem; }
+            .old-price { font-size: 0.7rem; }
+            .btn-add-cart-outline { font-size: 0.6rem; letter-spacing: 0; }
+        }
+
         
         /* --- Romance Copy & Accordion --- */
         .romance-copy { font-size: 1.05rem; line-height: 1.6; color: white; font-style: italic; border-left: 3px solid var(--chp-gold); padding-left: 15px; margin-bottom: 1.5rem; }
@@ -133,18 +179,8 @@
             .product-main-title { font-size: 1.8rem; line-height: 1.2; }
             .product-price { font-size: 1.8rem; }
             .product-gallery-img { padding: 1rem; }
-            .card-img-wrapper { height: 170px; min-height: 170px; padding: 15px;}
-            .card-body { padding: 1rem; }
-            .card-title { font-size: 14px; margin-bottom: 0.5rem; } 
-            .current-price { font-size: 14px; }
-            .old-price { font-size: 12px; }
-            .koko-text { font-size: 9px; margin-bottom: 1rem; }
-            .price-row { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 0.5rem; }
-            .card-actions { display: flex; flex-direction: column-reverse; gap: 8px; }
-            .btn-add-cart-outline { width: 100%; font-size: 12px; padding: 12px; }
-            .btn-view-solid { width: 100%; font-size: 12px; border-radius: 25px; height: 44px; } 
-            .btn-recent-view-solid { width: 44px; height: 44px; }
-            .btn-recent-add-cart-outline { width: 100%; font-size: 14px; padding: 12px;}
+            .btn-recent-view-solid { width: 40px; height: 40px; font-size: 0.8rem; }
+            .btn-recent-add-cart-outline { width: 100%; font-size: 0.7rem; padding: 10px 8px;}
         }
     </style>
 </head>
@@ -334,7 +370,20 @@
         <div class="container">
             <h3 class="text-center font-oswald text-white mb-5" style="font-size: 2rem;">You May Also Like</h3>
             <div class="row g-3" id="relatedProductsContainer">
-                <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div>
+                <!-- <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div> -->
+                <?php for($s=0; $s<4; $s++): ?>
+                <div class="col">
+                    <div class="skeleton-card">
+                        <div class="skeleton-img"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short mt-4"></div>
+                        </div>
+                    </div>
+                </div>
+                <?php endfor; ?>
             </div>
         </div>
     </section>
@@ -477,9 +526,17 @@
                 const container = document.getElementById('relatedProductsContainer');
                 container.innerHTML = '';
 
+                // Initialize htmlString BEFORE the loop!
+                let htmlString = ''; 
+
                 related.forEach(p => {
                     const currentPrice = new Intl.NumberFormat('en-LK').format(p.pricing.current_price);
-                    const oldPrice = p.pricing.discount_percent > 0 ? `${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}` : '';
+                    
+                    // Add the proper HTML span and LKR text back into the oldPrice variable
+                    const oldPrice = p.pricing.discount_percent > 0 
+                        ? `<span class="old-price">LKR ${new Intl.NumberFormat('en-LK').format(p.pricing.original_price)}</span>` 
+                        : '';
+                        
                     const img = p.primary_thumbnail ? p.primary_thumbnail : 'assets/images/products/default.png';
                     const safeName = p.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
@@ -487,19 +544,27 @@
                     const priceNum = parseFloat(p.current_price || (p.pricing ? p.pricing.current_price : 0));
                     const kokoInstallment = new Intl.NumberFormat('en-LK').format(priceNum / 3);
 
-                    container.innerHTML += `
+                    // Minor cleanup: simplified the stock check
+                    const stockCount = p.inventory?.stock_count || 0;
+                    const isOut = stockCount <= 0;
+
+                    const btnState = isOut
+                    ? `<button class="btn-add-cart-outline" disabled>Out of Stock</button>`
+                    : `<button class="btn-add-cart-outline" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${priceNum}, '${img}')">Add to Cart</button>`;
+
+                    htmlString += `
                         <div class="col-6 col-md-3">
                             <div class="product-card" onclick="window.location.href='product-page.php?id=${p.id}'">
                                 <div class="card-img-wrapper">
                                     <img src="${img}" alt="${safeName}">
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-title">${p.name}</h6>
-                                    
+                                    <h6 class="card-title">${p.name}</h6>                                    
+                                
                                     <div class="mt-auto">
                                         <div class="price-row">
                                             <div class="current-price font-oswald">LKR ${currentPrice}</div>
-                                            <div class="old-price">${oldPrice}</div>
+                                            ${oldPrice}
                                         </div>
                                         
                                         <div class="koko-text">
@@ -507,9 +572,7 @@
                                         </div>
 
                                         <div class="card-actions">
-                                            <button class="btn-add-cart-outline" onclick="event.stopPropagation(); quickAddToCart(${p.id}, '${safeName}', ${priceNum}, '${img}')">
-                                                Add to Cart
-                                            </button>
+                                            ${btnState}
                                             <button class="btn-view-solid" onclick="event.stopPropagation(); window.location.href='product-page.php?id=${p.id}'">
                                                 <i class="fas fa-eye"></i>
                                             </button>
@@ -520,6 +583,9 @@
                         </div>
                     `;
                 });
+
+                // Now this will work because htmlString exists
+                container.innerHTML += htmlString;
 
             } catch (error) {
                 console.error("Error loading related products:", error);

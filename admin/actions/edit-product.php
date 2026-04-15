@@ -24,7 +24,7 @@ $original_price = (float)$_POST["oprice"];
 $current_price = (float)$_POST["cprice"];
 $stock_count = $_POST["qty"];
 
-$is_luxury = (isset($_POST["luxury"]) && $_POST["luxury"] == 'true') ? 1 : 0;
+$is_premium = (isset($_POST["premium"]) && $_POST["premium"] == 'true') ? 1 : 0;
 $is_peoples_choice = (isset($_POST["choice"]) && $_POST["choice"] == 'true') ? 1 : 0;
 
 if (empty($product_id)) { echo "Product ID missing."; exit(); }
@@ -62,7 +62,7 @@ try {
         `discount_percentage` = '".$discount_percentage."', 
         `koko_installment` = '".$koko_installment."', 
         `stock_count` = '".$stock_count."', 
-        `is_luxury` = '".$is_luxury."', 
+        `is_premium` = '".$is_premium."', 
         `is_peoples_choice` = '".$is_peoples_choice."' 
         WHERE `product_id` = '".$product_id."'";
 

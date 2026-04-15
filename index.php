@@ -147,7 +147,7 @@
                         <div class="container">
                             <h1 class="hero-title text-uppercase">Define<br>Your Legacy</h1>
                             <p class="hero-subtitle d-none d-md-block">Discover timepieces that tell your story</p>
-                            <a href="#" class="btn btn-gold hero-btn">SHOP PREMIUM COLLECTION</a>
+                            <a href="#premiumCarouselWrapper" class="btn btn-gold hero-btn">SHOP PREMIUM COLLECTION</a>
                         </div>
                     </div>
                 </div>
@@ -229,7 +229,7 @@
     </section>
 
     <!-- The Premium Collection -->
-    <section class="py-5" style="background-color: var(--cream-bg);">
+    <section id="premiumCarouselWrapper" class="py-5" style="background-color: var(--cream-bg);">
         <div class="container">
             <h2 class="section-title text-uppercase" style="color: var(--prm-blue) !important; font-weight: 700;">The Premium Collection</h2>
             
