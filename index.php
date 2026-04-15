@@ -181,7 +181,7 @@
                         <div class="container">
                             <h1 class="hero-title text-uppercase">Timeless<br>Elegance</h1>
                             <p class="hero-subtitle d-none d-md-block">Where craftsmanship meets sophistication</p>
-                            <a href="#" class="btn btn-gold hero-btn">VIEW NEW ARRIVALS</a>
+                            <a href="collection.php?category=Wall Clocks" class="btn btn-gold hero-btn">VIEW NEW ARRIVALS</a>
                         </div>
                     </div>
                 </div>
@@ -196,7 +196,7 @@
                         <div class="container">
                             <h1 class="hero-title text-uppercase">Golden<br>Moments</h1>
                             <p class="hero-subtitle d-none d-md-block">Celebrate life's precious moments in style</p>
-                            <a href="#" class="btn btn-gold hero-btn">SHOP EXCLUSIVE</a>
+                            <a href="collection.php?category=Women's Watches" class="btn btn-gold hero-btn">SHOP EXCLUSIVE</a>
                         </div>
                     </div>
                 </div>
@@ -219,29 +219,34 @@
         <div class="container">
             <div class="row g-3 d-flex justify-content-center">
                 <div class="col-4 col-md-2">
-                    <div class="brand-item">
+                    <a href="collection.php?brand=Titan" class="brand-item">
+                        <img src="assets/images/watch-brand-logos/titan.png" alt="Titan">
+                    </a>
+                </div>
+                <div class="col-4 col-md-2">
+                    <a href="collection.php?brand=Aviator" class="brand-item">
                         <img src="assets/images/watch-brand-logos/aviator.png" alt="Aviator">
-                    </div>
+                    </a>
                 </div>
                 <div class="col-4 col-md-2">
-                    <div class="brand-item">
+                    <a href="collection.php?brand=Casio" class="brand-item">
                         <img src="assets/images/watch-brand-logos/casio.png" alt="Casio">
-                    </div>
+                    </a>
                 </div>
                 <div class="col-4 col-md-2">
-                    <div class="brand-item">
+                    <a href="collection.php?brand=Police" class="brand-item">
                         <img src="assets/images/watch-brand-logos/police.png" alt="Police">
-                    </div>
+                    </a>
                 </div>
                 <div class="col-4 col-md-2">
-                    <div class="brand-item">
+                    <a href="collection.php?brand=Seiko" class="brand-item">
                         <img src="assets/images/watch-brand-logos/seiko.png" alt="Seiko">
-                    </div>
+                    </a>
                 </div>
                 <div class="col-4 col-md-2">
-                    <div class="brand-item">
+                    <a href="collection.php?brand=Citizen" class="brand-item">
                         <img src="assets/images/watch-brand-logos/citizen.png" alt="Citizen">
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
