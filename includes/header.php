@@ -51,10 +51,10 @@
                             Services <i class="fas fa-chevron-down ms-1"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                            <li><a class="dropdown-item" href="#">Watch Repair</a></li>
-                            <li><a class="dropdown-item" href="#">Battery Replacement</a></li>
-                            <li><a class="dropdown-item" href="#">Custom Engraving</a></li>
-                            <li><a class="dropdown-item" href="#">Warranty Service</a></li>
+                            <li><a class="dropdown-item" href="watch-repair.php">Watch Repair</a></li>
+                            <li><a class="dropdown-item" href="battery-replacement.php">Battery Replacement</a></li>
+                            <li><a class="dropdown-item" href="custom-engraving.php">Custom Engraving</a></li>
+                            <li><a class="dropdown-item" href="warranty-service.php">Warranty Service</a></li>
                         </ul>
                     </li>
                 </ul>

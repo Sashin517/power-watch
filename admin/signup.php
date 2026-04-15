@@ -111,7 +111,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-gold mb-3" id="signupBtn">
+                            <button type="submit" class="btn btn-gold w-100 mb-3" id="signupBtn">
                                 <span id="btnText">Sign Up</span>
                                 <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
                             </button>

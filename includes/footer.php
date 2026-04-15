@@ -13,6 +13,7 @@
                     <ul>
                         <li><a href="collection.php?category=Men's Watches">Men's Watches</a></li>
                         <li><a href="collection.php?category=Women's Watches">Women's Watches</a></li>
+                        <li><a href="about.php">About Us</a></li>
                         <li><a href="collection.php">Shop All</a></li>
                     </ul>
                 </div>
@@ -25,7 +26,9 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Panadura Address</h5>
-                    <p>No. 123, Main Street, Panadura, Sri Lanka.</p>
+                    <a href="https://maps.app.goo.gl/YU1YcddnFdzbM9VVA" target="_blank" rel="noopener noreferrer">
+                        No. 80, D.S Senanayake Street, Panadura, Sri Lanka.
+                    </a>
                 </div>
             </div>
             

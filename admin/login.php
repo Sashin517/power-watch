@@ -95,7 +95,7 @@
                                 <a href="#" class="small text-gold">Forgot password?</a>
                             </div>
 
-                            <button type="submit" class="btn btn-gold mb-3" id="loginBtn">
+                            <button type="submit" class="btn btn-gold w-100 mb-3" id="loginBtn">
                                 <span id="btnText">Sign In</span>
                                 <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
                             </button>
