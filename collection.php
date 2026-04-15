@@ -722,14 +722,15 @@
         // BUILD FILTER OPTIONS FROM API DATA (no PHP loops needed)
         // ============================================================
         function buildFilterOptions() {
-            // Categories
-            const cats = [...new Set(globalProducts.map(p => p.category).filter(Boolean))].sort();
+            // Categories (Combines Top-Level and Sub-Categories for deep linking)
+            const cats = [...new Set(globalProducts.flatMap(p => [p.category, p.sub_category]).filter(Boolean))].sort();
+            
             const catList = document.getElementById('categoryList');
             catList.innerHTML = cats.map(c => `
                 <div class="filter-option">
                     <input type="radio" name="category" value="${c}" id="cat-${btoa(c).replace(/=/g,'')}">
                     <label for="cat-${btoa(c).replace(/=/g,'')}">${c}</label>
-                    <span class="filter-count">${globalProducts.filter(p=>p.category===c).length}</span>
+                    <span class="filter-count">${globalProducts.filter(p => p.category === c || p.sub_category === c).length}</span>
                 </div>`).join('');
 
             // Brands

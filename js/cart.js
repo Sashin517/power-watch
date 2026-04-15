@@ -110,7 +110,8 @@ function renderSideCart() {
     const cartContainer = document.getElementById('sideCartItems');
     const totalEl = document.getElementById('sideCartTotal');
     const headerCount = document.getElementById('cartHeaderCount');
-    
+    const navHeaderCount = document.getElementById('navHeaderCount');
+
     if(!cartContainer) return;
 
     const items = cart.getItems();
@@ -118,6 +119,8 @@ function renderSideCart() {
     
     // Update Header Count
     if(headerCount) headerCount.innerText = `(${cart.getCount()})`;
+    if(navHeaderCount) navHeaderCount.innerText = `(${cart.getCount()})`;
+
 
     // Free Shipping Logic
     const freeShippingThreshold = 15000;

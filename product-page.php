@@ -226,7 +226,7 @@
                         </div>
                     </div>
 
-                    <div class="koko-box d-flex justify-content-between align-items-center">
+                    <div class="koko-box d-none d-flex justify-content-between align-items-center">
                         <div>
                             <span class="text-white d-block mb-1" style="font-size: 0.9rem;">Pay in 3 installments of <strong>LKR <?php echo number_format($product['koko_installment'], 2); ?></strong></span>
                             <span class="text-faded" style="font-size: 0.75rem;">0% interest. No hidden fees.</span>
@@ -326,9 +326,9 @@
                         </div>
                     </div>
 
-                    <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+                    <!-- <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;"> -->
 
-                    <div class="row g-3 align-items-center mb-4">
+                    <div class="row g-3 align-items-center my-4">
                         <div class="col-auto">
                             <div class="qty-pill" style="height: 54px; padding: 0 10px;">
                                 <button onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
@@ -372,8 +372,7 @@
             <div class="row g-3" id="relatedProductsContainer">
                 <!-- <div class="text-center py-4"><div class="spinner-border text-gold" role="status"></div></div> -->
                 <?php for($s=0; $s<4; $s++): ?>
-                <div class="col">
-                    <div class="skeleton-card">
+                    <div class="col-6 col-md-3"> <div class="skeleton-card">
                         <div class="skeleton-img"></div>
                         <div class="skeleton-body">
                             <div class="skeleton-line short"></div>

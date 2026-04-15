@@ -73,6 +73,24 @@
         .banner-gold-watch { background-image: url('assets/images/home/body-banners/bdy-bnr-img-1.png'); }
         .banner-wall-clock { background-image: url('assets/images/home/body-banners/bdy-bnr-img-2.png'); }
 
+        /* --- Mobile Responsive Brand Tabs --- */
+        .brand-tabs-wrapper { width: 100%; overflow: hidden; }
+        .brand-tabs-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding-bottom: 10px;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .brand-tabs-container::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+        .brand-tab { flex: 0 0 auto; font-size: 0.9rem;} /* Prevents buttons from squishing */
+        
+        @media (min-width: 992px) {
+            .brand-tabs-container { justify-content: center; }
+        }
+
         /* Responsive Breakpoints */
         @media (max-width: 991px) {
             .hero-section { height: 500px; }
@@ -86,6 +104,7 @@
             .hero-overlay { left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; max-width: 90%; width: 100%; }
             .hero-title { font-size: 2.5rem; }
             .section-title { font-size: 1.5rem; }
+            .brand-tabs-container { flex-wrap: wrap; justify-content: center; }
             .banner-street { background-image: url('assets/images/home/body-banners/bdy-bnr-img-3-mobile.png'); }
             .banner-gold-watch { background-image: url('assets/images/home/body-banners/bdy-bnr-img-1-mobile.png'); }
             .banner-wall-clock { background-image: url('assets/images/home/body-banners/bdy-bnr-img-2-mobile.png'); }
@@ -240,6 +259,10 @@
             </div>
             <!-- closes #premiumCarousel -->
             <div class="text-center mt-3" id="premiumDots"></div>
+            
+            <div class="text-center mt-4">
+                <a href="collection.php?category=Premium%20Collection" class="btn btn-outline-gold rounded-pill px-5 fw-bold" style="letter-spacing: 1px;">Explore Premium Collection</a>
+            </div>
         </div>
     </section>
 
@@ -266,6 +289,10 @@
             </div>
             <!-- closes #peoplesChoiceCarousel -->
             <div class="text-center mt-3" id="peoplesChoiceDots"></div>
+            
+            <div class="text-center mt-4">
+                <a href="collection.php" class="btn btn-outline-light rounded-pill px-5 fw-bold" style="letter-spacing: 1px;">Shop All Collections</a>
+            </div>
         </div>
     </section>
 
@@ -287,23 +314,29 @@
             <h2 class="section-title text-uppercase text-white">Favorite Brands</h2>
             
             <!-- Tabs -->
-            <div class="d-flex justify-content-center gap-2 mb-4" id="brandTabs">
-                <button class="btn btn-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Casio'); updateActiveTab(this);">Casio</button>
-                <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Titan'); updateActiveTab(this);">Titan</button>
-                <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Seiko'); updateActiveTab(this);">Seiko</button>
+            <div class="brand-tabs-wrapper mb-4">
+                <div class="brand-tabs-container" id="brandTabs">
+                    <button class="btn btn-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Casio'); updateActiveTab(this);">Casio</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Titan'); updateActiveTab(this);">Titan</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Seiko'); updateActiveTab(this);">Seiko</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Rolex'); updateActiveTab(this);">Rolex</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Omega'); updateActiveTab(this);">Omega</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Fossil'); updateActiveTab(this);">Fossil</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Citizen'); updateActiveTab(this);">Citizen</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Police'); updateActiveTab(this);">Police</button>
+                    <button class="btn btn-outline-light rounded-pill px-4 brand-tab" onclick="filterByBrand('Aviator'); updateActiveTab(this);">Aviator</button>
+                </div>
             </div>
 
-            <!-- Carousel Grid (similar to Premium Collection) -->
             <div id="favoriteBrandsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
                 <div class="carousel-inner" id="favoriteBrandsCarouselInner">
                     <div class="text-center py-5"><div class="spinner-border text-white" role="status"></div></div>
                 </div>
             </div>
-            <!-- closes #favoriteBrandsCarousel -->
             <div class="text-center mt-3" id="favoriteBrandsDots"></div>
 
-            <div class="text-center">
-                <button class="btn btn-gold rounded-pill px-5">See more</button>
+            <div class="text-center mt-4">
+                <a href="collection.php?brand=Casio" id="brandSeeMoreBtn" class="btn btn-gold rounded-pill px-5 fw-bold" style="letter-spacing: 1px;">See more from Casio</a>
             </div>
         </div>
     </section>
@@ -331,6 +364,10 @@
             </div>
             <!-- closes #wallClockCarousel -->
             <div class="text-center mt-3" id="wallClockDots"></div>
+            
+            <div class="text-center mt-4">
+                <a href="collection.php?category=Wall%20Clocks" class="btn btn-outline-light rounded-pill px-5 fw-bold" style="letter-spacing: 1px;">View All Wall Decor</a>
+            </div>
         </div>
     </section>
 
@@ -452,6 +489,13 @@
         function filterByBrand(brandName) {
             const brandProducts = globalProducts.filter(p => p.brand && p.brand.name.toLowerCase() === brandName.toLowerCase());
             renderCarouselGrid(brandProducts, 'favoriteBrandsCarouselInner', 'btn-brown');
+            
+            // NEW: Update the "See more" button dynamically
+            const seeMoreBtn = document.getElementById('brandSeeMoreBtn');
+            if (seeMoreBtn) {
+                seeMoreBtn.href = 'collection.php?brand=' + encodeURIComponent(brandName);
+                seeMoreBtn.innerText = 'See more from ' + brandName;
+            }
         }
 
         // The Master Function that builds the HTML

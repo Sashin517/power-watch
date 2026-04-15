@@ -11,16 +11,16 @@
                 <div class="col-md-2 col-6">
                     <h5>Quick Links</h5>
                     <ul>
-                        <li><a href="#">Men's</a></li>
-                        <li><a href="#">Women's</a></li>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="collection.php?category=Men's Watches">Men's Watches</a></li>
+                        <li><a href="collection.php?category=Women's Watches">Women's Watches</a></li>
+                        <li><a href="collection.php">Shop All</a></li>
                     </ul>
                 </div>
                 <div class="col-md-2 col-6">
                     <h5>Customer Care</h5>
                     <ul>
-                        <li><a href="#">Warranty Info</a></li>
-                        <li><a href="#">Returns Policy</a></li>
+                        <li><a href="warranty.php">Warranty Info</a></li>
+                        <li><a href="returns.php">Returns Policy</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
@@ -37,7 +37,7 @@
                     <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
                 </div>
-                <div class="payment-methods">
+                <div class="payment-methods d-none">
                      <span class="text-white me-2">We Accept:</span>
                      <i class="fab fa-cc-mastercard fa-lg text-light me-2"></i>
                      <i class="fab fa-cc-visa fa-lg text-light me-2"></i>
