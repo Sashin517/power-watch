@@ -1,0 +1,143 @@
+# ====================================================
+# POWER WATCH - Apache Configuration
+# Password Protection + Clean URLs
+# ====================================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Enable JavaScript modules
+AddType application/javascript .mjs
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Set base path (adjust if site is in subdirectory)
+RewriteBase /power-watch/
+
+# ====================================================
+# 1. PASSWORD PROTECTION
+# ====================================================
+# Protect entire site with username/password
+AuthType Basic
+AuthName "Power Watch - Restricted Access"
+AuthUserFile /home/sldevs/public_html/power-watch/.htpasswd
+Require valid-user
+
+# ====================================================
+# 2. REMOVE .PHP EXTENSION FROM URLS
+# ====================================================
+
+# Redirect .php URLs to clean URLs
+RewriteCond %{THE_REQUEST} ^GET\ /power-watch/(.+)\.php\ HTTP
+RewriteRule ^(.+)\.php$ /power-watch/$1 [R=301,L]
+
+# ====================================================
+# 3. CLEAN URL ROUTING (Main Pages)
+# ====================================================
+
+# Route clean URLs to PHP files
+# Examples: /index → index.php, /collection → collection.php
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/power-watch/$1.php -f
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]
+
+# ====================================================
+# 4. PRODUCT PAGE WITH ID PARAMETER
+# ====================================================
+
+# Handle product-page?id=123 as /product/123
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^product/([0-9]+)/?$ product-page.php?id=$1 [L,QSA]
+
+# ====================================================
+# 5. ORDER SUCCESS PAGE
+# ====================================================
+
+# Handle order-success?order=PWORD7 as /order/PWORD7
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^order/([A-Z0-9]+)/?$ order-success.php?order=$1 [L,QSA]
+
+# ====================================================
+# 6. ADMIN AREA (No password protection for admin)
+# ====================================================
+
+# Allow admin area to bypass main auth (optional)
+<Files "admin/login.php">
+    Allow from all
+    Satisfy Any
+</Files>
+
+# ====================================================
+# 7. FORCE WWW (Optional - Remove if not needed)
+# ====================================================
+
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+
+# ====================================================
+# 8. FORCE HTTPS (Recommended for production)
+# ====================================================
+
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ====================================================
+# 9. PREVENT HOTLINKING (Optional)
+# ====================================================
+
+# Prevent other sites from using your images
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https://(www\.)?sldevs\.web\.lk [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|svg|webp)$ - [F,L]
+
+# ====================================================
+# 10. SECURITY HEADERS
+# ====================================================
+
+# Prevent clickjacking
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ====================================================
+# 11. CACHE CONTROL
+# ====================================================
+
+# Cache static assets for better performance
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+
+# ====================================================
+# 12. ERROR PAGES (Optional - Create these files)
+# ====================================================
+
+# ErrorDocument 404 /power-watch/404.php
+# ErrorDocument 403 /power-watch/403.php
+# ErrorDocument 500 /power-watch/500.php
+
+# ====================================================
+# 13. PHP SETTINGS (If allowed by host)
+# ====================================================
+
+# php_value upload_max_filesize 64M
+# php_value post_max_size 64M
+# php_value max_execution_time 300
+# php_value max_input_time 300
